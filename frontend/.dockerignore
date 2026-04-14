@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+.playwright/
+playwright-report/
+test-results/
+.idea/
+.vscode/
+*.log
