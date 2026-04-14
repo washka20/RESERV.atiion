@@ -47,4 +47,9 @@ final class EloquentUserRepository implements UserRepositoryInterface
     {
         return UserModel::where('email', $email->value())->exists();
     }
+
+    public function delete(User $user): void
+    {
+        UserModel::where('id', $user->id()->toString())->delete();
+    }
 }

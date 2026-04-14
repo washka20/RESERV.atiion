@@ -7,6 +7,7 @@ namespace App\Modules\Identity\Domain\Entity;
 use App\Modules\Identity\Domain\Event\UserEmailVerified;
 use App\Modules\Identity\Domain\Event\UserRegistered;
 use App\Modules\Identity\Domain\Event\UserRoleAssigned;
+use App\Modules\Identity\Domain\Event\UserRoleRevoked;
 use App\Modules\Identity\Domain\ValueObject\Email;
 use App\Modules\Identity\Domain\ValueObject\FullName;
 use App\Modules\Identity\Domain\ValueObject\HashedPassword;
@@ -100,6 +101,43 @@ final class User extends AggregateRoot
         $now = new DateTimeImmutable;
         $this->emailVerifiedAt = $now;
         $this->recordEvent(new UserEmailVerified($this->id, $now));
+    }
+
+    /**
+     * Отзывает роль у пользователя. Идемпотентно: если роли нет — ничего не делает.
+     */
+    public function revokeRole(Role $role): void
+    {
+        foreach ($this->roles as $i => $existing) {
+            if ($existing->id()->equals($role->id())) {
+                unset($this->roles[$i]);
+                $this->roles = array_values($this->roles);
+                $this->recordEvent(new UserRoleRevoked(
+                    $this->id,
+                    $role->id(),
+                    $role->name(),
+                    new DateTimeImmutable,
+                ));
+
+                return;
+            }
+        }
+    }
+
+    /**
+     * Меняет полное имя пользователя.
+     */
+    public function changeName(FullName $newName): void
+    {
+        $this->fullName = $newName;
+    }
+
+    /**
+     * Меняет email пользователя.
+     */
+    public function changeEmail(Email $newEmail): void
+    {
+        $this->email = $newEmail;
     }
 
     /**
