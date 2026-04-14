@@ -8,14 +8,17 @@ use App\Modules\Identity\Domain\ValueObject\UserId;
 
 interface JwtTokenServiceInterface
 {
-    public function issue(UserId $userId): TokenPair;
+    /**
+     * @param  array<string, scalar>  $extraClaims
+     */
+    public function issue(UserId $userId, array $extraClaims = []): TokenPair;
+
+    /**
+     * @throws \App\Modules\Identity\Domain\Exception\InvalidCredentialsException
+     */
+    public function parseAccess(string $accessToken): ParsedClaims;
 
     public function refresh(string $refreshToken): TokenPair;
 
     public function revoke(string $refreshToken): void;
-
-    /**
-     * Возвращает UserId, если access token валиден, иначе null.
-     */
-    public function parseAccessToken(string $accessToken): ?UserId;
 }

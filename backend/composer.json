@@ -9,6 +9,7 @@
         "php": "^8.3",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
+        "lcobucci/clock": "^3.6",
         "lcobucci/jwt": "^5"
     },
     "require-dev": {
