@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Shared\Infrastructure\Event;
+namespace Tests\Unit\Modules\Identity\Application\Support;
 
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
 use App\Shared\Domain\DomainEvent;
-use Illuminate\Contracts\Events\Dispatcher;
 
-final class LaravelDomainEventDispatcher implements DomainEventDispatcherInterface
+final class RecordingEventDispatcher implements DomainEventDispatcherInterface
 {
-    public function __construct(private readonly Dispatcher $events) {}
+    /** @var list<DomainEvent> */
+    public array $events = [];
 
     public function dispatch(DomainEvent $event): void
     {
-        $this->events->dispatch($event->eventName(), [$event]);
-        $this->events->dispatch($event);
+        $this->events[] = $event;
     }
 
     public function dispatchAll(iterable $events): void
