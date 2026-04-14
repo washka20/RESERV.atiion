@@ -1,7 +1,7 @@
 services:
   nginx:
     ports:
-      - "8080:80"
+      - "${NGINX_PORT:-8080}:80"
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./backend:/var/www/html
@@ -29,7 +29,7 @@ services:
       dockerfile: docker/node/Dockerfile
     restart: unless-stopped
     working_dir: /app
-    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    command: ["sh", "-c", "npm install && npm run dev -- --host 0.0.0.0"]
     environment:
       NODE_ENV: development
       CHOKIDAR_USEPOLLING: "true"
@@ -37,7 +37,7 @@ services:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5273}:5173"
     networks:
       - reservatiion
     healthcheck:
@@ -49,16 +49,16 @@ services:
 
   postgres:
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
 
   redis:
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
 
   minio:
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "${MINIO_API_PORT:-9500}:9000"
+      - "${MINIO_CONSOLE_PORT:-9501}:9001"
 
 volumes:
   frontend_node_modules:
