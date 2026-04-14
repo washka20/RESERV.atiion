@@ -1,19 +1,50 @@
-/.phpunit.cache
+# OS / Editors
+.DS_Store
+.idea/
+.vscode/
+.fleet/
+
+# Dependencies
 /node_modules
-/public/build
-/public/hot
-/public/storage
-/storage/*.key
 /vendor
+*.log
+
+# Environment
 .env
-.env.backup
-.env.production
+.env.*
+!.env.example
+
+# Build artifacts
+/backend/public/build
+/backend/public/hot
+/backend/public/storage
+/backend/storage/*.key
+/frontend/dist
+/frontend/coverage
+
+# PHPUnit / Pest
+.phpunit.cache
 .phpunit.result.cache
-Homestead.json
-Homestead.yaml
-auth.json
-npm-debug.log
-yarn-error.log
-/.fleet
-/.idea
-/.vscode
+/backend/.phpunit.cache
+/backend/.phpunit.result.cache
+
+# Claude Code (project-local, НЕ коммитим)
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+.superpowers/
+docs/superpowers/
+
+# Планы
+*.plan.md
+.claude/plans/
+
+# Legacy — не коммитим зависимости легаси-проекта
+old/node_modules/
+old/vendor/
+old/.env
+old/.env.*
+old/public/build/
+old/public/hot/
+old/public/storage/
+old/storage/*.key
