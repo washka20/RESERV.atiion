@@ -8,6 +8,7 @@ use App\Modules\Identity\Domain\Exception\InvalidCredentialsException;
 use App\Modules\Identity\Domain\Repository\UserRepositoryInterface;
 use App\Modules\Identity\Domain\Service\PasswordHasherInterface;
 use App\Modules\Identity\Domain\ValueObject\Email;
+use App\Modules\Identity\Domain\ValueObject\UserId;
 use Throwable;
 
 final readonly class AuthService
@@ -46,5 +47,10 @@ final readonly class AuthService
     public function logout(string $refreshToken): void
     {
         $this->jwt->revoke($refreshToken);
+    }
+
+    public function issueForUserId(UserId $userId): TokenPair
+    {
+        return $this->jwt->issue($userId);
     }
 }
