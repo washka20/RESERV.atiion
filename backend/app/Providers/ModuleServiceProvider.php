@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Modules\Identity\Provider;
 use App\Shared\Application\Bus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBusInterface;
 use App\Shared\Infrastructure\Bus\LaravelCommandBus;
@@ -15,10 +16,10 @@ final class ModuleServiceProvider extends ServiceProvider
     /**
      * FQCN модульных ServiceProvider'ов. Добавляется по одному при создании модуля.
      *
-     * @var list<class-string<\Illuminate\Support\ServiceProvider>>
+     * @var list<class-string<ServiceProvider>>
      */
     private const MODULE_PROVIDERS = [
-        \App\Modules\Identity\Provider::class,
+        Provider::class,
         \App\Modules\Catalog\Provider::class,
         \App\Modules\Booking\Provider::class,
         \App\Modules\Payment\Provider::class,
@@ -34,7 +35,5 @@ final class ModuleServiceProvider extends ServiceProvider
         }
     }
 
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 }
