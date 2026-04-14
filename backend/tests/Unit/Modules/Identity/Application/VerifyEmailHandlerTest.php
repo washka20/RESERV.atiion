@@ -16,8 +16,8 @@ use Tests\Unit\Modules\Identity\Application\Support\RecordingEventDispatcher;
 
 it('verifies email and dispatches UserEmailVerified', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
-    $dispatcher = new RecordingEventDispatcher();
-    $hasher = new InMemoryPasswordHasher();
+    $dispatcher = new RecordingEventDispatcher;
+    $hasher = new InMemoryPasswordHasher;
 
     $userId = UserId::generate();
     $user = User::register($userId, new Email('test@example.com'), HashedPassword::fromPlaintext('secret', $hasher), new FullName('A', 'B', null));
@@ -35,8 +35,8 @@ it('verifies email and dispatches UserEmailVerified', function (): void {
 
 it('is idempotent — second verify does not dispatch event', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
-    $dispatcher = new RecordingEventDispatcher();
-    $hasher = new InMemoryPasswordHasher();
+    $dispatcher = new RecordingEventDispatcher;
+    $hasher = new InMemoryPasswordHasher;
 
     $userId = UserId::generate();
     $user = User::register($userId, new Email('test@example.com'), HashedPassword::fromPlaintext('secret', $hasher), new FullName('A', 'B', null));
@@ -59,6 +59,6 @@ it('throws RuntimeException when user not found', function (): void {
 
     $users->shouldReceive('findById')->once()->andReturnNull();
 
-    $handler = new VerifyEmailHandler($users, new RecordingEventDispatcher());
+    $handler = new VerifyEmailHandler($users, new RecordingEventDispatcher);
     $handler->handle(new VerifyEmailCommand(UserId::generate()->toString()));
 })->throws(RuntimeException::class);

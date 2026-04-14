@@ -10,11 +10,11 @@ final class InMemoryPasswordHasher implements PasswordHasherInterface
 {
     public function hash(string $plain): string
     {
-        return 'hashed:' . $plain;
+        return 'hashed:'.$plain;
     }
 
     public function check(string $plain, string $hash): bool
     {
-        return $hash === 'hashed:' . $plain;
+        return $hash === 'hashed:'.$plain;
     }
 }

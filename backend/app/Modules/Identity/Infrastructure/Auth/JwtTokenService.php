@@ -14,6 +14,7 @@ use Lcobucci\Clock\Clock;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Lcobucci\JWT\Validation\Constraint\PermittedFor;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
@@ -34,7 +35,7 @@ final class JwtTokenService implements JwtTokenServiceInterface
         private readonly Clock $clock,
     ) {
         $this->config = Configuration::forSymmetricSigner(
-            new Sha256(),
+            new Sha256,
             InMemory::plainText($secret),
         );
     }
@@ -84,7 +85,7 @@ final class JwtTokenService implements JwtTokenServiceInterface
             throw new InvalidCredentialsException('Invalid or expired token');
         }
 
-        /** @var \Lcobucci\JWT\UnencryptedToken $parsed */
+        /** @var UnencryptedToken $parsed */
         $sub = (string) $parsed->claims()->get('sub');
 
         return new ParsedClaims(

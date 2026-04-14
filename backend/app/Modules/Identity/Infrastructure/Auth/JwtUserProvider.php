@@ -20,9 +20,7 @@ final class JwtUserProvider implements UserProvider
         return null;
     }
 
-    public function updateRememberToken(Authenticatable $user, $token): void
-    {
-    }
+    public function updateRememberToken(Authenticatable $user, $token): void {}
 
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
@@ -38,7 +36,5 @@ final class JwtUserProvider implements UserProvider
         return false;
     }
 
-    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
-    {
-    }
+    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void {}
 }

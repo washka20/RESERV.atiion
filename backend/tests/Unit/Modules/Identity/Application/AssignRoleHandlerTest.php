@@ -21,8 +21,8 @@ use Tests\Unit\Modules\Identity\Application\Support\RecordingEventDispatcher;
 it('assigns role to user and dispatches UserRoleAssigned', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $roles = Mockery::mock(RoleRepositoryInterface::class);
-    $dispatcher = new RecordingEventDispatcher();
-    $hasher = new InMemoryPasswordHasher();
+    $dispatcher = new RecordingEventDispatcher;
+    $hasher = new InMemoryPasswordHasher;
 
     $userId = UserId::generate();
     $user = User::register($userId, new Email('test@example.com'), HashedPassword::fromPlaintext('secret', $hasher), new FullName('A', 'B', null));
@@ -47,14 +47,14 @@ it('throws RuntimeException when user not found', function (): void {
 
     $users->shouldReceive('findById')->once()->andReturnNull();
 
-    $handler = new AssignRoleHandler($users, $roles, new RecordingEventDispatcher());
+    $handler = new AssignRoleHandler($users, $roles, new RecordingEventDispatcher);
     $handler->handle(new AssignRoleCommand(UserId::generate()->toString(), RoleName::Admin));
 })->throws(RuntimeException::class);
 
 it('throws RuntimeException when role not found', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $roles = Mockery::mock(RoleRepositoryInterface::class);
-    $hasher = new InMemoryPasswordHasher();
+    $hasher = new InMemoryPasswordHasher;
 
     $userId = UserId::generate();
     $user = User::register($userId, new Email('test@example.com'), HashedPassword::fromPlaintext('secret', $hasher), new FullName('A', 'B', null));
@@ -63,6 +63,6 @@ it('throws RuntimeException when role not found', function (): void {
     $users->shouldReceive('findById')->once()->andReturn($user);
     $roles->shouldReceive('findByName')->once()->andReturnNull();
 
-    $handler = new AssignRoleHandler($users, $roles, new RecordingEventDispatcher());
+    $handler = new AssignRoleHandler($users, $roles, new RecordingEventDispatcher);
     $handler->handle(new AssignRoleCommand((string) $userId, RoleName::Admin));
 })->throws(RuntimeException::class);

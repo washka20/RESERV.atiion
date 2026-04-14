@@ -15,9 +15,17 @@ it('rejects empty hash', function (): void {
 })->throws(InvalidArgumentException::class);
 
 it('creates from plaintext via hasher', function (): void {
-    $hasher = new class implements PasswordHasherInterface {
-        public function hash(string $plain): string { return 'HASHED:' . $plain; }
-        public function check(string $plain, string $hash): bool { return $hash === 'HASHED:' . $plain; }
+    $hasher = new class implements PasswordHasherInterface
+    {
+        public function hash(string $plain): string
+        {
+            return 'HASHED:'.$plain;
+        }
+
+        public function check(string $plain, string $hash): bool
+        {
+            return $hash === 'HASHED:'.$plain;
+        }
     };
 
     $hp = HashedPassword::fromPlaintext('secret', $hasher);
@@ -25,9 +33,17 @@ it('creates from plaintext via hasher', function (): void {
 });
 
 it('matches plaintext via hasher', function (): void {
-    $hasher = new class implements PasswordHasherInterface {
-        public function hash(string $plain): string { return 'HASHED:' . $plain; }
-        public function check(string $plain, string $hash): bool { return $hash === 'HASHED:' . $plain; }
+    $hasher = new class implements PasswordHasherInterface
+    {
+        public function hash(string $plain): string
+        {
+            return 'HASHED:'.$plain;
+        }
+
+        public function check(string $plain, string $hash): bool
+        {
+            return $hash === 'HASHED:'.$plain;
+        }
     };
 
     $hp = new HashedPassword('HASHED:secret');

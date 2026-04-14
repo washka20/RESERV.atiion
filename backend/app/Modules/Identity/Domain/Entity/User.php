@@ -44,7 +44,7 @@ final class User extends AggregateRoot
         HashedPassword $passwordHash,
         FullName $fullName,
     ): self {
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $user = new self($id, $email, $passwordHash, $fullName, [], null, $now);
         $user->recordEvent(new UserRegistered($id, $email, $now));
 
@@ -84,7 +84,7 @@ final class User extends AggregateRoot
             $this->id,
             $role->id(),
             $role->name(),
-            new DateTimeImmutable(),
+            new DateTimeImmutable,
         ));
     }
 
@@ -97,7 +97,7 @@ final class User extends AggregateRoot
             return;
         }
 
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $this->emailVerifiedAt = $now;
         $this->recordEvent(new UserEmailVerified($this->id, $now));
     }

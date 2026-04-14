@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Identity\Application\Service;
 
+use App\Modules\Identity\Domain\Exception\InvalidCredentialsException;
 use App\Modules\Identity\Domain\ValueObject\UserId;
 
 interface JwtTokenServiceInterface
@@ -14,7 +15,7 @@ interface JwtTokenServiceInterface
     public function issue(UserId $userId, array $extraClaims = []): TokenPair;
 
     /**
-     * @throws \App\Modules\Identity\Domain\Exception\InvalidCredentialsException
+     * @throws InvalidCredentialsException
      */
     public function parseAccess(string $accessToken): ParsedClaims;
 

@@ -40,7 +40,7 @@ final class UserMapper
      */
     public static function toEloquent(User $user): UserModel
     {
-        $model = UserModel::find($user->id()->toString()) ?? new UserModel();
+        $model = UserModel::find($user->id()->toString()) ?? new UserModel;
 
         $model->id = $user->id()->toString();
         $model->email = $user->email()->value();

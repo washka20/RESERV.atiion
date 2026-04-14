@@ -17,7 +17,7 @@ use Tests\Unit\Modules\Identity\Application\Support\InMemoryPasswordHasher;
 it('returns TokenPair on successful login', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $jwt = Mockery::mock(JwtTokenServiceInterface::class);
-    $hasher = new InMemoryPasswordHasher();
+    $hasher = new InMemoryPasswordHasher;
 
     $userId = UserId::generate();
     $user = User::register($userId, new Email('a@b.com'), HashedPassword::fromPlaintext('secret', $hasher), new FullName('A', 'B', null));
@@ -38,7 +38,7 @@ it('returns TokenPair on successful login', function (): void {
 it('throws InvalidCredentialsException on wrong password', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $jwt = Mockery::mock(JwtTokenServiceInterface::class);
-    $hasher = new InMemoryPasswordHasher();
+    $hasher = new InMemoryPasswordHasher;
 
     $userId = UserId::generate();
     $user = User::register($userId, new Email('a@b.com'), HashedPassword::fromPlaintext('secret', $hasher), new FullName('A', 'B', null));
@@ -53,7 +53,7 @@ it('throws InvalidCredentialsException on wrong password', function (): void {
 it('throws InvalidCredentialsException when user not found', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $jwt = Mockery::mock(JwtTokenServiceInterface::class);
-    $hasher = new InMemoryPasswordHasher();
+    $hasher = new InMemoryPasswordHasher;
 
     $users->shouldReceive('findByEmail')->once()->andReturnNull();
 
@@ -64,7 +64,7 @@ it('throws InvalidCredentialsException when user not found', function (): void {
 it('throws InvalidCredentialsException on invalid email format', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $jwt = Mockery::mock(JwtTokenServiceInterface::class);
-    $hasher = new InMemoryPasswordHasher();
+    $hasher = new InMemoryPasswordHasher;
 
     $auth = new AuthService($users, $hasher, $jwt);
     $auth->login('not-an-email', 'password');
@@ -73,7 +73,7 @@ it('throws InvalidCredentialsException on invalid email format', function (): vo
 it('delegates refresh to JwtTokenServiceInterface', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $jwt = Mockery::mock(JwtTokenServiceInterface::class);
-    $hasher = new InMemoryPasswordHasher();
+    $hasher = new InMemoryPasswordHasher;
 
     $jwt->shouldReceive('refresh')->once()->with('refresh-token')->andReturn(new TokenPair('new-acc', 'new-ref', 3600));
 
@@ -86,7 +86,7 @@ it('delegates refresh to JwtTokenServiceInterface', function (): void {
 it('delegates logout to JwtTokenServiceInterface::revoke', function (): void {
     $users = Mockery::mock(UserRepositoryInterface::class);
     $jwt = Mockery::mock(JwtTokenServiceInterface::class);
-    $hasher = new InMemoryPasswordHasher();
+    $hasher = new InMemoryPasswordHasher;
 
     $jwt->shouldReceive('revoke')->once()->with('refresh-token');
 
