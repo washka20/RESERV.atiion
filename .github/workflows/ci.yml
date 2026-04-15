@@ -19,6 +19,48 @@ jobs:
       - name: Compare Dockerfile base stage vs CI extensions
         run: bash .github/scripts/check-php-extensions-drift.sh
 
+  docker-dev-validate:
+    name: Docker dev image (smoke build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build dev stage
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/php/Dockerfile
+          target: dev
+          push: false
+          load: true
+          tags: reservatiion-php:dev-ci
+          cache-from: type=gha,scope=php-dev
+          cache-to: type=gha,mode=max,scope=php-dev
+      - name: Smoke run
+        run: docker run --rm reservatiion-php:dev-ci php --version
+
+  docker-prod-validate:
+    name: Docker prod image (smoke build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build prod stage
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/php/Dockerfile
+          target: prod
+          push: false
+          load: true
+          tags: reservatiion-php:prod-ci
+          cache-from: type=gha,scope=php-prod
+          cache-to: type=gha,mode=max,scope=php-prod
+      - name: Smoke run
+        run: docker run --rm reservatiion-php:prod-ci php --version
+
   backend-lint:
     name: Backend lint (Pint)
     runs-on: ubuntu-latest
