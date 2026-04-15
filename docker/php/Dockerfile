@@ -54,8 +54,12 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 
 COPY docker/php/php-dev.ini /usr/local/etc/php/conf.d/zz-app.ini
 COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug.ini
+COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# В dev код монтируется через bind mount, не копируем
+# В dev код монтируется через bind mount, не копируем.
+# entrypoint обеспечивает vendor/ и filament-assets до старта php-fpm.
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]
 
 # --- Stage: prod (copy code + composer install) ---
@@ -72,6 +76,7 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-in
 
 COPY --chown=app:app backend/ ./
 RUN composer dump-autoload --optimize --classmap-authoritative \
+    && php artisan filament:assets --no-interaction \
     && php artisan storage:link || true
 
 USER app

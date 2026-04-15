@@ -25,6 +25,10 @@ services:
       - ./backend:/var/www/html
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    # Entrypoint делает composer install / filament:assets при первом старте —
+    # даём healthcheck'у грейс (prod-образ сразу готов, там префабрик).
+    healthcheck:
+      start_period: 120s
 
   frontend:
     build:
