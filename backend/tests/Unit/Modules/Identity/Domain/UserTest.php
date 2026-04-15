@@ -7,6 +7,7 @@ use App\Modules\Identity\Domain\Entity\User;
 use App\Modules\Identity\Domain\Event\UserEmailVerified;
 use App\Modules\Identity\Domain\Event\UserRegistered;
 use App\Modules\Identity\Domain\Event\UserRoleAssigned;
+use App\Modules\Identity\Domain\Event\UserRoleRevoked;
 use App\Modules\Identity\Domain\ValueObject\Email;
 use App\Modules\Identity\Domain\ValueObject\FullName;
 use App\Modules\Identity\Domain\ValueObject\HashedPassword;
@@ -93,4 +94,54 @@ it('changes password hash', function (): void {
 
     $user->changePassword(new HashedPassword('new-hash'));
     expect($user->passwordHash()->value())->toBe('new-hash');
+});
+
+it('revokeRole удаляет роль и записывает UserRoleRevoked', function (): void {
+    $user = makeUser();
+    $user->pullDomainEvents();
+
+    $role = new Role(RoleId::generate(), RoleName::User);
+    $user->assignRole($role);
+    $user->pullDomainEvents(); // очищаем UserRoleAssigned
+
+    $user->revokeRole($role);
+
+    expect($user->roles())->toBe([]);
+    $events = $user->pullDomainEvents();
+    expect($events)->toHaveCount(1)
+        ->and($events[0])->toBeInstanceOf(UserRoleRevoked::class);
+});
+
+it('revokeRole для несуществующей роли — no-op, нет события', function (): void {
+    $user = makeUser();
+    $user->pullDomainEvents();
+
+    $role = new Role(RoleId::generate(), RoleName::User);
+    // роль не назначалась
+    $user->revokeRole($role);
+
+    expect($user->roles())->toBe([]);
+    expect($user->pullDomainEvents())->toBe([]);
+});
+
+it('changeName меняет FullName', function (): void {
+    $user = makeUser();
+    $user->pullDomainEvents();
+
+    $newName = new FullName('Jane', 'Smith', 'Ann');
+    $user->changeName($newName);
+
+    expect($user->fullName()->firstName())->toBe('Jane')
+        ->and($user->fullName()->lastName())->toBe('Smith')
+        ->and($user->fullName()->middleName())->toBe('Ann');
+});
+
+it('changeEmail меняет Email', function (): void {
+    $user = makeUser();
+    $user->pullDomainEvents();
+
+    $newEmail = new Email('new@example.com');
+    $user->changeEmail($newEmail);
+
+    expect($user->email()->value())->toBe('new@example.com');
 });

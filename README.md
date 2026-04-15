@@ -7,7 +7,7 @@
 - **Универсальное бронирование:**
   - Временные слоты (стрижка, консультация, аренда зала)
   - Штучные (номера в отеле, оборудование, билеты)
-- **Админка** на Filament 3
+- **Админка** на Filament 5
 - **Customer SPA** на Vue 3
 - **Оплата** (архитектура заложена, реализация в процессе)
 - **Конструктор лендингов** (отдельная репа как git submodule)
@@ -15,7 +15,7 @@
 ## Стек
 
 - **Backend:** Laravel 13 / PHP 8.4 / PostgreSQL 17 / Redis 7 / S3
-- **Admin:** Filament 3
+- **Admin:** Filament 5
 - **Frontend:** Vue 3 + TypeScript + Pinia + Vue Router + Tailwind CSS
 - **Infra:** Docker Compose, GitHub Actions
 

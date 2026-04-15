@@ -95,7 +95,7 @@ sh -c "npm install && npm run dev -- --host 0.0.0.0"
 | Mounts | Bind `./backend`, `./frontend` | Код запечён в образ PHP; фронт — собранный `dist/` volume |
 | Xdebug | Включён (триггер) | Нет |
 | Ports | Все наружу | Только 80/443 (nginx) |
-| User | root внутри php | `app` (non-root) |
+| User | `www-data` remap под host uid/gid через `APP_UID`/`APP_GID` | `app` (non-root, uid 1000) |
 | Opcache | validate_timestamps=1 | validate_timestamps=0, JIT |
 | Resources | Без лимитов | `deploy.resources.limits` |
 

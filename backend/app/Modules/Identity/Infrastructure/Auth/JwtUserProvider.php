@@ -12,7 +12,7 @@ final class JwtUserProvider implements UserProvider
 {
     public function retrieveById($identifier): ?Authenticatable
     {
-        return UserModel::with('roles')->find((string) $identifier);
+        return UserModel::with('domainRoles')->find((string) $identifier);
     }
 
     public function retrieveByToken($identifier, $token): ?Authenticatable
@@ -28,7 +28,7 @@ final class JwtUserProvider implements UserProvider
             return null;
         }
 
-        return UserModel::with('roles')->where('email', $credentials['email'])->first();
+        return UserModel::with('domainRoles')->where('email', $credentials['email'])->first();
     }
 
     public function validateCredentials(Authenticatable $user, array $credentials): bool

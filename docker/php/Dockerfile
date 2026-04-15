@@ -37,6 +37,16 @@ WORKDIR /var/www/html
 # --- Stage: dev (xdebug + dev ini) ---
 FROM base AS dev
 
+# Remap www-data to host uid/gid for bind-mount write compatibility.
+# APP_UID/APP_GID прокидываются Makefile через docker-compose build args (id -u / id -g).
+# Флаг -o допускает существующие uid/gid (на alpine gid 20 = dialout, gid 1000 может быть занят).
+ARG APP_UID=1000
+ARG APP_GID=1000
+RUN apk add --no-cache shadow \
+    && groupmod -o -g ${APP_GID} www-data \
+    && usermod -o -u ${APP_UID} -g ${APP_GID} www-data \
+    && apk del shadow
+
 RUN apk add --no-cache $PHPIZE_DEPS \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \

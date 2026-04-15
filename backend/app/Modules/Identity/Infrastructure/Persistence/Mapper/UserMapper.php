@@ -19,7 +19,7 @@ final class UserMapper
     {
         /** @var list<Role> $roles */
         $roles = [];
-        foreach ($model->roles as $roleModel) {
+        foreach ($model->domainRoles as $roleModel) {
             /** @var RoleModel $roleModel */
             $roles[] = RoleMapper::toDomain($roleModel);
         }

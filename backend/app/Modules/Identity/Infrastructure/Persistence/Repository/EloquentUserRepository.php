@@ -25,20 +25,20 @@ final class EloquentUserRepository implements UserRepositoryInterface
                 static fn (Role $r): string => $r->id()->toString(),
                 $user->roles(),
             );
-            $model->roles()->sync($roleIds);
+            $model->domainRoles()->sync($roleIds);
         });
     }
 
     public function findById(UserId $id): ?User
     {
-        $model = UserModel::with('roles')->find($id->toString());
+        $model = UserModel::with('domainRoles')->find($id->toString());
 
         return $model !== null ? UserMapper::toDomain($model) : null;
     }
 
     public function findByEmail(Email $email): ?User
     {
-        $model = UserModel::with('roles')->where('email', $email->value())->first();
+        $model = UserModel::with('domainRoles')->where('email', $email->value())->first();
 
         return $model !== null ? UserMapper::toDomain($model) : null;
     }
@@ -46,5 +46,10 @@ final class EloquentUserRepository implements UserRepositoryInterface
     public function existsByEmail(Email $email): bool
     {
         return UserModel::where('email', $email->value())->exists();
+    }
+
+    public function delete(User $user): void
+    {
+        UserModel::where('id', $user->id()->toString())->delete();
     }
 }
