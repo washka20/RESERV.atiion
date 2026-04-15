@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Identity\Interface\Filament\Resource;
 
 use App\Modules\Identity\Infrastructure\Persistence\Model\UserModel;
+use App\Modules\Identity\Interface\Filament\Action\AssignRoleAction;
+use App\Modules\Identity\Interface\Filament\Action\RevokeRoleAction;
 use App\Modules\Identity\Interface\Filament\Resource\UserResource\Pages;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -75,6 +77,8 @@ final class UserResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
+                AssignRoleAction::make(),
+                RevokeRoleAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
