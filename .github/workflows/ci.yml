@@ -11,6 +11,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-php-drift:
+    name: PHP extensions drift check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare Dockerfile base stage vs CI extensions
+        run: bash .github/scripts/check-php-extensions-drift.sh
+
   backend-lint:
     name: Backend lint (Pint)
     runs-on: ubuntu-latest
@@ -35,6 +43,7 @@ jobs:
 
   backend-test:
     name: Backend tests (Pest)
+    needs: check-php-drift
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -79,7 +88,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.4"
-          extensions: pdo_pgsql, redis, bcmath, intl, gd, zip, pcntl
+          extensions: pdo_pgsql, redis, bcmath, intl, gd, zip, opcache, pcntl
           tools: composer:v2
           coverage: none
       - name: Cache Composer
