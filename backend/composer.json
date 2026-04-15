@@ -38,7 +38,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "tests/Support/CatalogHelpers.php"
+        ]
     },
     "scripts": {
         "setup": [

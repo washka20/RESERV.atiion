@@ -2,79 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Modules\Catalog\Application\Query\ListServices\ListServicesHandler;
 use App\Modules\Catalog\Application\Query\ListServices\ListServicesQuery;
 use App\Modules\Catalog\Domain\Entity\Service;
 use App\Modules\Catalog\Domain\Repository\ServiceRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObject\CategoryId;
 use App\Modules\Catalog\Domain\ValueObject\Duration;
 use App\Modules\Catalog\Domain\ValueObject\ImagePath;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
-use App\Modules\Catalog\Domain\ValueObject\SubcategoryId;
-use App\Modules\Catalog\Infrastructure\Persistence\Model\CategoryModel;
-use App\Modules\Catalog\Infrastructure\Persistence\Model\SubcategoryModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
-
-function insertCategory(string $name = 'Beauty', int $sortOrder = 0): CategoryId
-{
-    $id = CategoryId::generate();
-    CategoryModel::query()->insert([
-        'id' => $id->toString(),
-        'name' => $name,
-        'slug' => strtolower($name).'-'.substr($id->toString(), 0, 8),
-        'sort_order' => $sortOrder,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    return $id;
-}
-
-function insertSubcategory(CategoryId $categoryId, string $name = 'Hair'): SubcategoryId
-{
-    $id = SubcategoryId::generate();
-    SubcategoryModel::query()->insert([
-        'id' => $id->toString(),
-        'category_id' => $categoryId->toString(),
-        'name' => $name,
-        'slug' => strtolower($name).'-'.substr($id->toString(), 0, 8),
-        'sort_order' => 0,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    return $id;
-}
-
-function saveTimeSlotService(
-    string $name,
-    CategoryId $categoryId,
-    int $priceCents = 100000,
-    ?SubcategoryId $subcategoryId = null,
-    string $description = 'desc',
-    int $duration = 60,
-): Service {
-    $service = Service::createTimeSlot(
-        ServiceId::generate(),
-        $name,
-        $description,
-        Money::fromCents($priceCents, 'RUB'),
-        Duration::ofMinutes($duration),
-        $categoryId,
-        $subcategoryId,
-    );
-    app(ServiceRepositoryInterface::class)->save($service);
-
-    return $service;
-}
-
-function listServicesHandler(): ListServicesHandler
-{
-    return app(ListServicesHandler::class);
-}
 
 it('returns all active services by default', function (): void {
     $catId = insertCategory();
