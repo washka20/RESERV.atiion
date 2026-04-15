@@ -65,7 +65,11 @@ Identity — управляет учётными записями, ролями,
 
 ## Filament Resources
 
-Нет. Будет `UserResource` для admin в Plan 5.
+- `Interface/Filament/Resource/UserResource` + Pages (ListUsers, CreateUser, EditUser)
+- `Interface/Filament/Action/AssignRoleAction`, `RevokeRoleAction`
+- `Interface/Filament/Listener/SyncSpatieRoleOn*` — синхронизация доменных ролей в Spatie
+
+Детали: [docs/modules/identity.md](../../../../docs/modules/identity.md).
 
 ## Dependencies
 

@@ -56,13 +56,30 @@ POST /api/v1/auth/register
   → 201 { success, data: { user, access_token, refresh_token, expires_in, token_type }, error: null, meta: null }
 ```
 
-## Admin preview (Plan 5)
+## Admin (Filament)
 
-В Plan 5 добавится:
-- Filament panel на `/admin` с session auth через guard `web`
-- `UserResource` (Filament) для CRUD пользователей
-- Policy на основе `RoleName::Admin|Manager`
-- Сохранение паттерна write-через-CommandBus: Filament's `handleRecordCreation` вызывает `RegisterUserHandler`
+### Resources
+- `UserResource` — CRUD пользователей. Read через `UserModel` Eloquent. Write через CommandBus (`RegisterUserCommand`, `UpdateUserCommand`).
+  - Form: email, password (hashed in domain), first/last/middle name, Spatie roles (read-only — изменение через `AssignRoleAction`)
+  - Table: id, email, full_name, roles (badge), email_verified_at, created_at
+  - Filters: по роли, по verified status
+
+### Actions
+- `AssignRoleAction` — диспатчит `AssignRoleCommand(userId, RoleName)`.
+- `RevokeRoleAction` — диспатчит `RevokeRoleCommand`.
+- Обе видны только пользователям с ролью `admin`.
+
+### Authorization
+- `UserModel::canAccessPanel()` — `admin` или `manager`
+- `UserResource::canViewAny` / `canEdit` — `admin` или `manager`
+- `UserResource::canCreate` / `canDelete` — только `admin`
+- Customer (Spatie роль `customer`) → 403 на `/admin`
+
+### Sync Identity ↔ Spatie
+- `SyncSpatieRoleOnUserRoleAssigned` слушает `UserRoleAssigned` → `$user->assignRole($roleName->value)`
+- `SyncSpatieRoleOnUserRoleRevoked` слушает `UserRoleRevoked` → `$user->removeRole(...)`
+- Domain `RoleName` enum (admin/manager/user) — source of truth; Spatie — mirror.
+- См. [ADR-010](../adr/010-spatie-permission-with-domain-roles.md).
 
 ## Ссылки
 
