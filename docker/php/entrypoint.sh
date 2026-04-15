@@ -16,6 +16,13 @@ set -e
 
 cd /var/www/html
 
+# Graceful-mode: если проекта нет (CI smoke build, пустой образ) — просто стартуем.
+# Entrypoint имеет смысл только когда bind-mount с backend/ примонтирован.
+if [ ! -f composer.json ]; then
+    echo "[entrypoint] no composer.json — skipping project bootstrap (CI/empty image mode)"
+    exec "$@"
+fi
+
 # 1. Vendor — первый запуск или nuke вручную
 if [ ! -f vendor/autoload.php ]; then
     echo "[entrypoint] vendor/autoload.php missing — composer install"
