@@ -5,7 +5,7 @@ declare(strict_types=1);
 arch('Domain слой не импортирует Illuminate')
     ->expect('App\Modules')
     ->toOnlyBeUsedIn('App\Modules')
-    ->ignoring(['App\Shared', 'App\Providers']);
+    ->ignoring(['App\Shared', 'App\Providers', 'Database\Seeders']);
 
 arch('Domain не использует Laravel фреймворк (Identity)')
     ->expect('App\Modules\Identity\Domain')

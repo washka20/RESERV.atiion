@@ -4,36 +4,43 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Modules\Identity\Application\Command\AssignRole\AssignRoleCommand;
+use App\Modules\Identity\Application\Command\RegisterUser\RegisterUserCommand;
+use App\Modules\Identity\Domain\ValueObject\RoleName;
+use App\Shared\Application\Bus\CommandBusInterface;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
+/**
+ * Создаёт администратора через CommandBus.
+ *
+ * Domain events публикуются handler-ами, Spatie sync listeners автоматически
+ * синхронизируют роли с таблицами Spatie Permission.
+ */
 final class AdminUserSeeder extends Seeder
 {
+    public function __construct(private readonly CommandBusInterface $commandBus) {}
+
     public function run(): void
     {
         $email = 'admin@example.com';
 
-        $exists = DB::table('users')->where('email', $email)->exists();
-
-        if (! $exists) {
-            DB::table('users')->insert([
-                'id' => (string) Str::uuid(),
-                'first_name' => 'Admin',
-                'last_name' => 'User',
-                'email' => $email,
-                'password' => Hash::make('password123'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        if (DB::table('users')->where('email', $email)->exists()) {
+            return;
         }
 
-        $userId = DB::table('users')->where('email', $email)->value('id');
+        $userId = $this->commandBus->dispatch(new RegisterUserCommand(
+            email: $email,
+            plaintextPassword: 'password123',
+            firstName: 'Admin',
+            lastName: 'User',
+        ));
 
-        DB::table('role_user')->updateOrInsert(
-            ['user_id' => $userId, 'role_id' => RoleSeeder::ADMIN_ID],
-        );
+        DB::table('users')->where('email', $email)->update(['email_verified_at' => now()]);
+
+        $this->commandBus->dispatch(new AssignRoleCommand(
+            userId: $userId->toString(),
+            roleName: RoleName::Admin,
+        ));
     }
 }
