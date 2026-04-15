@@ -6,4 +6,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
     require __DIR__.'/../app/Modules/Identity/Interface/Api/routes.php';
+    require __DIR__.'/../app/Modules/Catalog/Interface/Api/routes.php';
 });
