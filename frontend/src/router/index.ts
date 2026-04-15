@@ -17,6 +17,22 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/catalog',
+      name: 'catalog',
+      component: () => import('@/modules/catalog/views/CatalogView.vue'),
+    },
+    {
+      path: '/catalog/:id',
+      name: 'catalog-service',
+      component: () => import('@/modules/catalog/views/ServiceDetailView.vue'),
+      props: true,
+    },
+    {
+      path: '/booking/new',
+      name: 'booking-create',
+      component: () => import('@/modules/catalog/views/BookingStubView.vue'),
+    },
   ],
 })
 
