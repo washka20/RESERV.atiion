@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Modules\Catalog\Application\Query\ListServices\ListServicesQuery;
 use App\Modules\Catalog\Domain\Entity\Service;
 use App\Modules\Catalog\Domain\Repository\ServiceRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObject\Duration;
 use App\Modules\Catalog\Domain\ValueObject\ImagePath;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
