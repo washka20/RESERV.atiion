@@ -15,6 +15,9 @@ final class DatabaseSeeder extends Seeder
             SpatieRoleSeeder::class,
             AdminUserSeeder::class,
             TestUserSeeder::class,
+            CategoriesSeeder::class,
+            SubcategoriesSeeder::class,
+            ServicesSeeder::class,
         ]);
     }
 }

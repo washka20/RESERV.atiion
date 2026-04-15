@@ -33,14 +33,25 @@ export default defineConfig({
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.CI ? 'http://localhost:4173' : 'http://localhost:5173',
+    /**
+     * Base URL.
+     *
+     * Local: nginx (`make up`) на :8080 — обслуживает фронт + проксирует /api → php.
+     * CI: preview build на :4173 (потребует proxy в будущем, пока CI не цель).
+     */
+    baseURL: process.env.CI ? 'http://localhost:4173' : 'http://localhost:8080',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 
     /* Only on CI systems run the tests headless */
     headless: !!process.env.CI,
+
+    /**
+     * Проект использует kebab-case `data-test-id` (см. .claude/rules/testing.md
+     * и vue.md). Дефолтное значение Playwright — `data-testid`.
+     */
+    testIdAttribute: 'data-test-id',
   },
 
   /* Configure projects for major browsers */
@@ -96,15 +107,15 @@ export default defineConfig({
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',
 
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    /**
-     * Use the dev server by default for faster feedback loop.
-     * Use the preview server on CI for more realistic testing.
-     * Playwright will re-use the local server if there is already a dev-server running.
-     */
-    command: process.env.CI ? 'npm run preview' : 'npm run dev',
-    port: process.env.CI ? 4173 : 5173,
-    reuseExistingServer: !process.env.CI,
-  },
+  /**
+   * Локально стек поднимается через `make up` (nginx на :8080). Playwright не
+   * запускает webServer самостоятельно. На CI используется preview build.
+   */
+  webServer: process.env.CI
+    ? {
+        command: 'npm run preview',
+        port: 4173,
+        reuseExistingServer: false,
+      }
+    : undefined,
 })
