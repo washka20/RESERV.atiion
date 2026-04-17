@@ -28,6 +28,9 @@
 /backend/.phpunit.cache
 /backend/.phpunit.result.cache
 
+# Worktrees
+.worktrees/
+
 # Claude Code (project-local, НЕ коммитим)
 CLAUDE.md
 CLAUDE.local.md
