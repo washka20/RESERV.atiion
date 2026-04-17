@@ -11,7 +11,7 @@ use App\Modules\Booking\Domain\Specification\CancellationPolicy;
 use App\Modules\Booking\Domain\ValueObject\BookingId;
 use App\Modules\Booking\Domain\ValueObject\BookingType;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
-use Illuminate\Support\Facades\DB;
+use App\Shared\Application\Transaction\TransactionManagerInterface;
 use RuntimeException;
 
 /**
@@ -28,6 +28,7 @@ final readonly class CancelBookingHandler
         private TimeSlotRepositoryInterface $slotRepo,
         private CancellationPolicy $cancellationPolicy,
         private DomainEventDispatcherInterface $dispatcher,
+        private TransactionManagerInterface $tx,
     ) {}
 
     /**
@@ -45,7 +46,7 @@ final readonly class CancelBookingHandler
             throw new RuntimeException('Forbidden cancellation');
         }
 
-        DB::transaction(function () use ($booking): void {
+        $this->tx->transactional(function () use ($booking): void {
             $booking->cancel($this->cancellationPolicy);
             $this->bookingRepo->save($booking);
 

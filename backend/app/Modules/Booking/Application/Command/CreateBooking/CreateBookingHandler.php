@@ -24,7 +24,7 @@ use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Catalog\Domain\ValueObject\ServiceType;
 use App\Modules\Identity\Domain\ValueObject\UserId;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
-use Illuminate\Support\Facades\DB;
+use App\Shared\Application\Transaction\TransactionManagerInterface;
 use InvalidArgumentException;
 
 /**
@@ -44,6 +44,7 @@ final readonly class CreateBookingHandler
         private TimeSlotRepositoryInterface $slotRepo,
         private BookingPolicy $bookingPolicy,
         private DomainEventDispatcherInterface $dispatcher,
+        private TransactionManagerInterface $tx,
         private int $userBookingsLimit = 20,
     ) {}
 
@@ -54,7 +55,7 @@ final readonly class CreateBookingHandler
             throw ServiceNotFoundException::byId(new ServiceId($cmd->serviceId));
         }
 
-        return DB::transaction(function () use ($cmd, $service): BookingDTO {
+        return $this->tx->transactional(function () use ($cmd, $service): BookingDTO {
             $userId = new UserId($cmd->userId);
             $userActiveBookings = $this->bookingRepo->countActiveByUserId($userId);
 

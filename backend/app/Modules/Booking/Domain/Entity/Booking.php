@@ -60,7 +60,7 @@ final class Booking extends AggregateRoot
         Money $totalPrice,
         ?string $notes = null,
     ): self {
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $booking = new self(
             id: $id,
             userId: $userId,
@@ -93,7 +93,7 @@ final class Booking extends AggregateRoot
         Money $totalPrice,
         ?string $notes = null,
     ): self {
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $booking = new self(
             id: $id,
             userId: $userId,
@@ -173,7 +173,7 @@ final class Booking extends AggregateRoot
             );
         }
         $this->status = BookingStatus::CONFIRMED;
-        $this->updatedAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable;
         $this->recordEvent(new BookingConfirmed($this->id, $this->updatedAt));
     }
 
@@ -191,7 +191,7 @@ final class Booking extends AggregateRoot
             );
         }
         $this->status = BookingStatus::CANCELLED;
-        $this->updatedAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable;
         $this->recordEvent(new BookingCancelled($this->id, $this->type, $this->slotId, $this->updatedAt));
     }
 
@@ -208,7 +208,7 @@ final class Booking extends AggregateRoot
             );
         }
         $this->status = BookingStatus::COMPLETED;
-        $this->updatedAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable;
         $this->recordEvent(new BookingCompleted($this->id, $this->updatedAt));
     }
 

@@ -18,6 +18,7 @@ use App\Modules\Booking\Infrastructure\Persistence\Repository\EloquentBookingRep
 use App\Modules\Booking\Infrastructure\Persistence\Repository\EloquentTimeSlotRepository;
 use App\Modules\Catalog\Domain\Repository\ServiceRepositoryInterface;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
+use App\Shared\Application\Transaction\TransactionManagerInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -63,6 +64,7 @@ final class Provider extends ServiceProvider
                 $app->make(TimeSlotRepositoryInterface::class),
                 $app->make(BookingPolicy::class),
                 $app->make(DomainEventDispatcherInterface::class),
+                $app->make(TransactionManagerInterface::class),
                 userBookingsLimit: (int) config('booking.user_active_limit', 10),
             );
         });

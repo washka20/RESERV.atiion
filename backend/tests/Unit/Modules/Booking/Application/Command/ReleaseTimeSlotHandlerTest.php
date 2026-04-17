@@ -13,7 +13,7 @@ it('calls markAsFree with correct SlotId', function (): void {
     $slotRepo = mock(TimeSlotRepositoryInterface::class);
     $slotRepo->shouldReceive('markAsFree')
         ->once()
-        ->with(\Mockery::on(fn (SlotId $id): bool => $id->toString() === $slotId->toString()));
+        ->with(Mockery::on(fn (SlotId $id): bool => $id->toString() === $slotId->toString()));
 
     $handler = new ReleaseTimeSlotHandler($slotRepo);
     $handler->handle(new ReleaseTimeSlotCommand($slotId->toString()));

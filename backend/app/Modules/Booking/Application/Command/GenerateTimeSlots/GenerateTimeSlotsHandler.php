@@ -75,7 +75,7 @@ final readonly class GenerateTimeSlotsHandler
             $dateFrom,
             $dateTo,
             count($slots),
-            new DateTimeImmutable(),
+            new DateTimeImmutable,
         ));
 
         return count($slots);

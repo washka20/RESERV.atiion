@@ -39,7 +39,7 @@ final class WithinBookingWindow extends Specification
             return false;
         }
 
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $minDiff = ($startsAt->getTimestamp() - $now->getTimestamp()) / 60;
         if ($minDiff < $this->minAdvanceMinutes) {
             $this->recordFailure(sprintf(

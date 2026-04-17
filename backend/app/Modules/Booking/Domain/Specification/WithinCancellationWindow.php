@@ -36,7 +36,7 @@ final class WithinCancellationWindow extends Specification
             return false;
         }
 
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable;
         $hoursUntilStart = ($startsAt->getTimestamp() - $now->getTimestamp()) / 3600;
         if ($hoursUntilStart < $this->minHoursBefore) {
             $this->recordFailure(sprintf(

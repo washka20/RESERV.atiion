@@ -80,7 +80,7 @@ final class TimeSlot extends AggregateRoot
         }
         $this->isBooked = true;
         $this->bookingId = $bookingId;
-        $this->recordEvent(new TimeSlotReserved($this->id, $bookingId, new DateTimeImmutable()));
+        $this->recordEvent(new TimeSlotReserved($this->id, $bookingId, new DateTimeImmutable));
     }
 
     /**
@@ -90,6 +90,6 @@ final class TimeSlot extends AggregateRoot
     {
         $this->isBooked = false;
         $this->bookingId = null;
-        $this->recordEvent(new TimeSlotReleased($this->id, new DateTimeImmutable()));
+        $this->recordEvent(new TimeSlotReleased($this->id, new DateTimeImmutable));
     }
 }

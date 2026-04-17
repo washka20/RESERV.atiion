@@ -19,11 +19,15 @@ use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Identity\Domain\ValueObject\UserId;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
-use Illuminate\Support\Facades\DB;
+use App\Shared\Application\Transaction\TransactionManagerInterface;
 
-beforeEach(function (): void {
-    DB::shouldReceive('transaction')->andReturnUsing(fn (callable $cb) => $cb());
-});
+function passthroughTxForCancel(): TransactionManagerInterface
+{
+    $tx = mock(TransactionManagerInterface::class);
+    $tx->shouldReceive('transactional')->andReturnUsing(fn (callable $cb) => $cb());
+
+    return $tx;
+}
 
 function makeTimeSlotBookingForCancel(UserId $userId, SlotId $slotId): Booking
 {
@@ -65,7 +69,7 @@ it('cancels TIME_SLOT booking, releases slot, dispatches events', function (): v
     $slotRepo = mock(TimeSlotRepositoryInterface::class);
     $slotRepo->shouldReceive('markAsFree')
         ->once()
-        ->with(\Mockery::on(fn (SlotId $id): bool => $id->toString() === $slotId->toString()));
+        ->with(Mockery::on(fn (SlotId $id): bool => $id->toString() === $slotId->toString()));
 
     $policy = mock(CancellationPolicy::class);
     $policy->shouldReceive('isSatisfiedBy')->andReturnTrue();
@@ -73,7 +77,7 @@ it('cancels TIME_SLOT booking, releases slot, dispatches events', function (): v
     $dispatcher = mock(DomainEventDispatcherInterface::class);
     $dispatcher->shouldReceive('dispatchAll')->once();
 
-    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTxForCancel());
     $handler->handle(new CancelBookingCommand(
         bookingId: $booking->id->toString(),
         actorUserId: $userId->toString(),
@@ -88,7 +92,7 @@ it('throws BookingNotFoundException when booking is missing', function (): void 
     $policy = mock(CancellationPolicy::class);
     $dispatcher = mock(DomainEventDispatcherInterface::class);
 
-    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTxForCancel());
     $handler->handle(new CancelBookingCommand(
         bookingId: BookingId::generate()->toString(),
         actorUserId: UserId::generate()->toString(),
@@ -111,7 +115,7 @@ it('throws CancellationNotAllowedException when policy fails', function (): void
 
     $dispatcher = mock(DomainEventDispatcherInterface::class);
 
-    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTxForCancel());
     $handler->handle(new CancelBookingCommand(
         bookingId: $booking->id->toString(),
         actorUserId: $userId->toString(),
@@ -131,7 +135,7 @@ it('throws RuntimeException when non-admin user tries to cancel someone elses bo
     $policy = mock(CancellationPolicy::class);
     $dispatcher = mock(DomainEventDispatcherInterface::class);
 
-    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTxForCancel());
     $handler->handle(new CancelBookingCommand(
         bookingId: $booking->id->toString(),
         actorUserId: $otherUserId->toString(),
@@ -156,7 +160,7 @@ it('does not call markAsFree for QUANTITY bookings', function (): void {
     $dispatcher = mock(DomainEventDispatcherInterface::class);
     $dispatcher->shouldReceive('dispatchAll')->once();
 
-    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTxForCancel());
     $handler->handle(new CancelBookingCommand(
         bookingId: $booking->id->toString(),
         actorUserId: $userId->toString(),
@@ -181,7 +185,7 @@ it('allows admin to cancel any booking', function (): void {
     $dispatcher = mock(DomainEventDispatcherInterface::class);
     $dispatcher->shouldReceive('dispatchAll')->once();
 
-    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CancelBookingHandler($bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTxForCancel());
     $handler->handle(new CancelBookingCommand(
         bookingId: $booking->id->toString(),
         actorUserId: $adminUserId->toString(),

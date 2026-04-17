@@ -17,14 +17,14 @@ it('generates 6 slots across 2 days with 10:00-13:00 window and 60min duration',
     $slotRepo = mock(TimeSlotRepositoryInterface::class);
     $slotRepo->shouldReceive('saveMany')
         ->once()
-        ->with(\Mockery::on(function (array $slots) use (&$capturedSlots): bool {
+        ->with(Mockery::on(function (array $slots) use (&$capturedSlots): bool {
             $capturedSlots = $slots;
 
             return true;
         }));
 
     $dispatcher = mock(DomainEventDispatcherInterface::class);
-    $dispatcher->shouldReceive('dispatch')->once()->with(\Mockery::type(TimeSlotGenerated::class));
+    $dispatcher->shouldReceive('dispatch')->once()->with(Mockery::type(TimeSlotGenerated::class));
 
     $handler = new GenerateTimeSlotsHandler($slotRepo, $dispatcher);
     $count = $handler->handle(new GenerateTimeSlotsCommand(
@@ -54,7 +54,7 @@ it('excludes specific weekdays from generation', function (): void {
     $slotRepo = mock(TimeSlotRepositoryInterface::class);
     $slotRepo->shouldReceive('saveMany')
         ->once()
-        ->with(\Mockery::on(function (array $slots) use (&$capturedSlots): bool {
+        ->with(Mockery::on(function (array $slots) use (&$capturedSlots): bool {
             $capturedSlots = $slots;
 
             return true;
@@ -93,7 +93,7 @@ it('respects breaks between slots', function (): void {
     $slotRepo = mock(TimeSlotRepositoryInterface::class);
     $slotRepo->shouldReceive('saveMany')
         ->once()
-        ->with(\Mockery::on(function (array $slots) use (&$capturedSlots): bool {
+        ->with(Mockery::on(function (array $slots) use (&$capturedSlots): bool {
             $capturedSlots = $slots;
 
             return true;
@@ -129,7 +129,7 @@ it('calls saveMany exactly once with all generated slots', function (): void {
     $slotRepo = mock(TimeSlotRepositoryInterface::class);
     $slotRepo->shouldReceive('saveMany')
         ->once()
-        ->with(\Mockery::on(fn (array $slots): bool => count($slots) === 4));
+        ->with(Mockery::on(fn (array $slots): bool => count($slots) === 4));
 
     $dispatcher = mock(DomainEventDispatcherInterface::class);
     $dispatcher->shouldReceive('dispatch')->once();

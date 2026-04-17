@@ -20,12 +20,15 @@ use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Identity\Domain\ValueObject\UserId;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
-use Illuminate\Support\Facades\DB;
+use App\Shared\Application\Transaction\TransactionManagerInterface;
 
-beforeEach(function (): void {
-    // DB::transaction($cb) — стабим так чтобы просто выполнял колбек
-    DB::shouldReceive('transaction')->andReturnUsing(fn (callable $cb) => $cb());
-});
+function passthroughTx(): TransactionManagerInterface
+{
+    $tx = mock(TransactionManagerInterface::class);
+    $tx->shouldReceive('transactional')->andReturnUsing(fn (callable $cb) => $cb());
+
+    return $tx;
+}
 
 function makeTimeSlotServiceForCreate(ServiceId $id): Service
 {
@@ -81,7 +84,7 @@ it('creates a TIME_SLOT booking via happy path', function (): void {
     $dispatcher = mock(DomainEventDispatcherInterface::class);
     $dispatcher->shouldReceive('dispatchAll')->once();
 
-    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTx());
     $dto = $handler->handle(new CreateBookingCommand(
         userId: UserId::generate()->toString(),
         serviceId: $serviceId->toString(),
@@ -121,7 +124,7 @@ it('fails TIME_SLOT booking when markAsBooked returns false (race condition)', f
 
     $dispatcher = mock(DomainEventDispatcherInterface::class);
 
-    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTx());
     $handler->handle(new CreateBookingCommand(
         userId: UserId::generate()->toString(),
         serviceId: $serviceId->toString(),
@@ -149,7 +152,7 @@ it('creates a QUANTITY booking via happy path', function (): void {
     $dispatcher = mock(DomainEventDispatcherInterface::class);
     $dispatcher->shouldReceive('dispatchAll')->once();
 
-    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTx());
     $dto = $handler->handle(new CreateBookingCommand(
         userId: UserId::generate()->toString(),
         serviceId: $serviceId->toString(),
@@ -178,7 +181,7 @@ it('fails QUANTITY booking when insufficient quantity', function (): void {
     $policy = mock(BookingPolicy::class);
     $dispatcher = mock(DomainEventDispatcherInterface::class);
 
-    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher);
+    $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher, passthroughTx());
     $handler->handle(new CreateBookingCommand(
         userId: UserId::generate()->toString(),
         serviceId: $serviceId->toString(),
