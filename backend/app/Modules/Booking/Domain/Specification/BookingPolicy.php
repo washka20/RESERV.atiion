@@ -13,7 +13,7 @@ use App\Shared\Domain\Specification\Specification;
  * Комбинирует WithinBookingWindow AND UserNotExceedsLimit.
  * UserNotExceedsLimit требует контекст с userActiveBookings — подаётся через isSatisfiedByWithContext.
  */
-final class BookingPolicy extends Specification
+class BookingPolicy extends Specification
 {
     public function __construct(
         private readonly WithinBookingWindow $withinWindow,
