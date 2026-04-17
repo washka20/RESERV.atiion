@@ -27,7 +27,7 @@ beforeEach(function (): void {
     DB::shouldReceive('transaction')->andReturnUsing(fn (callable $cb) => $cb());
 });
 
-function makeTimeSlotService(ServiceId $id): Service
+function makeTimeSlotServiceForCreate(ServiceId $id): Service
 {
     return Service::createTimeSlot(
         id: $id,
@@ -40,7 +40,7 @@ function makeTimeSlotService(ServiceId $id): Service
     );
 }
 
-function makeQuantityService(ServiceId $id, int $total = 10): Service
+function makeQuantityServiceForCreate(ServiceId $id, int $total = 10): Service
 {
     return Service::createQuantity(
         id: $id,
@@ -62,7 +62,7 @@ it('creates a TIME_SLOT booking via happy path', function (): void {
         new DateTimeImmutable('+2 days 10:00'),
         new DateTimeImmutable('+2 days 11:00'),
     );
-    $service = makeTimeSlotService($serviceId);
+    $service = makeTimeSlotServiceForCreate($serviceId);
 
     $serviceRepo = mock(ServiceRepositoryInterface::class);
     $serviceRepo->shouldReceive('findById')->andReturn($service);
@@ -103,7 +103,7 @@ it('fails TIME_SLOT booking when markAsBooked returns false (race condition)', f
         new DateTimeImmutable('+2 days 10:00'),
         new DateTimeImmutable('+2 days 11:00'),
     );
-    $service = makeTimeSlotService($serviceId);
+    $service = makeTimeSlotServiceForCreate($serviceId);
 
     $serviceRepo = mock(ServiceRepositoryInterface::class);
     $serviceRepo->shouldReceive('findById')->andReturn($service);
@@ -128,7 +128,7 @@ it('fails TIME_SLOT booking when markAsBooked returns false (race condition)', f
 
 it('creates a QUANTITY booking via happy path', function (): void {
     $serviceId = ServiceId::generate();
-    $service = makeQuantityService($serviceId, total: 10);
+    $service = makeQuantityServiceForCreate($serviceId, total: 10);
 
     $serviceRepo = mock(ServiceRepositoryInterface::class);
     $serviceRepo->shouldReceive('findById')->andReturn($service);
@@ -162,7 +162,7 @@ it('creates a QUANTITY booking via happy path', function (): void {
 
 it('fails QUANTITY booking when insufficient quantity', function (): void {
     $serviceId = ServiceId::generate();
-    $service = makeQuantityService($serviceId, total: 10);
+    $service = makeQuantityServiceForCreate($serviceId, total: 10);
 
     $serviceRepo = mock(ServiceRepositoryInterface::class);
     $serviceRepo->shouldReceive('findById')->andReturn($service);
