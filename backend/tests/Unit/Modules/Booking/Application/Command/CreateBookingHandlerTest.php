@@ -110,12 +110,15 @@ it('fails TIME_SLOT booking when markAsBooked returns false (race condition)', f
 
     $bookingRepo = mock(BookingRepositoryInterface::class);
     $bookingRepo->shouldReceive('countActiveByUserId')->andReturn(0);
+    $bookingRepo->shouldReceive('save')->once();
 
     $slotRepo = mock(TimeSlotRepositoryInterface::class);
     $slotRepo->shouldReceive('findById')->andReturn($slot);
     $slotRepo->shouldReceive('markAsBooked')->once()->andReturnFalse();
 
     $policy = mock(BookingPolicy::class);
+    $policy->shouldReceive('isSatisfiedByWithContext')->andReturnTrue();
+
     $dispatcher = mock(DomainEventDispatcherInterface::class);
 
     $handler = new CreateBookingHandler($serviceRepo, $bookingRepo, $slotRepo, $policy, $dispatcher);

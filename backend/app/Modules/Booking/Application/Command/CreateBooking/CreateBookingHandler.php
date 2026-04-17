@@ -71,6 +71,13 @@ final readonly class CreateBookingHandler
             }
 
             $this->bookingRepo->save($booking);
+
+            if ($service->type() === ServiceType::TIME_SLOT && $booking->slotId !== null) {
+                if (! $this->slotRepo->markAsBooked($booking->slotId, $booking->id)) {
+                    throw SlotUnavailableException::forSlotId($booking->slotId);
+                }
+            }
+
             $this->dispatcher->dispatchAll($booking->pullDomainEvents());
 
             return BookingDTO::fromEntity($booking);
@@ -92,13 +99,8 @@ final readonly class CreateBookingHandler
             throw SlotUnavailableException::forSlotId($slotId);
         }
 
-        $bookingId = BookingId::generate();
-        if (! $this->slotRepo->markAsBooked($slotId, $bookingId)) {
-            throw SlotUnavailableException::forSlotId($slotId);
-        }
-
         return Booking::createTimeSlotBooking(
-            id: $bookingId,
+            id: BookingId::generate(),
             userId: new UserId($cmd->userId),
             serviceId: $service->id(),
             slotId: $slotId,

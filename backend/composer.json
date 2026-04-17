@@ -40,7 +40,8 @@
             "Tests\\": "tests/"
         },
         "files": [
-            "tests/Support/CatalogHelpers.php"
+            "tests/Support/CatalogHelpers.php",
+            "tests/Support/BookingHelpers.php"
         ]
     },
     "scripts": {
