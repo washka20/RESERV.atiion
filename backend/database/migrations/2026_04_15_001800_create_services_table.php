@@ -29,23 +29,21 @@ return new class extends Migration
             $t->index('type');
         });
 
-        if (DB::getDriverName() === 'pgsql') {
-            DB::statement(<<<'SQL'
-                ALTER TABLE services
-                ADD CONSTRAINT services_type_check CHECK (type IN ('time_slot','quantity')),
-                ADD CONSTRAINT services_time_slot_has_duration CHECK (
-                    type <> 'time_slot' OR duration_minutes IS NOT NULL
-                ),
-                ADD CONSTRAINT services_quantity_has_total CHECK (
-                    type <> 'quantity' OR total_quantity IS NOT NULL
-                ),
-                ADD CONSTRAINT services_price_non_negative CHECK (price_amount >= 0)
-            SQL);
+        DB::statement(<<<'SQL'
+            ALTER TABLE services
+            ADD CONSTRAINT services_type_check CHECK (type IN ('time_slot','quantity')),
+            ADD CONSTRAINT services_time_slot_has_duration CHECK (
+                type <> 'time_slot' OR duration_minutes IS NOT NULL
+            ),
+            ADD CONSTRAINT services_quantity_has_total CHECK (
+                type <> 'quantity' OR total_quantity IS NOT NULL
+            ),
+            ADD CONSTRAINT services_price_non_negative CHECK (price_amount >= 0)
+        SQL);
 
-            DB::statement(
-                'CREATE INDEX services_is_active_idx ON services (is_active) WHERE is_active = true'
-            );
-        }
+        DB::statement(
+            'CREATE INDEX services_is_active_idx ON services (is_active) WHERE is_active = true'
+        );
     }
 
     public function down(): void

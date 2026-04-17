@@ -17,20 +17,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 /*
- * Concurrency-контракты Booking.
+ * Concurrency-контракты Booking — против реального PostgreSQL.
  *
  * Ключевые защиты:
  * 1. EloquentTimeSlotRepository::markAsBooked — атомарный UPDATE ... WHERE is_booked=false.
- *    Conditional UPDATE в любой СУБД атомарен для одной строки — второй вызов с тем же slot_id
+ *    Conditional UPDATE атомарен для одной строки; второй вызов с тем же slot_id
  *    после успешного первого затронет 0 строк и вернёт false.
  * 2. EloquentBookingRepository::sumActiveQuantityOverlapping(lockForUpdate: true) —
- *    под pgsql держит row-lock на активных booking'ах в диапазоне до commit транзакции.
- *    SQLite: lockForUpdate — no-op (используется как интеграционный smoke, реальная
- *    защита валидируется в CI против PostgreSQL).
+ *    держит row-lock на активных booking'ах в диапазоне до commit транзакции.
  *
- * Эти тесты проверяют контракты на sequential-вызовах в одном соединении. Полный stress-test
- * с параллельными процессами (pcntl_fork) требует многосоединительной среды и входит в
- * Plan 11 (testcontainer с PostgreSQL).
+ * Тесты проверяют контракты sequential-вызовами в одном соединении. Полноценный stress-тест
+ * с параллельными процессами (pcntl_fork или отдельные HTTP-воркеры) — отдельная работа
+ * в рамках performance/load-тестирования, не в unit/feature сьюте.
  */
 
 it('markAsBooked is atomic — subsequent calls on the same slot return false', function (): void {

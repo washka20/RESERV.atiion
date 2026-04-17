@@ -66,6 +66,7 @@ final class EloquentBookingRepository implements BookingRepositoryInterface
     public function sumActiveQuantityOverlapping(ServiceId $serviceId, DateRange $range, bool $lockForUpdate = false): int
     {
         $query = BookingModel::query()
+            ->select(['id', 'quantity'])
             ->where('service_id', $serviceId->toString())
             ->where('type', 'quantity')
             ->whereIn('status', ['pending', 'confirmed'])
@@ -73,9 +74,13 @@ final class EloquentBookingRepository implements BookingRepositoryInterface
             ->where('check_out', '>', $range->checkIn->format('Y-m-d'));
 
         if ($lockForUpdate) {
+            // PG запрещает SELECT SUM(...) FOR UPDATE — row-lock несовместим с агрегацией.
+            // Берём строки с lock, суммируем в PHP: lock держится до конца транзакции.
             $query->lockForUpdate();
         }
 
-        return (int) $query->sum('quantity');
+        $rows = $query->get();
+
+        return (int) $rows->sum('quantity');
     }
 }

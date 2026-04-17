@@ -21,14 +21,18 @@
         </include>
     </source>
     <php>
+        <!--
+        Testing environment defaults. DB_* приходят из окружения:
+          - локально — docker-compose.test.yml (postgres-test testcontainer)
+          - CI — GH Actions services + job env в .github/workflows/ci.yml
+        Никакого SQLite: тесты идут против реальной PostgreSQL 17, как в prod.
+        -->
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:IKG+RgNgxAV0Dv7UiB37cnnBOBAwEV2CJOTLb8eLFoU="/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
-        <env name="DB_URL" value=""/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
@@ -36,6 +40,5 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <env name="JWT_SECRET" value="testing-secret-key-at-least-32-chars-long-for-sha256"/>
-        <env name="APP_KEY" value="base64:IKG+RgNgxAV0Dv7UiB37cnnBOBAwEV2CJOTLb8eLFoU="/>
     </php>
 </phpunit>

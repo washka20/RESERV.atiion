@@ -24,10 +24,8 @@ return new class extends Migration
             $table->index('is_booked');
         });
 
-        if (DB::getDriverName() === 'pgsql') {
-            DB::statement('ALTER TABLE time_slots ADD CONSTRAINT time_slots_range_chk CHECK (end_at > start_at)');
-            DB::statement('CREATE INDEX time_slots_available_idx ON time_slots (service_id, start_at) WHERE is_booked = false');
-        }
+        DB::statement('ALTER TABLE time_slots ADD CONSTRAINT time_slots_range_chk CHECK (end_at > start_at)');
+        DB::statement('CREATE INDEX time_slots_available_idx ON time_slots (service_id, start_at) WHERE is_booked = false');
     }
 
     public function down(): void

@@ -37,44 +37,42 @@ return new class extends Migration
             $table->index('slot_id');
         });
 
-        if (DB::getDriverName() === 'pgsql') {
-            DB::statement("
-                ALTER TABLE bookings ADD CONSTRAINT bookings_type_chk
-                CHECK (type IN ('time_slot', 'quantity'))
-            ");
-            DB::statement("
-                ALTER TABLE bookings ADD CONSTRAINT bookings_status_chk
-                CHECK (status IN ('pending', 'confirmed', 'cancelled', 'completed'))
-            ");
-            DB::statement("
-                ALTER TABLE bookings ADD CONSTRAINT bookings_time_slot_fields_chk
-                CHECK (
-                    type <> 'time_slot' OR (
-                        slot_id IS NOT NULL
-                        AND start_at IS NOT NULL
-                        AND end_at IS NOT NULL
-                        AND end_at > start_at
-                    )
+        DB::statement("
+            ALTER TABLE bookings ADD CONSTRAINT bookings_type_chk
+            CHECK (type IN ('time_slot', 'quantity'))
+        ");
+        DB::statement("
+            ALTER TABLE bookings ADD CONSTRAINT bookings_status_chk
+            CHECK (status IN ('pending', 'confirmed', 'cancelled', 'completed'))
+        ");
+        DB::statement("
+            ALTER TABLE bookings ADD CONSTRAINT bookings_time_slot_fields_chk
+            CHECK (
+                type <> 'time_slot' OR (
+                    slot_id IS NOT NULL
+                    AND start_at IS NOT NULL
+                    AND end_at IS NOT NULL
+                    AND end_at > start_at
                 )
-            ");
-            DB::statement("
-                ALTER TABLE bookings ADD CONSTRAINT bookings_quantity_fields_chk
-                CHECK (
-                    type <> 'quantity' OR (
-                        check_in IS NOT NULL
-                        AND check_out IS NOT NULL
-                        AND check_out > check_in
-                        AND quantity IS NOT NULL
-                        AND quantity > 0
-                    )
+            )
+        ");
+        DB::statement("
+            ALTER TABLE bookings ADD CONSTRAINT bookings_quantity_fields_chk
+            CHECK (
+                type <> 'quantity' OR (
+                    check_in IS NOT NULL
+                    AND check_out IS NOT NULL
+                    AND check_out > check_in
+                    AND quantity IS NOT NULL
+                    AND quantity > 0
                 )
-            ");
-            DB::statement("
-                CREATE INDEX bookings_quantity_active_idx
-                ON bookings (service_id, status, check_in, check_out)
-                WHERE type = 'quantity' AND status IN ('pending', 'confirmed')
-            ");
-        }
+            )
+        ");
+        DB::statement("
+            CREATE INDEX bookings_quantity_active_idx
+            ON bookings (service_id, status, check_in, check_out)
+            WHERE type = 'quantity' AND status IN ('pending', 'confirmed')
+        ");
     }
 
     public function down(): void
