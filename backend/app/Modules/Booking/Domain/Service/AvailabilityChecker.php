@@ -9,12 +9,16 @@ use App\Modules\Catalog\Domain\ValueObject\ServiceType;
 
 /**
  * Диспатчер стратегий доступности. Выбирает стратегию по ServiceType.
+ *
+ * Не final + не readonly на уровне класса — нужно для мокирования в unit-тестах
+ * вышестоящих handler-ов (Mockery не умеет расширять readonly классы).
+ * Свойства всё равно readonly — immutability сохраняется.
  */
-final readonly class AvailabilityChecker
+class AvailabilityChecker
 {
     public function __construct(
-        private TimeSlotAvailabilityStrategy $timeSlotStrategy,
-        private QuantityAvailabilityStrategy $quantityStrategy,
+        private readonly TimeSlotAvailabilityStrategy $timeSlotStrategy,
+        private readonly QuantityAvailabilityStrategy $quantityStrategy,
     ) {}
 
     /**
