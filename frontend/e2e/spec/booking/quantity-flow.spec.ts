@@ -124,6 +124,6 @@ test.describe('Booking flow — QUANTITY', () => {
     await bookingPage.setDateRange('2026-05-15', '2026-05-10')
     await bookingPage.setQuantity(1)
 
-    await bookingPage.expectSubmitDisabled()
+    await expect(bookingPage.submitBtn).toBeDisabled()
   })
 })
