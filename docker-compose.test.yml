@@ -1,0 +1,58 @@
+name: reservatiion-test
+
+services:
+  postgres-test:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: reservatiion_test
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+    tmpfs:
+      - /var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_TEST_PORT:-54329}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d reservatiion_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  php-test:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: base
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    environment:
+      APP_ENV: testing
+      APP_KEY: base64:IKG+RgNgxAV0Dv7UiB37cnnBOBAwEV2CJOTLb8eLFoU=
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres-test
+      DB_PORT: 5432
+      DB_DATABASE: reservatiion_test
+      DB_USERNAME: app
+      DB_PASSWORD: secret
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+      MAIL_MAILER: array
+      BROADCAST_CONNECTION: "null"
+      JWT_SECRET: "testing-secret-key-at-least-32-chars-long-for-sha256"
+    volumes:
+      - ./backend:/var/www/html
+    working_dir: /var/www/html
+    user: "${APP_UID:-1000}:${APP_GID:-1000}"
+    # sh-обёртка: гарантируем .env (vlucas/phpdotenv спамит warning'ами без него),
+    # прогоняем миграции, затем передаём остальные аргументы в pest.
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        touch .env
+        php artisan migrate --no-interaction --force --quiet
+        exec php -d memory_limit=1G vendor/bin/pest "$$@"
+      - --
+    command: []

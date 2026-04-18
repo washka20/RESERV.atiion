@@ -18,6 +18,8 @@ final class DatabaseSeeder extends Seeder
             CategoriesSeeder::class,
             SubcategoriesSeeder::class,
             ServicesSeeder::class,
+            Booking\TimeSlotsSeeder::class,
+            Booking\BookingsSeeder::class,
         ]);
     }
 }

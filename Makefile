@@ -11,10 +11,11 @@ export APP_GID
 COMPOSE_DEV     := docker compose -f docker-compose.yml -f docker-compose.dev.yml
 COMPOSE_STAGING := docker compose -f docker-compose.yml -f docker-compose.staging.yml
 COMPOSE_PROD    := docker compose -f docker-compose.yml -f docker-compose.prod.yml
+COMPOSE_TEST    := docker compose -f docker-compose.test.yml
 
 .PHONY: help up down restart logs ps shell shell-frontend \
         build rebuild fix-perms \
-        test test-backend test-frontend test-arch test-e2e \
+        test test-backend test-backend-down test-frontend test-arch test-e2e \
         lint lint-backend lint-frontend lint-fix \
         migrate seed fresh \
         composer-install npm-install build-frontend \
@@ -68,16 +69,22 @@ shell-frontend:
 	$(COMPOSE_DEV) exec frontend sh
 
 # --- Tests ---
+# Backend тесты идут против реального PostgreSQL (docker-compose.test.yml) —
+# SQLite не поддерживает partial indexes / CHECK constraints / FOR UPDATE, которые мы реально
+# используем в prod, и на SQLite тесты дают ложное "зелёно". Одна СУБД везде.
 test: test-backend test-frontend
 
 test-backend:
-	$(COMPOSE_DEV) exec -T php ./vendor/bin/pest
+	$(COMPOSE_TEST) run --rm php-test
+
+test-backend-down:
+	$(COMPOSE_TEST) down -v
 
 test-frontend:
 	$(COMPOSE_DEV) exec -T frontend npm run test:unit
 
 test-arch:
-	$(COMPOSE_DEV) exec -T php ./vendor/bin/pest --group=architecture
+	$(COMPOSE_TEST) run --rm --entrypoint sh php-test -c 'touch .env && php artisan migrate --no-interaction --force --quiet && exec php -d memory_limit=1G vendor/bin/pest tests/Architecture'
 
 test-e2e:
 	$(COMPOSE_DEV) exec -T frontend npx playwright test
