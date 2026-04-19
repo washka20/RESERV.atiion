@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Modules\Identity\Domain\Entity\Membership;
 use App\Modules\Identity\Domain\Event\MembershipGranted;
+use App\Modules\Identity\Domain\Event\MembershipRevoked;
 use App\Modules\Identity\Domain\Event\MembershipRoleChanged;
 use App\Modules\Identity\Domain\ValueObject\MembershipId;
 use App\Modules\Identity\Domain\ValueObject\MembershipRole;
@@ -89,6 +90,20 @@ it('bumps updatedAt when role changes', function (): void {
     $membership->changeRole(MembershipRole::STAFF);
 
     expect($membership->updatedAt())->not->toEqual($before);
+});
+
+it('revoke records MembershipRevoked event with entity ids', function (): void {
+    $membership = makeMembership(MembershipRole::ADMIN);
+    $membership->pullDomainEvents();
+
+    $membership->revoke();
+
+    $events = $membership->pullDomainEvents();
+    expect($events)->toHaveCount(1);
+    expect($events[0])->toBeInstanceOf(MembershipRevoked::class);
+    expect($events[0]->membershipId()->equals($membership->id))->toBeTrue();
+    expect($events[0]->userId()->equals($membership->userId))->toBeTrue();
+    expect($events[0]->organizationId()->equals($membership->organizationId))->toBeTrue();
 });
 
 it('reconstitute does not record domain events', function (): void {

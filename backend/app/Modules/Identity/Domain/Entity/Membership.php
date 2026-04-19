@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Identity\Domain\Entity;
 
 use App\Modules\Identity\Domain\Event\MembershipGranted;
+use App\Modules\Identity\Domain\Event\MembershipRevoked;
 use App\Modules\Identity\Domain\Event\MembershipRoleChanged;
 use App\Modules\Identity\Domain\ValueObject\MembershipId;
 use App\Modules\Identity\Domain\ValueObject\MembershipRole;
@@ -88,6 +89,22 @@ final class Membership extends AggregateRoot
             $createdAt,
             $updatedAt,
         );
+    }
+
+    /**
+     * Записывает MembershipRevoked event. Вызывается handler'ом перед delete
+     * в репозитории, чтобы event попал в pullDomainEvents и был opublikован.
+     * Состояние entity после revoke логически "удалено" — вызывающий код
+     * не должен его использовать дальше.
+     */
+    public function revoke(): void
+    {
+        $this->recordEvent(new MembershipRevoked(
+            $this->id,
+            $this->userId,
+            $this->organizationId,
+            new DateTimeImmutable,
+        ));
     }
 
     /**
