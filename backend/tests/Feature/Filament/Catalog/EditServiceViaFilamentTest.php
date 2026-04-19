@@ -28,6 +28,7 @@ it('admin edits service via filament form', function (): void {
     actingAs($admin, 'web');
 
     $categoryId = DB::table('categories')->value('id');
+    $organizationId = insertOrganizationForTests('edit-filament')->toString();
     $bus = app(CommandBusInterface::class);
 
     /** @var string $serviceId */
@@ -38,6 +39,7 @@ it('admin edits service via filament form', function (): void {
         priceCurrency: 'RUB',
         type: 'time_slot',
         categoryId: $categoryId,
+        organizationId: $organizationId,
         durationMinutes: 30,
     ));
 

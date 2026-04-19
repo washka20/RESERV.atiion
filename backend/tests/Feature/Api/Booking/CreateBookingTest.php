@@ -105,6 +105,7 @@ it('creates a QUANTITY booking — 201, DB row present', function (): void {
         10,
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($entity);
 
@@ -154,6 +155,7 @@ it('returns 409 BOOKING_INSUFFICIENT_QUANTITY when capacity is consumed', functi
         3,
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($entity);
 

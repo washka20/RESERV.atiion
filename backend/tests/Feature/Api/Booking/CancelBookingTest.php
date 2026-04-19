@@ -75,6 +75,7 @@ it('cancels a QUANTITY booking without touching any time slot', function (): voi
         10,
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($entity);
 

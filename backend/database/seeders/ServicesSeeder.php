@@ -15,13 +15,23 @@ use RuntimeException;
  *
  * Цены хранятся в копейках (amount × 100). Зависит от CategoriesSeeder
  * и SubcategoriesSeeder — идентификаторы берутся lookup-ом по slug.
+ *
+ * Организация-владелец: создаётся inline platform-admin org (fixed UUID),
+ * пока OrganizationsSeeder (Task 18) не введёт полноценный seed orgs.
+ * Все dev sample services attach'атся к этой org.
  */
 final class ServicesSeeder extends Seeder
 {
+    private const PLATFORM_ADMIN_ORG_ID = '00000000-0000-0000-0000-000000000001';
+
+    private const PLATFORM_ADMIN_ORG_SLUG = 'platform-admin';
+
     public function __construct(private readonly CommandBusInterface $commandBus) {}
 
     public function run(): void
     {
+        $orgId = $this->ensurePlatformAdminOrganization();
+
         $haircutsCat = $this->categoryIdBySlug('haircuts');
         $hotelsCat = $this->categoryIdBySlug('hotels');
         $consultCat = $this->categoryIdBySlug('consultations');
@@ -146,11 +156,46 @@ final class ServicesSeeder extends Seeder
                 priceCurrency: 'RUB',
                 type: $s['type'],
                 categoryId: $s['categoryId'],
+                organizationId: $orgId,
                 subcategoryId: $s['subcategoryId'],
                 durationMinutes: $s['durationMinutes'],
                 totalQuantity: $s['totalQuantity'],
             ));
         }
+    }
+
+    /**
+     * Обеспечивает существование platform-admin организации.
+     * Идемпотентно: reuse уже созданной.
+     */
+    private function ensurePlatformAdminOrganization(): string
+    {
+        $existing = DB::table('organizations')->where('id', self::PLATFORM_ADMIN_ORG_ID)->value('id');
+        if ($existing !== null) {
+            return (string) $existing;
+        }
+
+        DB::table('organizations')->insert([
+            'id' => self::PLATFORM_ADMIN_ORG_ID,
+            'slug' => self::PLATFORM_ADMIN_ORG_SLUG,
+            'name' => json_encode(['ru' => 'Platform Admin'], JSON_UNESCAPED_UNICODE),
+            'description' => json_encode(['ru' => 'Platform-wide organization для dev seed-услуг'], JSON_UNESCAPED_UNICODE),
+            'type' => 'other',
+            'logo_url' => null,
+            'city' => 'Moscow',
+            'district' => null,
+            'phone' => '+7 000 000 00 00',
+            'email' => 'admin@platform.local',
+            'verified' => true,
+            'cancellation_policy' => 'flexible',
+            'rating' => 0,
+            'reviews_count' => 0,
+            'archived_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return self::PLATFORM_ADMIN_ORG_ID;
     }
 
     private function categoryIdBySlug(string $slug): string

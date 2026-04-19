@@ -16,6 +16,7 @@ use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Catalog\Domain\ValueObject\ServiceType;
 use App\Modules\Catalog\Domain\ValueObject\SubcategoryId;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 use App\Shared\Domain\AggregateRoot;
 use DateTimeImmutable;
 
@@ -25,6 +26,11 @@ use DateTimeImmutable;
  * Два типа услуг:
  * - TIME_SLOT: требует duration (длительность одного слота)
  * - QUANTITY:  требует totalQuantity > 0 (кол-во единиц на диапазон дат)
+ *
+ * Принадлежит Organization (Identity BC) — cross-BC reference by ID.
+ * Для новых услуг organizationId обязателен (передаётся в createTimeSlot/createQuantity).
+ * Для reconstitute/restore допускается null на период backfill (existing rows до Plan 12).
+ * Когда все services backfilled — отдельная миграция сделает колонку NOT NULL.
  *
  * Инварианты проверяются в фабричных методах createTimeSlot() / createQuantity().
  * Восстановление из БД — через Service::restore() без генерации событий.
@@ -48,6 +54,7 @@ final class Service extends AggregateRoot
         private array $images,
         private readonly DateTimeImmutable $createdAt,
         private DateTimeImmutable $updatedAt,
+        private readonly ?OrganizationId $organizationId = null,
     ) {}
 
     /**
@@ -63,6 +70,7 @@ final class Service extends AggregateRoot
         Duration $duration,
         CategoryId $categoryId,
         ?SubcategoryId $subcategoryId,
+        OrganizationId $organizationId,
     ): self {
         $now = new DateTimeImmutable;
         $service = new self(
@@ -79,6 +87,7 @@ final class Service extends AggregateRoot
             [],
             $now,
             $now,
+            $organizationId,
         );
         $service->recordEvent(new ServiceCreated($id, $categoryId, ServiceType::TIME_SLOT, $now));
 
@@ -98,6 +107,7 @@ final class Service extends AggregateRoot
         int $totalQuantity,
         CategoryId $categoryId,
         ?SubcategoryId $subcategoryId,
+        OrganizationId $organizationId,
     ): self {
         if ($totalQuantity <= 0) {
             throw InvalidServiceTypeException::missingQuantity();
@@ -118,6 +128,7 @@ final class Service extends AggregateRoot
             [],
             $now,
             $now,
+            $organizationId,
         );
         $service->recordEvent(new ServiceCreated($id, $categoryId, ServiceType::QUANTITY, $now));
 
@@ -126,6 +137,9 @@ final class Service extends AggregateRoot
 
     /**
      * Восстанавливает услугу из хранилища без генерации domain events.
+     *
+     * $organizationId nullable на период backfill — existing services (до Plan 12)
+     * могут не иметь привязки к org. Новые создаются только через createTimeSlot/createQuantity.
      *
      * @param  list<ImagePath>  $images
      *
@@ -145,6 +159,7 @@ final class Service extends AggregateRoot
         array $images,
         DateTimeImmutable $createdAt,
         DateTimeImmutable $updatedAt,
+        ?OrganizationId $organizationId = null,
     ): self {
         if ($type === ServiceType::TIME_SLOT && $duration === null) {
             throw InvalidServiceTypeException::missingDuration();
@@ -167,6 +182,7 @@ final class Service extends AggregateRoot
             $images,
             $createdAt,
             $updatedAt,
+            $organizationId,
         );
     }
 
@@ -284,6 +300,15 @@ final class Service extends AggregateRoot
     public function subcategoryId(): ?SubcategoryId
     {
         return $this->subcategoryId;
+    }
+
+    /**
+     * Возвращает owning organization. Null для legacy записей до backfill
+     * (см. PHPDoc класса + restore()).
+     */
+    public function organizationId(): ?OrganizationId
+    {
+        return $this->organizationId;
     }
 
     public function isActive(): bool

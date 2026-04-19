@@ -12,6 +12,7 @@ use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Catalog\Domain\ValueObject\SubcategoryId;
 use App\Modules\Catalog\Infrastructure\Persistence\Model\CategoryModel;
 use App\Modules\Catalog\Infrastructure\Persistence\Model\SubcategoryModel;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 
 /*
  * Catalog test helpers — глобальные функции для Feature-тестов.
@@ -65,6 +66,7 @@ if (! function_exists('saveTimeSlotService')) {
         ?SubcategoryId $subcategoryId = null,
         string $description = 'desc',
         int $duration = 60,
+        ?OrganizationId $organizationId = null,
     ): Service {
         $service = Service::createTimeSlot(
             ServiceId::generate(),
@@ -74,6 +76,7 @@ if (! function_exists('saveTimeSlotService')) {
             Duration::ofMinutes($duration),
             $categoryId,
             $subcategoryId,
+            $organizationId ?? insertOrganizationForTests(),
         );
         app(ServiceRepositoryInterface::class)->save($service);
 

@@ -26,10 +26,12 @@ it('admin creates time_slot service via filament form', function (): void {
     actingAs($admin, 'web');
 
     $categoryId = DB::table('categories')->value('id');
+    $organizationId = insertOrganizationForTests('filament-ts')->toString();
 
     Livewire::test(CreateService::class)
         ->set('data.name', 'Premium Haircut')
         ->set('data.description', 'Professional premium haircut experience')
+        ->set('data.organization_id', $organizationId)
         ->set('data.category_id', $categoryId)
         ->set('data.type', 'time_slot')
         ->set('data.duration_minutes', 60)
@@ -53,10 +55,12 @@ it('admin creates quantity service via filament form', function (): void {
     actingAs($admin, 'web');
 
     $categoryId = DB::table('categories')->value('id');
+    $organizationId = insertOrganizationForTests('filament-qty')->toString();
 
     Livewire::test(CreateService::class)
         ->set('data.name', 'Hotel Room')
         ->set('data.description', 'Luxury hotel room with sea view')
+        ->set('data.organization_id', $organizationId)
         ->set('data.category_id', $categoryId)
         ->set('data.type', 'quantity')
         ->set('data.total_quantity', 20)

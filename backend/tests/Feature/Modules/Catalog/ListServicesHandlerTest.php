@@ -67,6 +67,7 @@ it('filters by type quantity', function (): void {
         5,
         $catId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($qtyService);
 

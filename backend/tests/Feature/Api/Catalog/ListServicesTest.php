@@ -62,6 +62,7 @@ function apiSaveTimeSlotService(
         Duration::ofMinutes($duration),
         $categoryId,
         $subcategoryId,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($service);
 
@@ -82,6 +83,7 @@ function apiSaveQuantityService(
         $totalQuantity,
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($service);
 

@@ -14,6 +14,7 @@ use App\Modules\Catalog\Domain\ValueObject\ServiceType;
 use App\Modules\Catalog\Domain\ValueObject\SubcategoryId;
 use App\Modules\Catalog\Infrastructure\Persistence\Model\ServiceImageModel;
 use App\Modules\Catalog\Infrastructure\Persistence\Model\ServiceModel;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 
 /**
  * Маппер Service ↔ ServiceModel.
@@ -39,6 +40,9 @@ final class ServiceMapper
         $subcategoryId = $model->subcategory_id !== null
             ? new SubcategoryId($model->subcategory_id)
             : null;
+        $organizationId = $model->organization_id !== null
+            ? new OrganizationId((string) $model->organization_id)
+            : null;
 
         return Service::restore(
             new ServiceId($model->id),
@@ -54,6 +58,7 @@ final class ServiceMapper
             $images,
             $model->created_at->toDateTimeImmutable(),
             $model->updated_at->toDateTimeImmutable(),
+            $organizationId,
         );
     }
 
@@ -73,6 +78,7 @@ final class ServiceMapper
             'total_quantity' => $service->totalQuantity(),
             'category_id' => $service->categoryId()->toString(),
             'subcategory_id' => $service->subcategoryId()?->toString(),
+            'organization_id' => $service->organizationId()?->toString(),
             'is_active' => $service->isActive(),
             'created_at' => $service->createdAt(),
             'updated_at' => $service->updatedAt(),

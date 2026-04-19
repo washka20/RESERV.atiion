@@ -64,6 +64,7 @@ it('saves and finds a TIME_SLOT service', function (): void {
         Duration::ofMinutes(60),
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
 
     repo()->save($service);
@@ -93,6 +94,7 @@ it('saves and finds a QUANTITY service with subcategory', function (): void {
         10,
         $categoryId,
         $subcategoryId,
+        insertOrganizationForTests(),
     );
 
     repo()->save($service);
@@ -114,6 +116,7 @@ it('updates existing service on repeated save', function (): void {
         Duration::ofMinutes(30),
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     repo()->save($service);
 
@@ -136,6 +139,7 @@ it('saves service with images and retrieves them in order', function (): void {
         Duration::ofMinutes(30),
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     $service->addImage(ImagePath::fromString('services/first.jpg'));
     $service->addImage(ImagePath::fromString('services/second.jpg'));
@@ -162,6 +166,7 @@ it('removes deleted images on re-save', function (): void {
         Duration::ofMinutes(30),
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     $img1 = ImagePath::fromString('services/a.jpg');
     $img2 = ImagePath::fromString('services/b.jpg');
@@ -189,6 +194,7 @@ it('findByCategory returns services of that category', function (): void {
     $categoryA = makeCategoryRow();
     $categoryB = makeCategoryRow();
 
+    $orgId = insertOrganizationForTests();
     $s1 = Service::createTimeSlot(
         ServiceId::generate(),
         'A1',
@@ -197,6 +203,7 @@ it('findByCategory returns services of that category', function (): void {
         Duration::ofMinutes(30),
         $categoryA,
         null,
+        $orgId,
     );
     $s2 = Service::createTimeSlot(
         ServiceId::generate(),
@@ -206,6 +213,7 @@ it('findByCategory returns services of that category', function (): void {
         Duration::ofMinutes(30),
         $categoryA,
         null,
+        $orgId,
     );
     $s3 = Service::createTimeSlot(
         ServiceId::generate(),
@@ -215,6 +223,7 @@ it('findByCategory returns services of that category', function (): void {
         Duration::ofMinutes(30),
         $categoryB,
         null,
+        $orgId,
     );
 
     repo()->save($s1);
@@ -238,6 +247,7 @@ it('deletes service', function (): void {
         Duration::ofMinutes(30),
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     repo()->save($service);
 
