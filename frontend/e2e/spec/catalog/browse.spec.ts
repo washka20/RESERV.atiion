@@ -1,11 +1,6 @@
 import { expect, test } from '../../fixtures/catalog.fixture'
 
 test.describe('Каталог услуг — browse + filter + detail', () => {
-  test.skip(
-    !!process.env.CI,
-    'TODO: spec ждёт /api/v1/services через waitForResponse — нужен живой backend или HAR-моки (как booking). В CI только Vite preview → таймаут. До фикса catalog.mocks.ts тесты скипаются.',
-  )
-
   test('отображает список услуг', async ({ openedCatalogPage }) => {
     const count = await openedCatalogPage.getServiceCount()
     expect(count).toBeGreaterThan(0)
