@@ -23,8 +23,10 @@ use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentOrganizat
 use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentRoleRepository;
 use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentUserRepository;
 use App\Modules\Identity\Infrastructure\Service\PgSlugGenerator;
+use App\Modules\Identity\Interface\Api\Middleware\MembershipGuardMiddleware;
 use App\Modules\Identity\Interface\Filament\Listener\SyncSpatieRoleOnUserRoleAssigned;
 use App\Modules\Identity\Interface\Filament\Listener\SyncSpatieRoleOnUserRoleRevoked;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -63,6 +65,10 @@ final class Provider extends ServiceProvider
                 $app->make('request'),
             );
         });
+
+        /** @var Router $router */
+        $router = $this->app['router'];
+        $router->aliasMiddleware('org.member', MembershipGuardMiddleware::class);
 
         Event::listen(UserRoleAssigned::class, [SyncSpatieRoleOnUserRoleAssigned::class, 'handle']);
         Event::listen(UserRoleRevoked::class, [SyncSpatieRoleOnUserRoleRevoked::class, 'handle']);
