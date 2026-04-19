@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import BaseToast from './shared/components/base/BaseToast.vue'
 import { useTheme } from './shared/composables/useTheme'
 
 useTheme()
@@ -21,6 +22,7 @@ useTheme()
   </header>
 
   <RouterView />
+  <BaseToast />
 </template>
 
 <style scoped>
