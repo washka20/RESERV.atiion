@@ -23,12 +23,25 @@ export default defineConfig({
   },
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  /**
+   * Retry на CI: 1 достаточно для устранения случайных сетевых дёрганий под
+   * нагрузкой. 2 — overkill, worst-case gives 3x-time при flaky.
+   */
+  retries: process.env.CI ? 1 : 0,
+  /**
+   * 2 workers на CI — sweet spot для Vite preview (single-threaded, начинает
+   * захлёбываться при 4+ одновременных клиентах). Тесты изолированы:
+   * test.beforeEach создаёт новый browser context, HAR-моки per-test.
+   */
+  workers: process.env.CI ? 2 : undefined,
+  /**
+   * line reporter даёт быстрый progress feedback в stdout GH Actions,
+   * html сохраняется для upload-artifact при failure (open: 'never' чтобы
+   * не пытался запустить браузер на раннере).
+   */
+  reporter: process.env.CI
+    ? [['line'], ['html', { open: 'never' }]]
+    : 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
