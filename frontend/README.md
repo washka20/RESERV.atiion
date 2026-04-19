@@ -71,3 +71,9 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
+
+## Design System
+
+См. `docs/modules/design-system.md` и `/design-system` route для live catalogue.
+Base компоненты в `src/shared/components/base/`.
+

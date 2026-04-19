@@ -1,0 +1,190 @@
+/* ============================================================
+   RESERV.atiion — design tokens
+   CSS custom properties, совместимые с Tailwind (через theme extend).
+   Поддержка light / dark через data-theme="dark" на <html>.
+   ============================================================ */
+
+:root {
+  /* ----- Brand accents (hue меняется через Tweaks) ----- */
+  --accent-h: 155;              /* sage by default */
+  --accent-c: 0.10;
+  --accent-l: 0.68;
+
+  --color-accent:        oklch(var(--accent-l) var(--accent-c) var(--accent-h));
+  --color-accent-soft:   oklch(0.94 0.04 var(--accent-h));
+  --color-accent-hover:  oklch(0.62 0.11 var(--accent-h));
+  --color-accent-press:  oklch(0.55 0.11 var(--accent-h));
+  --color-accent-fg:     oklch(0.22 0.03 var(--accent-h));
+
+  /* ----- Neutrals (warm-cool blend) ----- */
+  --color-bg:        oklch(0.985 0.003 85);        /* canvas */
+  --color-surface:   oklch(1.000 0 0);              /* card */
+  --color-surface-2: oklch(0.970 0.004 85);         /* subtle elevated */
+  --color-muted:     oklch(0.948 0.005 85);         /* chip bg */
+  --color-border:    oklch(0.905 0.005 85);
+  --color-border-strong: oklch(0.845 0.008 85);
+  --color-text:      oklch(0.22 0.01 270);
+  --color-text-muted:oklch(0.48 0.01 270);
+  --color-text-subtle:oklch(0.62 0.01 270);
+  --color-inverse:   oklch(0.98 0 0);
+
+  /* ----- Semantic (статусы бронирования) ----- */
+  --color-success:   oklch(0.68 0.10 155);
+  --color-success-soft: oklch(0.95 0.03 155);
+  --color-warning:   oklch(0.78 0.12 75);
+  --color-warning-soft: oklch(0.96 0.04 75);
+  --color-danger:    oklch(0.65 0.16 25);
+  --color-danger-soft:  oklch(0.95 0.03 25);
+  --color-info:      oklch(0.72 0.09 235);
+  --color-info-soft: oklch(0.95 0.03 235);
+
+  /* ----- Typography ----- */
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-xs:   12px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   16px;
+  --text-lg:   18px;
+  --text-xl:   22px;
+  --text-2xl:  28px;
+  --text-3xl:  36px;
+  --text-4xl:  48px;
+
+  --leading-tight: 1.15;
+  --leading-snug:  1.35;
+  --leading-body:  1.55;
+
+  --tracking-tight: -0.02em;
+  --tracking-snug:  -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide:  0.02em;
+
+  /* ----- Spacing scale (4px base) ----- */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* ----- Radius ----- */
+  --radius: 14px;              /* тоггл: 4 | 14 | 999 */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.3);
+  --radius-pill: 999px;
+
+  /* ----- Shadows (elevation) ----- */
+  --shadow-xs: 0 1px 1px rgba(20,20,30,0.04);
+  --shadow-sm: 0 1px 2px rgba(20,20,30,0.05), 0 1px 3px rgba(20,20,30,0.03);
+  --shadow-md: 0 4px 12px rgba(20,20,30,0.06), 0 1px 2px rgba(20,20,30,0.04);
+  --shadow-lg: 0 12px 32px rgba(20,20,30,0.10), 0 2px 6px rgba(20,20,30,0.05);
+  --shadow-focus: 0 0 0 3px oklch(0.88 0.08 var(--accent-h));
+
+  /* ----- Motion ----- */
+  --ease-out:      cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast:   120ms;
+  --dur-base:   200ms;
+  --dur-slow:   360ms;
+
+  /* ----- Z-index ----- */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-dropdown: 20;
+  --z-modal: 40;
+  --z-toast: 60;
+  --z-tweaks: 80;
+
+  /* ----- Density ----- */
+  --density: 1;                /* 1 = comfortable, 0.82 = compact */
+  --control-h: calc(44px * var(--density));
+  --control-h-sm: calc(36px * var(--density));
+  --control-pad-x: calc(16px * var(--density));
+  --row-gap: calc(16px * var(--density));
+
+  /* ----- Layout ----- */
+  --container-max: 1240px;
+  --sidebar-w: 264px;
+
+  /* ----- Aliases for Tailwind bridge (Plan 13 A.1) ----- */
+  --color-surface-muted: var(--color-muted);
+  --radius-xl: calc(var(--radius) * 1.6);
+}
+
+html[data-theme="dark"],
+html.dark {
+  --color-bg:        oklch(0.16 0.01 260);
+  --color-surface:   oklch(0.20 0.012 260);
+  --color-surface-2: oklch(0.23 0.013 260);
+  --color-muted:     oklch(0.25 0.013 260);
+  --color-border:    oklch(0.30 0.015 260);
+  --color-border-strong: oklch(0.40 0.018 260);
+  --color-text:      oklch(0.96 0.005 260);
+  --color-text-muted:oklch(0.72 0.008 260);
+  --color-text-subtle:oklch(0.55 0.008 260);
+  --color-inverse:   oklch(0.18 0.01 260);
+
+  --color-accent-soft:  oklch(0.30 0.05 var(--accent-h));
+  --color-accent-fg:    oklch(0.96 0.02 var(--accent-h));
+
+  --color-success-soft: oklch(0.30 0.05 155);
+  --color-warning-soft: oklch(0.32 0.06 75);
+  --color-danger-soft:  oklch(0.32 0.06 25);
+  --color-info-soft:    oklch(0.30 0.05 235);
+
+  --shadow-xs: 0 1px 1px rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.25);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --shadow-focus: 0 0 0 3px oklch(0.40 0.10 var(--accent-h));
+}
+
+/* ----- base reset / typography ----- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button { font-family: inherit; }
+:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-radius: var(--radius-sm); }
+
+/* striped placeholder bg (imagery) */
+.rs-stripes {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      oklch(0.92 0.02 var(--accent-h)) 0 8px,
+      oklch(0.95 0.015 var(--accent-h)) 8px 16px
+    );
+}
+html[data-theme="dark"] .rs-stripes,
+html.dark .rs-stripes {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      oklch(0.28 0.02 var(--accent-h)) 0 8px,
+      oklch(0.32 0.015 var(--accent-h)) 8px 16px
+    );
+}
+
+/* scrollbar (subtle) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); background-clip: content-box; border: 2px solid transparent; }

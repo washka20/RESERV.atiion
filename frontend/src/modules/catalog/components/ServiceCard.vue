@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import BaseBadge from '@/shared/components/base/BaseBadge.vue'
 import type { ServiceListItem } from '@/types/catalog.types'
 
 const props = defineProps<{ service: ServiceListItem }>()
@@ -31,10 +32,10 @@ const imageUrl = computed(() =>
 
 <template>
   <article
-    class="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
+    class="flex flex-col overflow-hidden rounded-md border border-border bg-surface shadow-sm transition hover:shadow-md"
     data-test-id="catalog-service-card"
   >
-    <div class="aspect-video w-full bg-gray-100">
+    <div class="aspect-video w-full bg-surface-muted">
       <img
         v-if="imageUrl"
         :src="imageUrl"
@@ -44,7 +45,7 @@ const imageUrl = computed(() =>
       />
       <div
         v-else
-        class="flex h-full w-full items-center justify-center text-sm text-gray-400"
+        class="flex h-full w-full items-center justify-center text-sm text-text-subtle"
         aria-hidden="true"
       >
         Нет изображения
@@ -53,23 +54,19 @@ const imageUrl = computed(() =>
 
     <div class="flex flex-1 flex-col gap-2 p-4">
       <div class="flex items-start justify-between gap-2">
-        <h3 class="text-base font-semibold text-gray-900">
+        <h3 class="text-base font-semibold text-text">
           {{ service.name }}
         </h3>
-        <span
-          class="shrink-0 rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700"
-        >
-          {{ typeLabel }}
-        </span>
+        <BaseBadge variant="info">{{ typeLabel }}</BaseBadge>
       </div>
 
-      <p class="text-sm text-gray-500">{{ service.categoryName }}</p>
+      <p class="text-sm text-text-subtle">{{ service.categoryName }}</p>
 
       <div class="mt-auto flex items-center justify-between pt-3">
-        <span class="text-lg font-bold text-gray-900">{{ formattedPrice }}</span>
+        <span class="text-lg font-bold text-text">{{ formattedPrice }}</span>
         <RouterLink
           :to="{ name: 'catalog-service', params: { id: service.id } }"
-          class="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+          class="text-sm font-medium text-accent hover:opacity-80"
           data-test-id="catalog-service-card-link"
         >
           Подробнее

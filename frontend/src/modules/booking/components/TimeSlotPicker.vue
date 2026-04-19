@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import BaseInput from '@/shared/components/base/BaseInput.vue'
 import { useBookingStore } from '@/stores/booking.store'
 
 const props = defineProps<{
@@ -44,22 +45,16 @@ function selectSlot(id: string): void {
 
 <template>
   <div class="space-y-3" data-test-id="booking-time-slot-picker">
-    <div>
-      <label for="booking-date" class="block text-sm font-medium text-gray-700">
-        Дата
-      </label>
-      <input
-        id="booking-date"
-        v-model="selectedDate"
-        type="date"
-        class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        data-test-id="booking-date-input"
-      />
-    </div>
+    <BaseInput
+      v-model="selectedDate"
+      label="Дата"
+      type="date"
+      test-id="booking-date-input"
+    />
 
     <p
       v-if="!selectedDate"
-      class="text-sm text-gray-500"
+      class="text-sm text-text-subtle"
       data-test-id="booking-choose-date"
     >
       Выберите дату
@@ -67,7 +62,7 @@ function selectSlot(id: string): void {
 
     <div
       v-else-if="booking.isLoading"
-      class="text-sm text-gray-500"
+      class="text-sm text-text-subtle"
       data-test-id="booking-slots-loading"
     >
       Загрузка слотов…
@@ -75,7 +70,7 @@ function selectSlot(id: string): void {
 
     <p
       v-else-if="slots.length === 0"
-      class="rounded-md border border-gray-200 bg-gray-50 p-3 text-sm text-gray-500"
+      class="rounded-md border border-border bg-surface-muted p-3 text-sm text-text-subtle"
       data-test-id="booking-no-slots"
     >
       Нет доступных слотов
@@ -90,11 +85,11 @@ function selectSlot(id: string): void {
         v-for="slot in slots"
         :key="slot.id"
         type="button"
-        class="rounded-md border px-3 py-2 text-sm font-medium transition"
+        class="rounded-md border px-3 py-2 text-sm font-medium transition-colors"
         :class="
           modelValue === slot.id
-            ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
-            : 'border-gray-300 bg-white text-gray-700 hover:border-indigo-400 hover:bg-indigo-50/40'
+            ? 'border-accent bg-accent-soft text-accent'
+            : 'border-border bg-surface text-text hover:border-accent'
         "
         data-test-id="booking-slot-btn"
         :data-slot-id="slot.id"

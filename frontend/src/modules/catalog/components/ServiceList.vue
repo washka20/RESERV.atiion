@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import BaseEmptyState from '@/shared/components/base/BaseEmptyState.vue'
+import BaseSkeleton from '@/shared/components/base/BaseSkeleton.vue'
 import type { ServiceListItem } from '@/types/catalog.types'
 import ServiceCard from './ServiceCard.vue'
 
@@ -15,7 +17,7 @@ const SKELETON_COUNT = 6
   <div data-test-id="catalog-service-list">
     <div
       v-if="error"
-      class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+      class="rounded-md border border-danger/30 bg-danger/10 p-4 text-sm text-danger"
       data-test-id="catalog-service-list-error"
     >
       {{ error }}
@@ -29,23 +31,24 @@ const SKELETON_COUNT = 6
       <div
         v-for="n in SKELETON_COUNT"
         :key="n"
-        class="overflow-hidden rounded-lg border border-gray-200 bg-white"
+        class="overflow-hidden rounded-md border border-border bg-surface"
       >
-        <div class="aspect-video w-full animate-pulse bg-gray-200" />
+        <BaseSkeleton variant="card" />
         <div class="space-y-3 p-4">
-          <div class="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
-          <div class="h-3 w-1/2 animate-pulse rounded bg-gray-200" />
-          <div class="h-5 w-1/3 animate-pulse rounded bg-gray-200" />
+          <BaseSkeleton variant="text" :lines="2" />
+          <BaseSkeleton variant="custom" width="33%" height="1.25rem" />
         </div>
       </div>
     </div>
 
     <div
       v-else-if="services.length === 0"
-      class="rounded-md border border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-500"
       data-test-id="catalog-service-list-empty"
     >
-      Услуги не найдены
+      <BaseEmptyState
+        title="Услуги не найдены"
+        description="Попробуйте сбросить фильтры или изменить запрос"
+      />
     </div>
 
     <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import BaseInput from '@/shared/components/base/BaseInput.vue'
 import { useCatalogStore } from '@/stores/catalog.store'
 
 const store = useCatalogStore()
@@ -44,31 +45,39 @@ function applyMax(): void {
   store.setFilters({ maxPrice: toMinor(maxPrice.value) })
   void store.fetchServices()
 }
+
+function onMinUpdate(raw: string): void {
+  const parsed = raw === '' ? null : Number(raw)
+  minPrice.value = parsed === null || Number.isNaN(parsed) ? null : parsed
+}
+
+function onMaxUpdate(raw: string): void {
+  const parsed = raw === '' ? null : Number(raw)
+  maxPrice.value = parsed === null || Number.isNaN(parsed) ? null : parsed
+}
 </script>
 
 <template>
-  <fieldset class="space-y-2 text-sm">
-    <legend class="mb-1 block font-medium text-gray-700">Цена, ₽</legend>
-    <div class="flex items-center gap-2">
-      <input
-        v-model.number="minPrice"
+  <fieldset class="flex flex-col gap-2 text-sm">
+    <legend class="mb-1 block font-medium text-text">Цена, ₽</legend>
+    <div class="grid grid-cols-[1fr_auto_1fr] items-end gap-2">
+      <BaseInput
+        :model-value="minPrice ?? ''"
         type="number"
-        min="0"
-        step="1"
         placeholder="от"
-        class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        data-test-id="catalog-price-filter-min"
+        test-id="catalog-price-filter-min"
+        :input-attrs="{ min: 0, step: 1 }"
+        @update:model-value="onMinUpdate"
         @blur="applyMin"
       />
-      <span class="text-gray-400">—</span>
-      <input
-        v-model.number="maxPrice"
+      <span class="pb-2 text-text-subtle">—</span>
+      <BaseInput
+        :model-value="maxPrice ?? ''"
         type="number"
-        min="0"
-        step="1"
         placeholder="до"
-        class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        data-test-id="catalog-price-filter-max"
+        test-id="catalog-price-filter-max"
+        :input-attrs="{ min: 0, step: 1 }"
+        @update:model-value="onMaxUpdate"
         @blur="applyMax"
       />
     </div>

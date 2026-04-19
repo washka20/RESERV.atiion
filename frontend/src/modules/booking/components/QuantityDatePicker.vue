@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import BaseInput from '@/shared/components/base/BaseInput.vue'
 import { useBookingStore } from '@/stores/booking.store'
 
 const props = defineProps<{
@@ -73,56 +74,43 @@ watch(quantityInput, (next) => {
   emit('update:quantity', normalized)
   void refreshAvailability()
 })
+
+function onQuantityUpdate(raw: string): void {
+  const parsed = Number(raw)
+  quantityInput.value = Number.isFinite(parsed) ? parsed : 1
+}
 </script>
 
 <template>
   <div class="space-y-3" data-test-id="booking-quantity-picker">
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <div>
-        <label for="booking-check-in" class="block text-sm font-medium text-gray-700">
-          Дата заезда
-        </label>
-        <input
-          id="booking-check-in"
-          v-model="checkIn"
-          type="date"
-          class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          data-test-id="booking-date-checkin-input"
-        />
-      </div>
-      <div>
-        <label for="booking-check-out" class="block text-sm font-medium text-gray-700">
-          Дата выезда
-        </label>
-        <input
-          id="booking-check-out"
-          v-model="checkOut"
-          type="date"
-          class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          data-test-id="booking-date-checkout-input"
-        />
-      </div>
-    </div>
-
-    <div>
-      <label for="booking-quantity" class="block text-sm font-medium text-gray-700">
-        Количество
-      </label>
-      <input
-        id="booking-quantity"
-        v-model.number="quantityInput"
-        type="number"
-        min="1"
-        :max="total"
-        class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        data-test-id="booking-quantity-input"
+      <BaseInput
+        v-model="checkIn"
+        label="Дата заезда"
+        type="date"
+        test-id="booking-date-checkin-input"
+      />
+      <BaseInput
+        v-model="checkOut"
+        label="Дата выезда"
+        type="date"
+        test-id="booking-date-checkout-input"
       />
     </div>
+
+    <BaseInput
+      :model-value="quantityInput"
+      label="Количество"
+      type="number"
+      test-id="booking-quantity-input"
+      :input-attrs="{ min: 1, max: total }"
+      @update:model-value="onQuantityUpdate"
+    />
 
     <p
       v-if="quantityAvailability"
       class="text-sm"
-      :class="quantityAvailability.available ? 'text-gray-600' : 'text-red-600'"
+      :class="quantityAvailability.available ? 'text-text-subtle' : 'text-danger'"
       data-test-id="booking-availability-info"
     >
       {{ quantityAvailability.availableQuantity }} доступно из {{ quantityAvailability.total }}

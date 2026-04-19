@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import BaseSelect from '@/shared/components/base/BaseSelect.vue'
 import { useCatalogStore } from '@/stores/catalog.store'
 import type { ServiceType } from '@/types/catalog.types'
 
@@ -13,19 +14,19 @@ const selected = computed<string>({
     void store.fetchServices()
   },
 })
+
+const options = [
+  { value: '', label: 'Все' },
+  { value: 'time_slot', label: 'Временной слот' },
+  { value: 'quantity', label: 'Количество' },
+]
 </script>
 
 <template>
-  <label class="block text-sm">
-    <span class="mb-1 block font-medium text-gray-700">Тип</span>
-    <select
-      v-model="selected"
-      class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-      data-test-id="catalog-type-filter-select"
-    >
-      <option value="">Все</option>
-      <option value="time_slot">Временной слот</option>
-      <option value="quantity">Количество</option>
-    </select>
-  </label>
+  <BaseSelect
+    v-model="selected"
+    :options="options"
+    label="Тип"
+    test-id="catalog-type-filter-select"
+  />
 </template>
