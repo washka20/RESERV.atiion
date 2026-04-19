@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Modules\Booking\Domain\ValueObject\BookingId;
-use App\Modules\Catalog\Domain\ValueObject\CategoryId;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Identity\Domain\ValueObject\UserId;
 use App\Modules\Payment\Domain\Entity\Payment;

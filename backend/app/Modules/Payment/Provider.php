@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Payment;
 
+use App\Modules\Payment\Application\Command\InitiatePayment\InitiatePaymentHandler;
 use App\Modules\Payment\Domain\Gateway\PaymentGatewayInterface;
 use App\Modules\Payment\Domain\Repository\PaymentRepositoryInterface;
 use App\Modules\Payment\Infrastructure\Gateway\NullPaymentGateway;
 use App\Modules\Payment\Infrastructure\Persistence\Repository\EloquentPaymentRepository;
+use App\Shared\Application\Bus\CommandBusInterface;
+use App\Shared\Application\Outbox\OutboxPublisherInterface;
+use App\Shared\Application\Transaction\TransactionManagerInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use RuntimeException;
@@ -41,6 +45,17 @@ final class Provider extends ServiceProvider
             $channel = (string) config('payments.log_channel', 'payments');
 
             return new NullPaymentGateway($app->make('log')->channel($channel));
+        });
+
+        $this->app->bind(InitiatePaymentHandler::class, static function (Application $app): InitiatePaymentHandler {
+            return new InitiatePaymentHandler(
+                $app->make(PaymentRepositoryInterface::class),
+                $app->make(PaymentGatewayInterface::class),
+                $app->make(OutboxPublisherInterface::class),
+                $app->make(CommandBusInterface::class),
+                $app->make(TransactionManagerInterface::class),
+                feePercent: (int) config('payments.marketplace_fee_percent', 10),
+            );
         });
     }
 
