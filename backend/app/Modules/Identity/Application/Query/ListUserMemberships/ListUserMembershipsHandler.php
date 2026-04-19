@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Identity\Application\Query\ListUserMemberships;
 
 use App\Modules\Identity\Application\DTO\MembershipWithOrgDTO;
+use App\Modules\Identity\Application\Service\UserMembershipsLookupInterface;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -15,16 +16,24 @@ use stdClass;
  * Возвращает только archived=false организации — archived orgs не должны
  * фигурировать в active context switching.
  */
-final readonly class ListUserMembershipsHandler
+final readonly class ListUserMembershipsHandler implements UserMembershipsLookupInterface
 {
     /**
      * @return list<MembershipWithOrgDTO>
      */
     public function handle(ListUserMembershipsQuery $query): array
     {
+        return $this->forUser($query->userId);
+    }
+
+    /**
+     * @return list<MembershipWithOrgDTO>
+     */
+    public function forUser(string $userId): array
+    {
         $rows = DB::table('memberships as m')
             ->join('organizations as o', 'm.organization_id', '=', 'o.id')
-            ->where('m.user_id', $query->userId)
+            ->where('m.user_id', $userId)
             ->whereNull('o.archived_at')
             ->orderBy('m.created_at')
             ->select([

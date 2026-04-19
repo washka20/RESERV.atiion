@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Identity;
 
+use App\Modules\Identity\Application\Query\ListUserMemberships\ListUserMembershipsHandler;
 use App\Modules\Identity\Application\Service\JwtTokenServiceInterface;
+use App\Modules\Identity\Application\Service\UserMembershipsLookupInterface;
 use App\Modules\Identity\Domain\Event\UserRoleAssigned;
 use App\Modules\Identity\Domain\Event\UserRoleRevoked;
 use App\Modules\Identity\Domain\Repository\MembershipRepositoryInterface;
@@ -38,6 +40,7 @@ final class Provider extends ServiceProvider
         $this->app->bind(MembershipRepositoryInterface::class, EloquentMembershipRepository::class);
         $this->app->bind(PasswordHasherInterface::class, BcryptPasswordHasher::class);
         $this->app->bind(SlugGeneratorInterface::class, PgSlugGenerator::class);
+        $this->app->bind(UserMembershipsLookupInterface::class, ListUserMembershipsHandler::class);
 
         $this->app->singleton(JwtTokenServiceInterface::class, static function ($app): JwtTokenService {
             return new JwtTokenService(
