@@ -19,9 +19,24 @@ type BookingFixtures = {
   bookingPage: BookingPage
   bookingConfirmPage: BookingConfirmPage
   dashboardPage: DashboardPage
+  _auth: void
 }
 
 export const test = base.extend<BookingFixtures>({
+  /**
+   * Auto-fixture: кладёт fake JWT в localStorage до первой навигации.
+   * Router guard (meta.requiresAuth) редиректит на /catalog когда токена нет —
+   * в e2e backend замоканы через page.route, реальный JWT не нужен.
+   */
+  _auth: [
+    async ({ page }, use) => {
+      await page.addInitScript(() => {
+        window.localStorage.setItem('auth:token', 'e2e-fake-token')
+      })
+      await use()
+    },
+    { auto: true },
+  ],
   bookingPage: async ({ page }, use) => {
     await use(new BookingPage(page))
   },
