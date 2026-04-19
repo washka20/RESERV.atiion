@@ -83,6 +83,29 @@ jobs:
       - run: composer install --no-interaction --prefer-dist --no-progress
       - run: ./vendor/bin/pint --test
 
+  backend-static:
+    name: Backend static analysis (PHPStan)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_pgsql, redis, bcmath, intl, gd, zip, opcache, pcntl
+          tools: composer:v2
+          coverage: none
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: php -d memory_limit=1G vendor/bin/phpstan analyse --no-progress
+
   backend-test:
     name: Backend tests (Pest)
     needs: check-php-drift
