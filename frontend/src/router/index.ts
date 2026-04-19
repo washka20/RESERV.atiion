@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store'
+import type { MembershipPermission } from '@/types/auth.types'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +41,16 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/modules/auth/views/LoginView.vue'),
+    },
+    {
+      path: '/forbidden',
+      name: 'forbidden',
+      component: () => import('@/modules/auth/views/ForbiddenView.vue'),
+    },
+    {
       path: '/design-system',
       name: 'design-system',
       component: () => import('@/modules/design-system/DesignSystemView.vue'),
@@ -52,16 +64,28 @@ const router = createRouter({
 })
 
 /**
- * Guard для роутов с meta.requiresAuth: пока /login нет (до Plan 14) —
- * редиректим на каталог. После Plan 14 заменить на redirect /login с saved route.
+ * Router guards.
+ *
+ * 1. `meta.requiresAuth` — redirect на /login с `?redirect=` saved route.
+ * 2. Org routes (`params.slug` + `meta.orgPermission`) — проверка membership
+ *    permission клиентски. Backend всё равно проверяет через middleware,
+ *    client guard нужен только для UX (избегаем flash незагруженной страницы).
  */
 router.beforeEach((to) => {
-  if (to.meta.requiresAuth) {
-    const token = localStorage.getItem('auth:token')
-    if (!token) {
-      return { name: 'catalog', query: { 'auth-required': '1' } }
+  const auth = useAuthStore()
+
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+
+  const orgSlug = to.params.slug
+  const requiredPermission = to.meta.orgPermission as MembershipPermission | undefined
+  if (typeof orgSlug === 'string' && requiredPermission) {
+    if (!auth.canAccessOrg(orgSlug, requiredPermission)) {
+      return { name: 'forbidden' }
     }
   }
+
   return true
 })
 
