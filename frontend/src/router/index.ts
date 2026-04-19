@@ -93,6 +93,19 @@ const router = createRouter({
       component: () => import('@/modules/design-system/DesignSystemView.vue'),
     },
     {
+      path: '/o/:slug',
+      component: () => import('@/modules/provider/components/OrgLayout.vue'),
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '',
+          name: 'org-dashboard',
+          component: () => import('@/modules/provider/views/OrgDashboardView.vue'),
+          meta: { orgPermission: 'analytics.view' },
+        },
+      ],
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/shared/views/NotFoundView.vue'),
