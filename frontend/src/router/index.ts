@@ -109,6 +109,18 @@ const router = createRouter({
           component: () => import('@/modules/provider/views/OrgServicesView.vue'),
           meta: { orgPermission: 'services.edit' },
         },
+        {
+          path: 'services/new',
+          name: 'org-service-create',
+          component: () => import('@/modules/provider/views/OrgServiceFormView.vue'),
+          meta: { orgPermission: 'services.create' },
+        },
+        {
+          path: 'services/:id/edit',
+          name: 'org-service-edit',
+          component: () => import('@/modules/provider/views/OrgServiceFormView.vue'),
+          meta: { orgPermission: 'services.edit' },
+        },
       ],
     },
     {
