@@ -19,6 +19,8 @@ interface Props {
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
   fullWidth?: boolean
+  /** Явно переопределяет `data-test-id` кнопки (для сохранения e2e локаторов). */
+  testId?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -85,7 +87,7 @@ const handleClick = (event: MouseEvent) => {
       sizeClass,
       fullWidth ? 'w-full' : '',
     ]"
-    :data-test-id="`base-button-${variant}`"
+    :data-test-id="testId ?? `base-button-${variant}`"
     @click="handleClick"
   >
     <BaseSpinner v-if="loading" :size="spinnerSize" />

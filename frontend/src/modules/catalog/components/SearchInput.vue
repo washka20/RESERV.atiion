@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onBeforeUnmount, watch } from 'vue'
+import BaseInput from '@/shared/components/base/BaseInput.vue'
 import { useCatalogStore } from '@/stores/catalog.store'
 
 const DEBOUNCE_MS = 300
@@ -30,15 +31,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <label class="block text-sm">
-    <span class="mb-1 block font-medium text-gray-700">Поиск</span>
-    <input
-      v-model="value"
-      type="search"
-      placeholder="Название услуги..."
-      class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-      data-test-id="catalog-search-input"
-      @input="schedule"
-    />
-  </label>
+  <BaseInput
+    v-model="value"
+    label="Поиск"
+    type="search"
+    placeholder="Название услуги..."
+    test-id="catalog-search-input"
+    @update:model-value="schedule"
+  />
 </template>

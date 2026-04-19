@@ -20,6 +20,8 @@ interface Props {
   disabled?: boolean
   required?: boolean
   id?: string
+  /** Явно переопределяет `data-test-id` нативного select (для сохранения e2e локаторов). */
+  testId?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,7 +61,7 @@ const onChange = (event: Event) => {
       :aria-invalid="!!error || undefined"
       class="h-10 rounded-md border bg-surface px-3 text-base text-text transition-colors focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
       :class="error ? 'border-danger' : 'border-border focus:border-accent'"
-      :data-test-id="`base-select-${id ?? autoId}`"
+      :data-test-id="testId ?? `base-select-${id ?? autoId}`"
       @change="onChange"
     >
       <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>

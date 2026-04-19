@@ -15,6 +15,8 @@ interface Props {
   id?: string
   rows?: number
   readonly?: boolean
+  /** Явно переопределяет `data-test-id` нативного textarea (для сохранения e2e локаторов). */
+  testId?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -67,7 +69,7 @@ const onInput = (event: Event) => {
       :aria-describedby="describedBy"
       class="rounded-md border bg-surface px-3 py-2 text-base text-text placeholder:text-text-subtle transition-colors focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
       :class="error ? 'border-danger' : 'border-border focus:border-accent'"
-      :data-test-id="`base-textarea-${id ?? autoId}`"
+      :data-test-id="testId ?? `base-textarea-${id ?? autoId}`"
       @input="onInput"
       @blur="(event) => emit('blur', event)"
       @focus="(event) => emit('focus', event)"

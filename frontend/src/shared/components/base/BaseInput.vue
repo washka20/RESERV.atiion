@@ -19,6 +19,15 @@ interface Props {
   id?: string
   autocomplete?: string
   readonly?: boolean
+  /**
+   * Явно переопределяет `data-test-id` нативного input.
+   * Используется при миграции существующих форм, чтобы сохранить e2e локаторы.
+   */
+  testId?: string
+  /**
+   * Дополнительные атрибуты для нативного input (min, max, step, pattern и т.п.).
+   */
+  inputAttrs?: Record<string, string | number | boolean>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -81,7 +90,8 @@ const onInput = (event: Event) => {
         :aria-invalid="!!error || undefined"
         :aria-describedby="describedBy"
         class="flex-1 bg-transparent px-3 py-2 text-base text-text placeholder:text-text-subtle focus:outline-none disabled:cursor-not-allowed"
-        :data-test-id="`base-input-${id ?? autoId}`"
+        :data-test-id="testId ?? `base-input-${id ?? autoId}`"
+        v-bind="inputAttrs"
         @input="onInput"
         @blur="(event) => emit('blur', event)"
         @focus="(event) => emit('focus', event)"
