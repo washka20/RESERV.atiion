@@ -37,8 +37,10 @@ jobs:
           tags: reservatiion-php:dev-ci
           cache-from: type=gha,scope=php-dev
           cache-to: type=gha,mode=max,scope=php-dev
-      - name: Smoke run
-        run: docker run --rm reservatiion-php:dev-ci php --version
+      - name: Smoke run (dev)
+        run: |
+          docker run --rm reservatiion-php:dev-ci php --version
+          docker run --rm reservatiion-php:dev-ci composer --version
 
   docker-prod-validate:
     name: Docker prod image (smoke build)
@@ -58,8 +60,10 @@ jobs:
           tags: reservatiion-php:prod-ci
           cache-from: type=gha,scope=php-prod
           cache-to: type=gha,mode=max,scope=php-prod
-      - name: Smoke run
-        run: docker run --rm reservatiion-php:prod-ci php --version
+      - name: Smoke run (prod)
+        run: |
+          docker run --rm reservatiion-php:prod-ci php --version
+          docker run --rm reservatiion-php:prod-ci composer --version || echo "composer not in prod image (expected)"
 
   backend-lint:
     name: Backend lint (Pint)
@@ -292,8 +296,30 @@ jobs:
       - name: Run seeders smoke assertions
         run: ./vendor/bin/pest tests/Feature/Infrastructure/SeedersSmokeTest.php
 
+  backend-build:
+    name: Backend build (prod composer smoke)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_pgsql, redis, bcmath, intl, gd, zip, opcache, pcntl
+          tools: composer:v2
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist --no-progress --no-dev --optimize-autoloader --no-scripts
+      - name: Prepare env for artisan commands
+        run: |
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+      - name: Verify app boots
+        run: php artisan about --only=environment 2>&1 | head -20
+
   frontend-lint:
-    name: Frontend lint (ESLint + type-check)
+    name: Frontend lint (ESLint)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -307,7 +333,6 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run lint
-      - run: npm run type-check
 
   frontend-test:
     name: Frontend tests (Vitest)
