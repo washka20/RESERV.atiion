@@ -35,7 +35,10 @@
         Никакого SQLite: тесты идут против реальной PostgreSQL 17, как в prod.
         -->
         <env name="APP_ENV" value="testing"/>
-        <env name="APP_KEY" value="base64:IKG+RgNgxAV0Dv7UiB37cnnBOBAwEV2CJOTLb8eLFoU="/>
+        <!-- APP_KEY: намеренно low-entropy testing-only ключ (decodes в 'testing-reserv-atiion-keyxxxxxxx').
+             Не используется в продакшене; CI/локальные тесты в tmpfs БД.
+             GitGuardian: см. .gitguardian.yaml allowlist. -->
+        <env name="APP_KEY" value="base64:dGVzdGluZy1yZXNlcnYtYXRpaW9uLWtleXh4eHh4eHg="/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>

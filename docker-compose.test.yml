@@ -27,7 +27,8 @@ services:
         condition: service_healthy
     environment:
       APP_ENV: testing
-      APP_KEY: base64:IKG+RgNgxAV0Dv7UiB37cnnBOBAwEV2CJOTLb8eLFoU=
+      # low-entropy testing APP_KEY (см. phpunit.xml + .gitguardian.yaml)
+      APP_KEY: base64:dGVzdGluZy1yZXNlcnYtYXRpaW9uLWtleXh4eHh4eHg=
       DB_CONNECTION: pgsql
       DB_HOST: postgres-test
       DB_PORT: 5432

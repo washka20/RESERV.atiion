@@ -1,0 +1,26 @@
+version: 2
+
+# GitGuardian allowlist. Репо публичный — GitGuardian сканит каждый push.
+# Здесь перечислены известные тестовые secret'ы которые НЕ являются prod-утечкой:
+# - APP_KEY в phpunit.xml и docker-compose.test.yml используется только тестами
+#   на tmpfs PostgreSQL. Он low-entropy ('testing-reserv-atiion-keyxxxxxxx' в base64),
+#   не используется в prod (prod-ключ генерится отдельно через `php artisan key:generate`
+#   и лежит в .env на сервере).
+# - JWT_SECRET в phpunit.xml аналогично — только для test/dev токенов.
+#
+# Любой НОВЫЙ secret который появляется в repo — must fix, не добавлять в allowlist.
+
+secret:
+  ignored-paths:
+    - "backend/phpunit.xml"
+    - "docker-compose.test.yml"
+
+  ignored-matches:
+    - name: Testing APP_KEY (low-entropy, not prod)
+      match: base64:dGVzdGluZy1yZXNlcnYtYXRpaW9uLWtleXh4eHh4eHg=
+
+    - name: Testing APP_KEY — прошлый leaked testing key
+      match: base64:IKG+RgNgxAV0Dv7UiB37cnnBOBAwEV2CJOTLb8eLFoU=
+
+    - name: Testing JWT_SECRET (testing only)
+      match: testing-secret-key-at-least-32-chars-long-for-sha256
