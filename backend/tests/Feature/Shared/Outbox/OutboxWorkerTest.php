@@ -16,6 +16,14 @@ use Psr\Log\NullLogger;
 
 uses(RefreshDatabase::class);
 
+beforeEach(function (): void {
+    // Глушим реальные listener'ы Payment на PaymentReceived — тест проверяет сам worker,
+    // а не side-effects цепочки ConfirmBooking/CreatePayoutTransaction (там bus → null bookings → throws).
+    \Illuminate\Support\Facades\Event::fake([
+        \App\Modules\Payment\Domain\Event\PaymentReceived::class,
+    ]);
+});
+
 function workerMakeEvent(): PaymentReceived
 {
     return new PaymentReceived(
