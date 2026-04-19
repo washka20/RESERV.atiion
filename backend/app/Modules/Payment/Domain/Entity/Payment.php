@@ -72,7 +72,7 @@ final class Payment extends AggregateRoot
             $gross,
             $method,
             $feePercent,
-            new DateTimeImmutable(),
+            new DateTimeImmutable,
         ));
 
         return $payment;
@@ -117,7 +117,7 @@ final class Payment extends AggregateRoot
 
         $this->status = PaymentStatus::PAID;
         $this->providerRef = $providerRef;
-        $this->paidAt = new DateTimeImmutable();
+        $this->paidAt = new DateTimeImmutable;
 
         $fee = $this->calculateFee();
 
@@ -149,7 +149,7 @@ final class Payment extends AggregateRoot
             $this->id,
             $this->bookingId,
             $reason,
-            new DateTimeImmutable(),
+            new DateTimeImmutable,
         ));
     }
 
@@ -170,7 +170,7 @@ final class Payment extends AggregateRoot
             $this->id,
             $this->bookingId,
             $this->gross,
-            new DateTimeImmutable(),
+            new DateTimeImmutable,
         ));
     }
 
