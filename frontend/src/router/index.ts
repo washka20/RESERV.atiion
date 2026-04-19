@@ -88,6 +88,12 @@ const router = createRouter({
       component: () => import('@/modules/auth/views/ForbiddenView.vue'),
     },
     {
+      path: '/provider/onboarding',
+      name: 'provider-onboarding',
+      component: () => import('@/modules/provider/views/OrgOnboardingWizardView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/design-system',
       name: 'design-system',
       component: () => import('@/modules/design-system/DesignSystemView.vue'),
