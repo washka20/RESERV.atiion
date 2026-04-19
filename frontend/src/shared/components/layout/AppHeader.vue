@@ -3,15 +3,36 @@
  * Глобальный header приложения.
  *
  * Содержит workspace switcher (placeholder пока до Plan 14), навигацию по
- * основным разделам, переключатель темы и аватар пользователя (fallback на
- * инициалы). На мобильных — только логотип + theme toggle + avatar.
+ * основным разделам, переключатель темы и — в зависимости от auth-статуса —
+ * либо аватар пользователя (для authenticated), либо CTA кнопки "Войти" /
+ * "Регистрация" (для guest). На мобильных — только логотип + theme toggle +
+ * auth CTA / avatar.
  */
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Moon, Sun } from 'lucide-vue-next'
 import BaseAvatar from '@/shared/components/base/BaseAvatar.vue'
+import BaseButton from '@/shared/components/base/BaseButton.vue'
 import { useTheme } from '@/shared/composables/useTheme'
+import { useAuthStore } from '@/stores/auth.store'
 
 const { isDark, toggle } = useTheme()
+const authStore = useAuthStore()
+
+const initials = computed<string>(() => {
+  const u = authStore.user
+  if (!u) return 'U'
+  const f = u.firstName?.[0] ?? ''
+  const l = u.lastName?.[0] ?? ''
+  const combined = `${f}${l}`.trim()
+  return combined || (u.email?.[0]?.toUpperCase() ?? 'U')
+})
+
+const fullName = computed<string>(() => {
+  const u = authStore.user
+  if (!u) return 'User'
+  return `${u.firstName} ${u.lastName}`.trim() || u.email
+})
 </script>
 
 <template>
@@ -68,7 +89,26 @@ const { isDark, toggle } = useTheme()
         <Moon v-else class="h-4 w-4" aria-hidden="true" />
       </button>
 
-      <BaseAvatar alt="User" fallback="U" size="sm" data-test-id="app-header-avatar" />
+      <template v-if="!authStore.isAuthenticated">
+        <RouterLink to="/login" data-test-id="app-header-login-link">
+          <BaseButton variant="ghost" size="sm" test-id="app-header-login-btn">
+            Войти
+          </BaseButton>
+        </RouterLink>
+        <RouterLink to="/register" data-test-id="app-header-register-link">
+          <BaseButton variant="primary" size="sm" test-id="app-header-register-btn">
+            Регистрация
+          </BaseButton>
+        </RouterLink>
+      </template>
+
+      <BaseAvatar
+        v-else
+        :alt="fullName"
+        :fallback="initials"
+        size="sm"
+        data-test-id="app-header-avatar"
+      />
     </div>
   </header>
 </template>

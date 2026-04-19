@@ -46,6 +46,43 @@ const router = createRouter({
       component: () => import('@/modules/auth/views/LoginView.vue'),
     },
     {
+      path: '/register',
+      name: 'auth-register',
+      component: () => import('@/modules/auth/views/RegisterRoleView.vue'),
+    },
+    {
+      path: '/register/customer',
+      name: 'auth-register-customer',
+      component: () => import('@/modules/auth/views/RegisterCustomerView.vue'),
+    },
+    {
+      path: '/register/provider',
+      name: 'auth-register-provider',
+      component: () => import('@/modules/auth/views/RegisterProviderView.vue'),
+    },
+    {
+      path: '/verify-email/:token',
+      name: 'auth-verify-email',
+      component: () => import('@/modules/auth/views/VerifyEmailView.vue'),
+      props: true,
+    },
+    {
+      path: '/verify-phone',
+      name: 'auth-verify-phone',
+      component: () => import('@/modules/auth/views/VerifyPhoneView.vue'),
+    },
+    {
+      path: '/forgot-password',
+      name: 'auth-forgot-password',
+      component: () => import('@/modules/auth/views/ForgotPasswordView.vue'),
+    },
+    {
+      path: '/reset-password/:token',
+      name: 'auth-reset-password',
+      component: () => import('@/modules/auth/views/ResetPasswordView.vue'),
+      props: true,
+    },
+    {
       path: '/forbidden',
       name: 'forbidden',
       component: () => import('@/modules/auth/views/ForbiddenView.vue'),
