@@ -41,13 +41,18 @@ final class SpatieRoleSeeder extends Seeder
 
     public function run(): void
     {
+        // Сбросить Spatie permission cache В НАЧАЛЕ. Критично под --parallel:
+        // предыдущий тест seed'ил permissions → cache их запомнил. Текущий тест
+        // сделал RefreshDatabase (pure empty DB) → вызывает этот seeder снова.
+        // findOrCreate проверяет cache, видит "permission существует", возвращает stale entry,
+        // НЕ пишет в пустую БД. Следующий syncPermissions идёт в БД → permission не найден → throw.
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
         foreach (array_unique(array_merge(...array_values(self::ROLE_PERMISSIONS))) as $permission) {
             SpatiePermission::findOrCreate($permission, 'web');
         }
 
-        // Reset Spatie permission cache — findOrCreate не инвалидирует его, и
-        // syncPermissions ниже читает stale cache. Критично под paratest (--parallel)
-        // где тесты идут после RefreshDatabase+этого seeder'а в одном процессе.
+        // И ещё раз — после создания permissions, чтобы syncPermissions ниже увидел новые.
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         foreach (self::ROLES as $name) {
