@@ -11,9 +11,9 @@
 import { computed } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { Moon, Sun } from 'lucide-vue-next'
-import BaseAvatar from '@/shared/components/base/BaseAvatar.vue'
 import BaseButton from '@/shared/components/base/BaseButton.vue'
 import BaseWorkspaceSwitcher from '@/shared/components/base/BaseWorkspaceSwitcher.vue'
+import AvatarMenu from '@/modules/auth/components/AvatarMenu.vue'
 import { useTheme } from '@/shared/composables/useTheme'
 import { useAuthStore } from '@/stores/auth.store'
 
@@ -147,13 +147,7 @@ function onWorkspaceChange(id: string): void {
         </RouterLink>
       </template>
 
-      <BaseAvatar
-        v-else
-        :alt="fullName"
-        :fallback="initials"
-        size="sm"
-        data-test-id="app-header-avatar"
-      />
+      <AvatarMenu v-else :full-name="fullName" :initials="initials" />
     </div>
   </header>
 </template>
