@@ -133,6 +133,12 @@ const router = createRouter({
           component: () => import('@/modules/provider/views/OrgInboxView.vue'),
           meta: { orgPermission: 'bookings.view' },
         },
+        {
+          path: 'payouts',
+          name: 'org-payouts',
+          component: () => import('@/modules/provider/views/OrgPayoutsView.vue'),
+          meta: { orgPermission: 'payouts.view' },
+        },
       ],
     },
     {
