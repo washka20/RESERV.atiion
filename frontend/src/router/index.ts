@@ -145,6 +145,12 @@ const router = createRouter({
           component: () => import('@/modules/provider/views/OrgTeamView.vue'),
           meta: { orgPermission: 'team.view' },
         },
+        {
+          path: 'settings',
+          name: 'org-settings',
+          component: () => import('@/modules/provider/views/OrgSettingsView.vue'),
+          meta: { orgPermission: 'settings.view' },
+        },
       ],
     },
     {
