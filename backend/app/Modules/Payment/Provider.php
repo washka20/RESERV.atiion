@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace App\Modules\Payment;
 
 use App\Modules\Payment\Application\Command\InitiatePayment\InitiatePaymentHandler;
+use App\Modules\Payment\Application\Command\UpdatePayoutSettings\UpdatePayoutSettingsHandler;
 use App\Modules\Payment\Domain\Gateway\PaymentGatewayInterface;
 use App\Modules\Payment\Domain\Repository\PaymentRepositoryInterface;
+use App\Modules\Payment\Domain\Repository\PayoutSettingsRepositoryInterface;
 use App\Modules\Payment\Infrastructure\Gateway\NullPaymentGateway;
 use App\Modules\Payment\Infrastructure\Persistence\Repository\EloquentPaymentRepository;
+use App\Modules\Payment\Infrastructure\Persistence\Repository\EloquentPayoutSettingsRepository;
 use App\Shared\Application\Bus\CommandBusInterface;
+use App\Shared\Application\Identity\MembershipLookupInterface;
 use App\Shared\Application\Outbox\OutboxPublisherInterface;
 use App\Shared\Application\Transaction\TransactionManagerInterface;
 use Illuminate\Contracts\Foundation\Application;
@@ -28,6 +32,7 @@ final class Provider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PaymentRepositoryInterface::class, EloquentPaymentRepository::class);
+        $this->app->bind(PayoutSettingsRepositoryInterface::class, EloquentPayoutSettingsRepository::class);
 
         $this->app->bind(PaymentGatewayInterface::class, static function (Application $app): PaymentGatewayInterface {
             $driver = (string) config('payments.default_gateway', 'null');
@@ -55,6 +60,15 @@ final class Provider extends ServiceProvider
                 $app->make(CommandBusInterface::class),
                 $app->make(TransactionManagerInterface::class),
                 feePercent: (int) config('payments.marketplace_fee_percent', 10),
+            );
+        });
+
+        $this->app->bind(UpdatePayoutSettingsHandler::class, static function (Application $app): UpdatePayoutSettingsHandler {
+            return new UpdatePayoutSettingsHandler(
+                $app->make(PayoutSettingsRepositoryInterface::class),
+                $app->make(MembershipLookupInterface::class),
+                $app->make(OutboxPublisherInterface::class),
+                $app->make(TransactionManagerInterface::class),
             );
         });
     }
