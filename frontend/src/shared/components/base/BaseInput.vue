@@ -89,7 +89,7 @@ const onInput = (event: Event) => {
         :autocomplete="autocomplete"
         :aria-invalid="!!error || undefined"
         :aria-describedby="describedBy"
-        class="flex-1 bg-transparent px-3 py-2 text-base text-text placeholder:text-text-subtle focus:outline-none disabled:cursor-not-allowed"
+        class="flex-1 min-w-0 bg-transparent px-3 py-2 text-base text-text placeholder:text-text-subtle focus:outline-none disabled:cursor-not-allowed"
         :data-test-id="testId ?? `base-input-${id ?? autoId}`"
         v-bind="inputAttrs"
         @input="onInput"

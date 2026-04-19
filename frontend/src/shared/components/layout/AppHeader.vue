@@ -6,20 +6,12 @@
  * основным разделам, переключатель темы и аватар пользователя (fallback на
  * инициалы). На мобильных — только логотип + theme toggle + avatar.
  */
-import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Moon, Sun } from 'lucide-vue-next'
 import BaseAvatar from '@/shared/components/base/BaseAvatar.vue'
-import BaseWorkspaceSwitcher from '@/shared/components/base/BaseWorkspaceSwitcher.vue'
 import { useTheme } from '@/shared/composables/useTheme'
 
 const { isDark, toggle } = useTheme()
-
-/** Плейсхолдер до Plan 14 — реальные organizations появятся в Identity BC. */
-const workspaces = [
-  { id: 'personal', name: 'Личный', type: 'personal' as const },
-]
-const activeWorkspaceId = ref<string>('personal')
 </script>
 
 <template>
@@ -27,14 +19,11 @@ const activeWorkspaceId = ref<string>('personal')
     class="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-surface px-4 py-2 sm:px-6"
     data-test-id="app-header"
   >
-    <BaseWorkspaceSwitcher
-      v-model="activeWorkspaceId"
-      :workspaces="workspaces"
-    />
-
+    <!-- WorkspaceSwitcher спрятан до Plan 14 (Orgs во frontend) — пока только
+         один workspace Personal, переключать нечего. -->
     <RouterLink
       :to="{ name: 'catalog' }"
-      class="ml-2 hidden text-lg font-semibold text-text hover:opacity-80 sm:inline-flex"
+      class="text-lg font-semibold text-text hover:opacity-80"
       data-test-id="app-header-logo"
     >
       RESERV

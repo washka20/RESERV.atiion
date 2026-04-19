@@ -19,11 +19,6 @@ const router = createRouter({
       props: true,
     },
     {
-      path: '/booking/new',
-      name: 'booking-create',
-      component: () => import('@/modules/catalog/views/BookingStubView.vue'),
-    },
-    {
       path: '/book/:serviceId',
       name: 'booking-new',
       component: () => import('@/modules/booking/views/BookingView.vue'),

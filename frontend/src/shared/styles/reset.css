@@ -1,9 +1,11 @@
 *, *::before, *::after { box-sizing: border-box; }
 html {
   font-family: var(--font-sans, system-ui), -apple-system, sans-serif;
-  /* stable scrollbar gutter — не смещает fixed элементы при переходе между
-     короткими (нет скролла) и длинными (скролл появляется) страницами. */
-  scrollbar-gutter: stable;
+}
+/* Stable scrollbar gutter — только для mouse-pointer (desktop). На touch scrollbars
+   = overlay, резервирование места только обрезает layout на 10-17px справа. */
+@media (pointer: fine) {
+  html { scrollbar-gutter: stable; }
 }
 body { margin: 0; background: var(--color-bg); color: var(--color-text); }
 button { font: inherit; background: none; border: none; padding: 0; cursor: pointer; }
@@ -25,6 +27,21 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
   outline: none;
+  /* Перекрываем глобальный :focus-visible { box-shadow: var(--shadow-focus) }
+     из tokens.css: focus-state реализуем через focus-within:border-accent на wrapper. */
+  box-shadow: none;
+}
+
+/* Убираем native spinner arrows у input[type="number"] —
+   они выезжают за rounded BaseInput wrapper, ломают обводку focus-within. */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
