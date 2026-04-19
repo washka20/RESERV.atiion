@@ -232,7 +232,7 @@ jobs:
       - name: Migrate test database
         run: php artisan migrate --no-interaction --force
       - name: Run tests
-        run: php artisan test --testsuite=Feature --parallel
+        run: php artisan test --parallel --exclude-testsuite=Architecture
 
   backend-seed-smoke:
     name: Backend seeders smoke
