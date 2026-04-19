@@ -1,0 +1,16 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    paths:
+        - app/Modules
+        - app/Shared
+        - app/Providers
+    excludePaths:
+        analyseAndScan:
+            - app/Modules/*/Infrastructure/Persistence/*Model.php
+    tmpDir: storage/framework/cache/phpstan
+    checkModelProperties: true
+    treatPhpDocTypesAsCertain: false
