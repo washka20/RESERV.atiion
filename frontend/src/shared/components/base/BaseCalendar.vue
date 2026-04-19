@@ -79,7 +79,7 @@ const cells = computed<Cell[]>(() => {
   for (let i = 0; i < 42; i += 1) {
     let day: number
     let inMonth = true
-    let year = y
+    const year = y
     let month = m
     if (i < offset) {
       day = prevTotal - offset + 1 + i
