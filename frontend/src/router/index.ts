@@ -127,6 +127,12 @@ const router = createRouter({
           component: () => import('@/modules/provider/views/OrgCalendarView.vue'),
           meta: { orgPermission: 'bookings.view' },
         },
+        {
+          path: 'inbox',
+          name: 'org-inbox',
+          component: () => import('@/modules/provider/views/OrgInboxView.vue'),
+          meta: { orgPermission: 'bookings.view' },
+        },
       ],
     },
     {
