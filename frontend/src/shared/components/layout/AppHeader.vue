@@ -2,22 +2,32 @@
 /**
  * Глобальный header приложения.
  *
- * Содержит workspace switcher (placeholder пока до Plan 14), навигацию по
- * основным разделам, переключатель темы и — в зависимости от auth-статуса —
- * либо аватар пользователя (для authenticated), либо CTA кнопки "Войти" /
- * "Регистрация" (для guest). На мобильных — только логотип + theme toggle +
- * auth CTA / avatar.
+ * Содержит workspace switcher (Personal + memberships для authenticated user),
+ * навигацию, переключатель темы и — в зависимости от auth-статуса —
+ * либо аватар пользователя, либо CTA кнопки "Войти" / "Регистрация".
+ *
+ * Avatar click → dropdown меню (Профиль / Настройки / Выход).
  */
 import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { Moon, Sun } from 'lucide-vue-next'
 import BaseAvatar from '@/shared/components/base/BaseAvatar.vue'
 import BaseButton from '@/shared/components/base/BaseButton.vue'
+import BaseWorkspaceSwitcher from '@/shared/components/base/BaseWorkspaceSwitcher.vue'
 import { useTheme } from '@/shared/composables/useTheme'
 import { useAuthStore } from '@/stores/auth.store'
 
+type WorkspaceType = 'personal' | 'organization'
+interface Workspace {
+  id: string
+  name: string
+  type: WorkspaceType
+}
+
 const { isDark, toggle } = useTheme()
 const authStore = useAuthStore()
+const route = useRoute()
+const router = useRouter()
 
 const initials = computed<string>(() => {
   const u = authStore.user
@@ -33,6 +43,35 @@ const fullName = computed<string>(() => {
   if (!u) return 'User'
   return `${u.firstName} ${u.lastName}`.trim() || u.email
 })
+
+const workspaces = computed<Workspace[]>(() => {
+  if (!authStore.isAuthenticated) return []
+  const orgs: Workspace[] = authStore.memberships.map((m) => ({
+    id: m.organizationSlug,
+    name: m.organizationSlug,
+    type: 'organization',
+  }))
+  return [
+    { id: 'personal', name: 'Личный', type: 'personal' },
+    ...orgs,
+  ]
+})
+
+const activeWorkspaceId = computed<string>(() => {
+  const slug = route.params.slug
+  if (typeof slug === 'string' && authStore.memberships.some((m) => m.organizationSlug === slug)) {
+    return slug
+  }
+  return 'personal'
+})
+
+function onWorkspaceChange(id: string): void {
+  if (id === 'personal') {
+    router.push({ name: 'dashboard' })
+  } else {
+    router.push(`/o/${id}`)
+  }
+}
 </script>
 
 <template>
@@ -40,8 +79,6 @@ const fullName = computed<string>(() => {
     class="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-surface px-4 py-2 sm:px-6"
     data-test-id="app-header"
   >
-    <!-- WorkspaceSwitcher спрятан до Plan 14 (Orgs во frontend) — пока только
-         один workspace Personal, переключать нечего. -->
     <RouterLink
       :to="{ name: 'catalog' }"
       class="text-lg font-semibold text-text hover:opacity-80"
@@ -49,6 +86,14 @@ const fullName = computed<string>(() => {
     >
       RESERV
     </RouterLink>
+
+    <BaseWorkspaceSwitcher
+      v-if="authStore.isAuthenticated && workspaces.length > 1"
+      :workspaces="workspaces"
+      :model-value="activeWorkspaceId"
+      data-test-id="app-header-workspace-switcher"
+      @update:model-value="onWorkspaceChange"
+    />
 
     <nav class="hidden flex-1 items-center gap-4 md:flex" aria-label="Main navigation">
       <RouterLink
