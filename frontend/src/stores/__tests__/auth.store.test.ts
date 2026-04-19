@@ -16,7 +16,7 @@ import * as authApi from '@/api/auth.api'
 
 const mockedLogin = vi.mocked(authApi.login)
 const mockedRegister = vi.mocked(authApi.register)
-const mockedRefresh = vi.mocked(authApi.refresh)
+const _mockedRefresh = vi.mocked(authApi.refresh)
 const mockedMe = vi.mocked(authApi.me)
 const mockedListMemberships = vi.mocked(authApi.listMemberships)
 const mockedLogout = vi.mocked(authApi.logout)
@@ -119,7 +119,7 @@ describe('useAuthStore', () => {
       const store = useAuthStore()
       await expect(
         store.login({ email: 'x@example.com', password: 'wrong' }),
-      ).rejects.toThrow()
+      ).rejects.toThrow(/Invalid credentials/i)
       expect(store.isAuthenticated).toBe(false)
       expect(localStorage.getItem('auth:token')).toBeNull()
       expect(store.error).toBe('Invalid credentials')
