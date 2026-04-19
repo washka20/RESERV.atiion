@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 use Spatie\Permission\Models\Role as SpatieRole;
+use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Создаёт Spatie-роли для web guard (platform-level RBAC).
@@ -43,6 +44,11 @@ final class SpatieRoleSeeder extends Seeder
         foreach (array_unique(array_merge(...array_values(self::ROLE_PERMISSIONS))) as $permission) {
             SpatiePermission::findOrCreate($permission, 'web');
         }
+
+        // Reset Spatie permission cache — findOrCreate не инвалидирует его, и
+        // syncPermissions ниже читает stale cache. Критично под paratest (--parallel)
+        // где тесты идут после RefreshDatabase+этого seeder'а в одном процессе.
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         foreach (self::ROLES as $name) {
             $role = SpatieRole::findOrCreate($name, 'web');
