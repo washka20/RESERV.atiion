@@ -227,6 +227,71 @@ jobs:
       - name: Run tests
         run: php artisan test --testsuite=Feature --parallel
 
+  backend-seed-smoke:
+    name: Backend seeders smoke
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: reservatiion_seed_test
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U app -d reservatiion_seed_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=3s
+          --health-retries=5
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: reservatiion_seed_test
+      DB_USERNAME: app
+      DB_PASSWORD: secret
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_pgsql, redis, bcmath, intl, gd, zip, opcache, pcntl
+          tools: composer:v2
+          coverage: none
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Prepare env
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+      - name: Fresh migrate + full seed
+        run: php artisan migrate:fresh --seed --no-interaction --force
+      - name: Run seeders smoke assertions
+        run: ./vendor/bin/pest tests/Feature/Infrastructure/SeedersSmokeTest.php
+
   frontend-lint:
     name: Frontend lint (ESLint + type-check)
     runs-on: ubuntu-latest
