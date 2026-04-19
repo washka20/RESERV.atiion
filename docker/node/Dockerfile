@@ -14,6 +14,11 @@ RUN apk add --no-cache bash curl git shadow \
     && mkdir -p /home/node && chown -R node:node /home/node \
     && apk del shadow
 
+# Предсоздаём /app и /app/node_modules с правильным ownership. Иначе named volume
+# `frontend_node_modules` наследует permissions parent dir (/app = root) при первом
+# create и процесс под USER node не может туда писать → npm install EACCES.
+RUN mkdir -p /app/node_modules && chown -R node:node /app
+
 WORKDIR /app
 
 # Без USER node процесс работает под root и пишет .vite/ / .eslintcache / node_modules
