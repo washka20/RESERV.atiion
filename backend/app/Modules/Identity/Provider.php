@@ -7,14 +7,20 @@ namespace App\Modules\Identity;
 use App\Modules\Identity\Application\Service\JwtTokenServiceInterface;
 use App\Modules\Identity\Domain\Event\UserRoleAssigned;
 use App\Modules\Identity\Domain\Event\UserRoleRevoked;
+use App\Modules\Identity\Domain\Repository\MembershipRepositoryInterface;
+use App\Modules\Identity\Domain\Repository\OrganizationRepositoryInterface;
 use App\Modules\Identity\Domain\Repository\RoleRepositoryInterface;
 use App\Modules\Identity\Domain\Repository\UserRepositoryInterface;
 use App\Modules\Identity\Domain\Service\PasswordHasherInterface;
+use App\Modules\Identity\Domain\Service\SlugGeneratorInterface;
 use App\Modules\Identity\Infrastructure\Auth\BcryptPasswordHasher;
 use App\Modules\Identity\Infrastructure\Auth\JwtGuard;
 use App\Modules\Identity\Infrastructure\Auth\JwtTokenService;
+use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentMembershipRepository;
+use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentOrganizationRepository;
 use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentRoleRepository;
 use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentUserRepository;
+use App\Modules\Identity\Infrastructure\Service\PgSlugGenerator;
 use App\Modules\Identity\Interface\Filament\Listener\SyncSpatieRoleOnUserRoleAssigned;
 use App\Modules\Identity\Interface\Filament\Listener\SyncSpatieRoleOnUserRoleRevoked;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +34,10 @@ final class Provider extends ServiceProvider
     {
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, EloquentRoleRepository::class);
+        $this->app->bind(OrganizationRepositoryInterface::class, EloquentOrganizationRepository::class);
+        $this->app->bind(MembershipRepositoryInterface::class, EloquentMembershipRepository::class);
         $this->app->bind(PasswordHasherInterface::class, BcryptPasswordHasher::class);
+        $this->app->bind(SlugGeneratorInterface::class, PgSlugGenerator::class);
 
         $this->app->singleton(JwtTokenServiceInterface::class, static function ($app): JwtTokenService {
             return new JwtTokenService(
