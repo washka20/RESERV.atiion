@@ -14,6 +14,10 @@ use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Catalog\Domain\ValueObject\ServiceType;
 use App\Modules\Catalog\Domain\ValueObject\SubcategoryId;
+use App\Modules\Identity\Domain\Exception\OrganizationArchivedException;
+use App\Modules\Identity\Domain\Exception\OrganizationNotFoundException;
+use App\Modules\Identity\Domain\Repository\OrganizationRepositoryInterface;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
 use InvalidArgumentException;
 
@@ -22,19 +26,35 @@ final readonly class CreateServiceHandler
     public function __construct(
         private ServiceRepositoryInterface $services,
         private CategoryRepositoryInterface $categories,
+        private OrganizationRepositoryInterface $organizations,
         private DomainEventDispatcherInterface $dispatcher,
     ) {}
 
     /**
-     * Создаёт услугу и сохраняет. Проверяет существование категории.
+     * Создаёт услугу и сохраняет. Проверяет существование категории и организации.
+     *
+     * Permission check (actor is member with services.create) — responsibility
+     * вызывающего layer'а (middleware / admin UI). Handler гарантирует только
+     * целостность: organization exists и не archived.
      *
      * @throws CategoryNotFoundException если category отсутствует
+     * @throws OrganizationNotFoundException если organization отсутствует
+     * @throws OrganizationArchivedException если organization archived
      * @throws InvalidArgumentException при несоответствии type и durationMinutes/totalQuantity
      */
     public function handle(CreateServiceCommand $command): string
     {
         $categoryId = new CategoryId($command->categoryId);
         $this->categories->findByIdOrFail($categoryId);
+
+        $organizationId = new OrganizationId($command->organizationId);
+        $organization = $this->organizations->findById($organizationId);
+        if ($organization === null) {
+            throw OrganizationNotFoundException::byId($organizationId);
+        }
+        if ($organization->isArchived()) {
+            throw OrganizationArchivedException::forId($organizationId);
+        }
 
         $subcategoryId = $command->subcategoryId !== null
             ? new SubcategoryId($command->subcategoryId)
@@ -45,8 +65,8 @@ final readonly class CreateServiceHandler
         $id = ServiceId::generate();
 
         $service = match ($type) {
-            ServiceType::TIME_SLOT => $this->createTimeSlot($command, $id, $price, $categoryId, $subcategoryId),
-            ServiceType::QUANTITY => $this->createQuantity($command, $id, $price, $categoryId, $subcategoryId),
+            ServiceType::TIME_SLOT => $this->createTimeSlot($command, $id, $price, $categoryId, $subcategoryId, $organizationId),
+            ServiceType::QUANTITY => $this->createQuantity($command, $id, $price, $categoryId, $subcategoryId, $organizationId),
         };
 
         $this->services->save($service);
@@ -61,6 +81,7 @@ final readonly class CreateServiceHandler
         Money $price,
         CategoryId $categoryId,
         ?SubcategoryId $subcategoryId,
+        OrganizationId $organizationId,
     ): Service {
         if ($command->durationMinutes === null) {
             throw new InvalidArgumentException('durationMinutes is required for TIME_SLOT service');
@@ -74,6 +95,7 @@ final readonly class CreateServiceHandler
             Duration::ofMinutes($command->durationMinutes),
             $categoryId,
             $subcategoryId,
+            $organizationId,
         );
     }
 
@@ -83,6 +105,7 @@ final readonly class CreateServiceHandler
         Money $price,
         CategoryId $categoryId,
         ?SubcategoryId $subcategoryId,
+        OrganizationId $organizationId,
     ): Service {
         if ($command->totalQuantity === null) {
             throw new InvalidArgumentException('totalQuantity is required for QUANTITY service');
@@ -96,6 +119,7 @@ final readonly class CreateServiceHandler
             $command->totalQuantity,
             $categoryId,
             $subcategoryId,
+            $organizationId,
         );
     }
 }

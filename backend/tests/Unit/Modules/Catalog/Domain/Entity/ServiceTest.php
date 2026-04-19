@@ -15,6 +15,7 @@ use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Catalog\Domain\ValueObject\ServiceType;
 use App\Modules\Catalog\Domain\ValueObject\SubcategoryId;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 
 function makeTimeSlotService(): Service
 {
@@ -26,6 +27,7 @@ function makeTimeSlotService(): Service
         duration: Duration::ofMinutes(60),
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 }
 
@@ -39,6 +41,7 @@ function makeQuantityService(): Service
         totalQuantity: 10,
         categoryId: CategoryId::generate(),
         subcategoryId: SubcategoryId::generate(),
+        organizationId: OrganizationId::generate(),
     );
 }
 
@@ -87,6 +90,7 @@ it('throws when TIME_SLOT created with zero-like duration via QUANTITY factory',
         totalQuantity: 0,
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 })->throws(InvalidServiceTypeException::class);
 

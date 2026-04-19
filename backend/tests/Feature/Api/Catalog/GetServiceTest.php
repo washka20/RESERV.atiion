@@ -32,6 +32,7 @@ it('returns full ServiceDTO envelope for existing service', function (): void {
         Duration::ofMinutes(45),
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($service);
 

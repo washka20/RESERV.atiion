@@ -102,6 +102,7 @@ it('quantity over-booking blocked via API — insufficient capacity returns 409'
         2,
         $catId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($service);
     $serviceId = $service->id();

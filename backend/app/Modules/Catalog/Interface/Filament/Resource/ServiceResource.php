@@ -10,6 +10,7 @@ use App\Modules\Catalog\Infrastructure\Persistence\Model\SubcategoryModel;
 use App\Modules\Catalog\Interface\Filament\Action\ActivateServiceAction;
 use App\Modules\Catalog\Interface\Filament\Action\DeactivateServiceAction;
 use App\Modules\Catalog\Interface\Filament\Resource\ServiceResource\Pages;
+use App\Modules\Identity\Infrastructure\Persistence\Model\OrganizationModel;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -62,6 +63,16 @@ final class ServiceResource extends Resource
                         ->required()
                         ->minLength(10)
                         ->rows(4),
+                    Select::make('organization_id')
+                        ->label('Организация')
+                        ->options(fn () => OrganizationModel::query()
+                            ->whereNull('archived_at')
+                            ->orderBy('slug')
+                            ->pluck('slug', 'id'))
+                        ->required()
+                        ->searchable()
+                        ->disabled(fn (string $operation): bool => $operation === 'edit')
+                        ->dehydrated(fn (string $operation): bool => $operation === 'create'),
                     Select::make('category_id')
                         ->label('Категория')
                         ->options(fn () => CategoryModel::query()->orderBy('sort_order')->pluck('name', 'id'))

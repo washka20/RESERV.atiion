@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Modules\Catalog\Application\Command\CreateService\CreateServiceCommand;
 use App\Shared\Application\Bus\CommandBusInterface;
+use Database\Seeders\Identity\OrganizationsSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -13,8 +14,12 @@ use RuntimeException;
 /**
  * Сидер примеров услуг каталога: 5 TIME_SLOT + 5 QUANTITY.
  *
- * Цены хранятся в копейках (amount × 100). Зависит от CategoriesSeeder
- * и SubcategoriesSeeder — идентификаторы берутся lookup-ом по slug.
+ * Цены хранятся в копейках (amount × 100). Зависит от CategoriesSeeder,
+ * SubcategoriesSeeder (lookup по slug) и Identity\OrganizationsSeeder
+ * (organization_id lookup по фиксированным константам).
+ *
+ * TIME_SLOT (стрижки, консультации) → Salon Savvin.
+ * QUANTITY (отели) → Loft 23.
  */
 final class ServicesSeeder extends Seeder
 {
@@ -22,6 +27,9 @@ final class ServicesSeeder extends Seeder
 
     public function run(): void
     {
+        $this->assertOrganizationExists(OrganizationsSeeder::SALON_SAVVIN_ID, 'salon-savvin');
+        $this->assertOrganizationExists(OrganizationsSeeder::LOFT_23_ID, 'loft-23');
+
         $haircutsCat = $this->categoryIdBySlug('haircuts');
         $hotelsCat = $this->categoryIdBySlug('hotels');
         $consultCat = $this->categoryIdBySlug('consultations');
@@ -41,6 +49,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $menSubcat,
                 'durationMinutes' => 45,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Женская стрижка',
@@ -51,6 +60,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $womenSubcat,
                 'durationMinutes' => 60,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Детская стрижка',
@@ -61,6 +71,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => null,
                 'durationMinutes' => 30,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Консультация юриста',
@@ -71,6 +82,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => null,
                 'durationMinutes' => 60,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Психологическая консультация',
@@ -81,6 +93,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => null,
                 'durationMinutes' => 90,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Номер Стандарт',
@@ -91,6 +104,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $standardSubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 10,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Номер Люкс',
@@ -101,6 +115,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $luxurySubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 5,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Номер Семейный',
@@ -111,6 +126,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $standardSubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 7,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Номер Президентский',
@@ -121,6 +137,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $luxurySubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 2,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Эконом номер',
@@ -131,6 +148,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $standardSubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 15,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
         ];
 
@@ -146,10 +164,21 @@ final class ServicesSeeder extends Seeder
                 priceCurrency: 'RUB',
                 type: $s['type'],
                 categoryId: $s['categoryId'],
+                organizationId: $s['organizationId'],
                 subcategoryId: $s['subcategoryId'],
                 durationMinutes: $s['durationMinutes'],
                 totalQuantity: $s['totalQuantity'],
             ));
+        }
+    }
+
+    private function assertOrganizationExists(string $id, string $slug): void
+    {
+        $exists = DB::table('organizations')->where('id', $id)->exists();
+        if (! $exists) {
+            throw new RuntimeException(
+                "Organization '{$slug}' (id={$id}) not found. Run Identity\\OrganizationsSeeder first."
+            );
         }
     }
 

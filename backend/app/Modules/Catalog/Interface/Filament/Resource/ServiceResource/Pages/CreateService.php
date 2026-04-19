@@ -26,6 +26,7 @@ final class CreateService extends CreateRecord
             priceCurrency: $data['price_currency'],
             type: $data['type'],
             categoryId: $data['category_id'],
+            organizationId: (string) $data['organization_id'],
             subcategoryId: $data['subcategory_id'] ?? null,
             durationMinutes: isset($data['duration_minutes']) && $data['duration_minutes'] !== null
                 ? (int) $data['duration_minutes']

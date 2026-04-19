@@ -8,6 +8,7 @@ use App\Modules\Catalog\Domain\ValueObject\CategoryId;
 use App\Modules\Catalog\Domain\ValueObject\Duration;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 
 function buildActiveService(): Service
 {
@@ -19,6 +20,7 @@ function buildActiveService(): Service
         duration: Duration::ofMinutes(60),
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 }
 

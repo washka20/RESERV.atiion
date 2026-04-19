@@ -26,6 +26,7 @@ it('returns ServiceDTO with full data and images', function (): void {
         Duration::ofMinutes(90),
         $categoryId,
         $subcategoryId,
+        insertOrganizationForTests(),
     );
     $service->addImage(ImagePath::fromString('services/first.jpg'));
     $service->addImage(ImagePath::fromString('services/second.jpg'));
@@ -68,6 +69,7 @@ it('returns quantity service with totalQuantity and null duration', function ():
         10,
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($service);
 

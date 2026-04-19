@@ -61,6 +61,7 @@ it('returns QUANTITY availability with total/booked/available_quantity/requested
         10,
         $categoryId,
         null,
+        insertOrganizationForTests(),
     );
     app(ServiceRepositoryInterface::class)->save($entity);
 

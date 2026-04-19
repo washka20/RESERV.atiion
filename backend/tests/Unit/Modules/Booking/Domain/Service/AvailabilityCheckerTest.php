@@ -15,6 +15,7 @@ use App\Modules\Catalog\Domain\ValueObject\CategoryId;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Modules\Catalog\Domain\ValueObject\ServiceType;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 
 it('TimeSlot strategy returns available slots on date', function (): void {
     $serviceId = ServiceId::generate();
@@ -63,6 +64,7 @@ it('Quantity strategy computes available quantity', function (): void {
         totalQuantity: 10,
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 
     $serviceRepo = mock(ServiceRepositoryInterface::class);
@@ -96,6 +98,7 @@ it('Quantity strategy reports unavailable when requested > available', function 
         totalQuantity: 10,
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 
     $serviceRepo = mock(ServiceRepositoryInterface::class);
@@ -140,6 +143,7 @@ it('AvailabilityChecker dispatches on ServiceType::QUANTITY', function (): void 
         totalQuantity: 5,
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 
     $svcRepo = mock(ServiceRepositoryInterface::class);

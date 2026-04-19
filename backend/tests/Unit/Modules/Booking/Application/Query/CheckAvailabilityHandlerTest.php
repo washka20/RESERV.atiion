@@ -17,6 +17,7 @@ use App\Modules\Catalog\Domain\ValueObject\CategoryId;
 use App\Modules\Catalog\Domain\ValueObject\Duration;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 
 function makeTimeSlotServiceForAvailability(ServiceId $id): Service
 {
@@ -28,6 +29,7 @@ function makeTimeSlotServiceForAvailability(ServiceId $id): Service
         duration: Duration::ofMinutes(60),
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 }
 
@@ -41,6 +43,7 @@ function makeQuantityServiceForAvailability(ServiceId $id, int $total = 10): Ser
         totalQuantity: $total,
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 }
 

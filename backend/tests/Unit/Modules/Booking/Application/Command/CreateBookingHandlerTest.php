@@ -18,6 +18,7 @@ use App\Modules\Catalog\Domain\ValueObject\CategoryId;
 use App\Modules\Catalog\Domain\ValueObject\Duration;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 use App\Modules\Identity\Domain\ValueObject\UserId;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
 use App\Shared\Application\Transaction\TransactionManagerInterface;
@@ -40,6 +41,7 @@ function makeTimeSlotServiceForCreate(ServiceId $id): Service
         duration: Duration::ofMinutes(60),
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 }
 
@@ -53,6 +55,7 @@ function makeQuantityServiceForCreate(ServiceId $id, int $total = 10): Service
         totalQuantity: $total,
         categoryId: CategoryId::generate(),
         subcategoryId: null,
+        organizationId: OrganizationId::generate(),
     );
 }
 

@@ -54,6 +54,7 @@ final class JwtTokenService implements JwtTokenServiceInterface
             ->withClaim('type', 'access');
 
         foreach ($extraClaims as $key => $value) {
+            /** @phpstan-ignore-next-line extraClaims accepts array values (memberships) */
             $builder = $builder->withClaim($key, $value);
         }
 
@@ -94,7 +95,7 @@ final class JwtTokenService implements JwtTokenServiceInterface
         );
     }
 
-    public function refresh(string $refreshToken): TokenPair
+    public function rotateRefresh(string $refreshToken): UserId
     {
         $hash = hash('sha256', $refreshToken);
         $record = RefreshTokenModel::where('token_hash', $hash)->first();
@@ -105,7 +106,12 @@ final class JwtTokenService implements JwtTokenServiceInterface
 
         $record->update(['revoked_at' => $this->clock->now()]);
 
-        return $this->issue(new UserId((string) $record->user_id));
+        return new UserId((string) $record->user_id);
+    }
+
+    public function refresh(string $refreshToken): TokenPair
+    {
+        return $this->issue($this->rotateRefresh($refreshToken));
     }
 
     public function revoke(string $refreshToken): void
