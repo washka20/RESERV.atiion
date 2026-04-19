@@ -119,7 +119,7 @@ test.describe('Booking flow — TIME_SLOT', () => {
     await bookingPage.slotBySlotId(SLOT_1).click()
     await bookingPage.submit()
 
-    await bookingPage.expectError(/409/)
+    await bookingPage.expectError(/Slot is not available/i)
     await expect(bookingPage.page).toHaveURL(/\/book\//)
   })
 
