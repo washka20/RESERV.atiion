@@ -45,4 +45,12 @@ final readonly class ServiceDeactivated implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new ServiceId((string) $payload['service_id']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

@@ -61,4 +61,16 @@ final readonly class BookingCancelled implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        $slotId = $payload['slot_id'] ?? null;
+
+        return new self(
+            new BookingId((string) $payload['booking_id']),
+            BookingType::from((string) $payload['type']),
+            $slotId !== null ? new SlotId((string) $slotId) : null,
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

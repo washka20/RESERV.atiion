@@ -45,4 +45,12 @@ final readonly class TimeSlotReleased implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new SlotId((string) $payload['slot_id']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

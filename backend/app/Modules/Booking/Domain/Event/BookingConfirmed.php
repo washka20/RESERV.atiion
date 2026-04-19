@@ -45,4 +45,12 @@ final readonly class BookingConfirmed implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new BookingId((string) $payload['booking_id']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

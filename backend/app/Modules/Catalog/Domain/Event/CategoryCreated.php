@@ -52,4 +52,13 @@ final readonly class CategoryCreated implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new CategoryId((string) $payload['category_id']),
+            (string) $payload['slug'],
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

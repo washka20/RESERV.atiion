@@ -127,6 +127,22 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'payments' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payments.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+
+        'payouts' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/payouts.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 30,
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];

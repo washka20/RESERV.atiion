@@ -70,4 +70,15 @@ final readonly class MembershipGranted implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new MembershipId((string) $payload['membership_id']),
+            new UserId((string) $payload['user_id']),
+            new OrganizationId((string) $payload['organization_id']),
+            MembershipRole::from((string) $payload['role']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

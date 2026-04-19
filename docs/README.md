@@ -17,3 +17,23 @@
 - [Overview](architecture/overview.md)
 - [Setup локально](development/setup.md)
 - [ADR index](adr/README.md)
+
+## Patterns
+
+- [CQRS / Domain Events](patterns/domain-events.md)
+- [Specification Pattern](patterns/specification-pattern.md)
+- [Filament DDD Bridge](patterns/filament-ddd-bridge.md)
+- [Outbox Pattern](patterns/outbox-pattern.md)
+- [Marketplace Fee](patterns/marketplace-fee.md)
+
+## API
+
+- [Authentication](api/authentication.md)
+- [Payouts API](api/payouts.md)
+
+## Modules
+
+- [Identity](modules/identity.md)
+- [Catalog](modules/catalog.md)
+- [Booking](modules/booking.md)
+- [Payment](../backend/app/Modules/Payment/README.md)

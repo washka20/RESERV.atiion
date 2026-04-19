@@ -22,8 +22,10 @@ use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentMembershi
 use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentOrganizationRepository;
 use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentRoleRepository;
 use App\Modules\Identity\Infrastructure\Persistence\Repository\EloquentUserRepository;
+use App\Modules\Identity\Infrastructure\Service\EloquentMembershipLookup;
 use App\Modules\Identity\Infrastructure\Service\PgSlugGenerator;
 use App\Modules\Identity\Interface\Api\Middleware\MembershipGuardMiddleware;
+use App\Shared\Application\Identity\MembershipLookupInterface;
 use App\Modules\Identity\Interface\Filament\Listener\SyncSpatieRoleOnUserRoleAssigned;
 use App\Modules\Identity\Interface\Filament\Listener\SyncSpatieRoleOnUserRoleRevoked;
 use Illuminate\Routing\Router;
@@ -43,6 +45,7 @@ final class Provider extends ServiceProvider
         $this->app->bind(PasswordHasherInterface::class, BcryptPasswordHasher::class);
         $this->app->bind(SlugGeneratorInterface::class, PgSlugGenerator::class);
         $this->app->bind(UserMembershipsLookupInterface::class, ListUserMembershipsHandler::class);
+        $this->app->bind(MembershipLookupInterface::class, EloquentMembershipLookup::class);
 
         $this->app->singleton(JwtTokenServiceInterface::class, static function ($app): JwtTokenService {
             return new JwtTokenService(

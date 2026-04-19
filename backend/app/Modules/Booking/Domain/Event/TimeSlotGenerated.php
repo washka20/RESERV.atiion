@@ -66,4 +66,15 @@ final readonly class TimeSlotGenerated implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new ServiceId((string) $payload['service_id']),
+            new DateTimeImmutable((string) $payload['from']),
+            new DateTimeImmutable((string) $payload['to']),
+            (int) $payload['count'],
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

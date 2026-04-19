@@ -86,3 +86,39 @@ arch('Booking\\Application не зависит от чужих Infrastructure/Ap
         'App\Modules\Payment\Application',
         'App\Modules\Payment\Interface',
     ]);
+
+/*
+ * Payment\Application (Command/Query/Handler) не должен зависеть от чужих Application/Infrastructure/Interface.
+ * Исключение — Listener подпакет: слушатели чужих Domain Events диспатчат Command/Query других BC
+ * через Bus, и сами Command/Query DTO — это публичный контракт BC (как интерфейс).
+ * Для Listener'ов проверяем только Infrastructure/Interface (строго запрещено).
+ */
+arch('Payment\\Application (Command/Query/Handler/Service/DTO) не зависит от чужих Infrastructure/Application/Interface')
+    ->expect([
+        'App\Modules\Payment\Application\Command',
+        'App\Modules\Payment\Application\Query',
+        'App\Modules\Payment\Application\Service',
+        'App\Modules\Payment\Application\DTO',
+    ])
+    ->not->toUse([
+        'App\Modules\Identity\Infrastructure',
+        'App\Modules\Identity\Application',
+        'App\Modules\Identity\Interface',
+        'App\Modules\Catalog\Infrastructure',
+        'App\Modules\Catalog\Application',
+        'App\Modules\Catalog\Interface',
+        'App\Modules\Booking\Infrastructure',
+        'App\Modules\Booking\Application',
+        'App\Modules\Booking\Interface',
+    ]);
+
+arch('Payment\\Application\\Listener не лезет в чужие Infrastructure/Interface')
+    ->expect('App\Modules\Payment\Application\Listener')
+    ->not->toUse([
+        'App\Modules\Identity\Infrastructure',
+        'App\Modules\Identity\Interface',
+        'App\Modules\Catalog\Infrastructure',
+        'App\Modules\Catalog\Interface',
+        'App\Modules\Booking\Infrastructure',
+        'App\Modules\Booking\Interface',
+    ]);
