@@ -30,8 +30,35 @@ export const test = base.extend<BookingFixtures>({
    */
   _auth: [
     async ({ page }, use) => {
+      // Fake JWT + default моки auth.store.hydrate endpoints (/auth/me, /me/memberships).
+      // Без моков hydrate() валит loadMe → user=null → guard редиректит на /login.
       await page.addInitScript(() => {
         window.localStorage.setItem('auth:token', 'e2e-fake-token')
+      })
+      await page.route('**/api/v1/auth/me', async (route) => {
+        await route.fulfill({
+          status: 200,
+          json: {
+            success: true,
+            data: {
+              id: 'e2e-user',
+              email: 'e2e@test.ru',
+              first_name: 'E2E',
+              last_name: 'User',
+              middle_name: null,
+              roles: [],
+              email_verified_at: '2026-01-01T00:00:00Z',
+              created_at: '2026-01-01T00:00:00Z',
+            },
+            error: null,
+          },
+        })
+      })
+      await page.route('**/api/v1/me/memberships', async (route) => {
+        await route.fulfill({
+          status: 200,
+          json: { success: true, data: [], error: null },
+        })
       })
       await use()
     },
