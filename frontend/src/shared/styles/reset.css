@@ -7,6 +7,9 @@ html {
 }
 body { margin: 0; background: var(--color-bg); color: var(--color-text); }
 button { font: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+/* Tailwind Preflight сбрасывает padding/margin fieldset, но НЕ border (2px groove по умолчанию). */
+fieldset { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
+legend { padding: 0; }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 /* focus-visible outline для интерактивных элементов — но НЕ для нативных input/textarea/select,
