@@ -60,4 +60,14 @@ final readonly class PaymentFailed implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new PaymentId((string) $payload['payment_id']),
+            new BookingId((string) $payload['booking_id']),
+            (string) $payload['reason'],
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

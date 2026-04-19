@@ -58,4 +58,14 @@ final readonly class UserRoleAssigned implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new UserId((string) $payload['user_id']),
+            new RoleId((string) $payload['role_id']),
+            RoleName::from((string) $payload['role_name']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

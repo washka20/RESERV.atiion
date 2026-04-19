@@ -78,4 +78,16 @@ final readonly class PaymentInitiated implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new PaymentId((string) $payload['payment_id']),
+            new BookingId((string) $payload['booking_id']),
+            Money::fromCents((int) $payload['gross_amount'], (string) $payload['currency']),
+            PaymentMethod::from((string) $payload['method']),
+            Percentage::fromInt((int) $payload['fee_percent']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

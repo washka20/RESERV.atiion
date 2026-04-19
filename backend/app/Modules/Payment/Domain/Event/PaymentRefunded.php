@@ -62,4 +62,14 @@ final readonly class PaymentRefunded implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new PaymentId((string) $payload['payment_id']),
+            new BookingId((string) $payload['booking_id']),
+            Money::fromCents((int) $payload['amount'], (string) $payload['currency']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

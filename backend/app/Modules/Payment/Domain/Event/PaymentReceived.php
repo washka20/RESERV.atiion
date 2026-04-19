@@ -83,4 +83,19 @@ final readonly class PaymentReceived implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        $currency = (string) $payload['currency'];
+
+        return new self(
+            new PaymentId((string) $payload['payment_id']),
+            new BookingId((string) $payload['booking_id']),
+            Money::fromCents((int) $payload['gross_amount'], $currency),
+            Money::fromCents((int) $payload['platform_fee_amount'], $currency),
+            Money::fromCents((int) $payload['net_amount'], $currency),
+            (string) $payload['provider_ref'],
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

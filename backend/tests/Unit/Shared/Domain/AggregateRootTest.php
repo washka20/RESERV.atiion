@@ -32,6 +32,11 @@ final class FakeEvent implements DomainEvent
     {
         return ['aggregate_id' => $this->aggregateId];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self((string) $payload['aggregate_id']);
+    }
 }
 
 final class FakeAggregate extends AggregateRoot

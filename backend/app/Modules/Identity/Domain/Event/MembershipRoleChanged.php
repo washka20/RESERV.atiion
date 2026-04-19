@@ -61,4 +61,14 @@ final readonly class MembershipRoleChanged implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new MembershipId((string) $payload['membership_id']),
+            MembershipRole::from((string) $payload['old_role']),
+            MembershipRole::from((string) $payload['new_role']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

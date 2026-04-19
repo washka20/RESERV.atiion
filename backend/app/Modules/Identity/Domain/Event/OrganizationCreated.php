@@ -62,4 +62,14 @@ final readonly class OrganizationCreated implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new OrganizationId((string) $payload['organization_id']),
+            new OrganizationSlug((string) $payload['slug']),
+            OrganizationType::from((string) $payload['type']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

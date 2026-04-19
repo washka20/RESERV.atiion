@@ -69,4 +69,15 @@ final readonly class BookingCreated implements DomainEvent
             'occurred_at' => $this->occurredAt->format(DATE_ATOM),
         ];
     }
+
+    public static function fromPayload(array $payload): self
+    {
+        return new self(
+            new BookingId((string) $payload['booking_id']),
+            new UserId((string) $payload['user_id']),
+            new ServiceId((string) $payload['service_id']),
+            BookingType::from((string) $payload['type']),
+            new DateTimeImmutable((string) $payload['occurred_at']),
+        );
+    }
 }

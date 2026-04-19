@@ -18,4 +18,11 @@ interface DomainEvent
      * @return array<string, mixed>
      */
     public function payload(): array;
+
+    /**
+     * Десериализует событие из payload'а (для Outbox replay).
+     *
+     * @param  array<string, mixed>  $payload
+     */
+    public static function fromPayload(array $payload): self;
 }
