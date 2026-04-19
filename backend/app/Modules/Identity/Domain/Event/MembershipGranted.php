@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Identity\Domain\Event;
+
+use App\Modules\Identity\Domain\ValueObject\MembershipId;
+use App\Modules\Identity\Domain\ValueObject\MembershipRole;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
+use App\Modules\Identity\Domain\ValueObject\UserId;
+use App\Shared\Domain\DomainEvent;
+use DateTimeImmutable;
+
+/**
+ * User стал членом Organization с указанной ролью.
+ * Emitted при CreateOrganization (owner grant) и при InviteMember.
+ */
+final readonly class MembershipGranted implements DomainEvent
+{
+    public function __construct(
+        private MembershipId $membershipId,
+        private UserId $userId,
+        private OrganizationId $organizationId,
+        private MembershipRole $role,
+        private DateTimeImmutable $occurredAt,
+    ) {}
+
+    public function membershipId(): MembershipId
+    {
+        return $this->membershipId;
+    }
+
+    public function userId(): UserId
+    {
+        return $this->userId;
+    }
+
+    public function organizationId(): OrganizationId
+    {
+        return $this->organizationId;
+    }
+
+    public function role(): MembershipRole
+    {
+        return $this->role;
+    }
+
+    public function aggregateId(): string
+    {
+        return $this->membershipId->toString();
+    }
+
+    public function occurredAt(): DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
+
+    public function eventName(): string
+    {
+        return 'identity.membership.granted';
+    }
+
+    public function payload(): array
+    {
+        return [
+            'membership_id' => $this->membershipId->toString(),
+            'user_id' => $this->userId->toString(),
+            'organization_id' => $this->organizationId->toString(),
+            'role' => $this->role->value,
+            'occurred_at' => $this->occurredAt->format(DATE_ATOM),
+        ];
+    }
+}
