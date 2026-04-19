@@ -48,7 +48,26 @@ const router = createRouter({
       name: 'design-system',
       component: () => import('@/modules/design-system/DesignSystemView.vue'),
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/shared/views/NotFoundView.vue'),
+    },
   ],
+})
+
+/**
+ * Guard для роутов с meta.requiresAuth: пока /login нет (до Plan 14) —
+ * редиректим на каталог. После Plan 14 заменить на redirect /login с saved route.
+ */
+router.beforeEach((to) => {
+  if (to.meta.requiresAuth) {
+    const token = localStorage.getItem('auth:token')
+    if (!token) {
+      return { name: 'catalog', query: { 'auth-required': '1' } }
+    }
+  }
+  return true
 })
 
 export default router

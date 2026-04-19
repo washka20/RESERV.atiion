@@ -60,12 +60,13 @@ function onMaxUpdate(raw: string): void {
 <template>
   <fieldset class="flex flex-col gap-2 text-sm">
     <legend class="mb-1 block font-medium text-text">Цена, ₽</legend>
-    <div class="grid grid-cols-[1fr_auto_1fr] items-end gap-2">
+    <div class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-2">
       <BaseInput
         :model-value="minPrice ?? ''"
         type="number"
         placeholder="от"
         test-id="catalog-price-filter-min"
+        class="min-w-0"
         :input-attrs="{ min: 0, step: 1 }"
         @update:model-value="onMinUpdate"
         @blur="applyMin"
@@ -76,6 +77,7 @@ function onMaxUpdate(raw: string): void {
         type="number"
         placeholder="до"
         test-id="catalog-price-filter-max"
+        class="min-w-0"
         :input-attrs="{ min: 0, step: 1 }"
         @update:model-value="onMaxUpdate"
         @blur="applyMax"

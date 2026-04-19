@@ -44,7 +44,7 @@ const activeWorkspaceId = ref<string>('personal')
       <RouterLink
         :to="{ name: 'catalog' }"
         class="text-sm font-medium text-text-subtle hover:text-text"
-        active-class="text-accent"
+        active-class="!text-accent !font-semibold"
         data-test-id="app-header-nav-catalog"
       >
         Каталог
@@ -52,7 +52,7 @@ const activeWorkspaceId = ref<string>('personal')
       <RouterLink
         :to="{ name: 'dashboard' }"
         class="text-sm font-medium text-text-subtle hover:text-text"
-        active-class="text-accent"
+        active-class="!text-accent !font-semibold"
         data-test-id="app-header-nav-dashboard"
       >
         Мои брони
@@ -60,7 +60,7 @@ const activeWorkspaceId = ref<string>('personal')
       <RouterLink
         :to="{ name: 'design-system' }"
         class="text-sm font-medium text-text-subtle hover:text-text"
-        active-class="text-accent"
+        active-class="!text-accent !font-semibold"
         data-test-id="app-header-nav-design"
       >
         Design

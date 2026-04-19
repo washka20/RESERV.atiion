@@ -32,7 +32,23 @@ export const useBookingStore = defineStore('booking', () => {
   const error = ref<string | null>(null)
 
   function extractMessage(err: unknown, fallback: string): string {
-    if (err instanceof Error) return err.message
+    // axios error → envelope с error.message или status-specific fallback
+    if (err && typeof err === 'object' && 'response' in err) {
+      const res = (err as { response?: { status?: number; data?: { error?: { message?: string } } } }).response
+      const envMsg = res?.data?.error?.message
+      if (envMsg) return envMsg
+      const status = res?.status
+      if (status === 401) return 'Требуется вход в систему'
+      if (status === 403) return 'Недостаточно прав'
+      if (status === 404) return 'Не найдено'
+      if (status === 422) return 'Проверьте введённые данные'
+      if (status && status >= 500) return 'Ошибка сервера — попробуйте позже'
+    }
+    if (err instanceof Error) {
+      // "Request failed with status code N" — generic axios — скрываем
+      if (/^Request failed with status code/.test(err.message)) return fallback
+      return err.message
+    }
     return fallback
   }
 
@@ -55,7 +71,7 @@ export const useBookingStore = defineStore('booking', () => {
         total.value = 0
       }
     } catch (err) {
-      error.value = extractMessage(err, 'Failed to fetch bookings')
+      error.value = extractMessage(err, 'Не удалось загрузить бронирования')
       throw err
     } finally {
       isLoading.value = false
@@ -72,7 +88,7 @@ export const useBookingStore = defineStore('booking', () => {
       const envelope = await bookingApi.getBooking(id)
       currentBooking.value = envelope.success ? envelope.data : null
     } catch (err) {
-      error.value = extractMessage(err, 'Failed to fetch booking')
+      error.value = extractMessage(err, 'Не удалось загрузить бронирование')
       currentBooking.value = null
       throw err
     } finally {
@@ -95,7 +111,7 @@ export const useBookingStore = defineStore('booking', () => {
       const envelope = await availabilityApi.checkAvailability(serviceId, params)
       availability.value = envelope.success ? envelope.data : null
     } catch (err) {
-      error.value = extractMessage(err, 'Failed to check availability')
+      error.value = extractMessage(err, 'Не удалось проверить доступность')
       availability.value = null
       throw err
     } finally {
@@ -115,12 +131,12 @@ export const useBookingStore = defineStore('booking', () => {
     try {
       const envelope = await bookingApi.createBooking(payload)
       if (!envelope.success || !envelope.data) {
-        throw new Error(envelope.error?.message ?? 'Failed to create booking')
+        throw new Error(envelope.error?.message ?? 'Не удалось создать бронирование')
       }
       currentBooking.value = envelope.data
       return envelope.data
     } catch (err) {
-      error.value = extractMessage(err, 'Failed to create booking')
+      error.value = extractMessage(err, 'Не удалось создать бронирование')
       throw err
     } finally {
       isLoading.value = false
@@ -145,7 +161,7 @@ export const useBookingStore = defineStore('booking', () => {
         }
       }
     } catch (err) {
-      error.value = extractMessage(err, 'Failed to cancel booking')
+      error.value = extractMessage(err, 'Не удалось отменить бронирование')
       throw err
     }
   }

@@ -34,7 +34,10 @@ const select = (id: string) => {
     aria-label="Bottom navigation"
     data-test-id="base-bottom-nav"
   >
-    <ul class="grid grid-cols-4 gap-1">
+    <ul
+      class="grid gap-1"
+      :style="{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }"
+    >
       <li v-for="item in items" :key="item.id">
         <button
           type="button"

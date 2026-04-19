@@ -8,7 +8,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
+    // Vue DevTools floating panel — включается только при VITE_VUE_DEVTOOLS=1.
+    // По-умолчанию отключён: overlay в середине низа перекрывал mobile BottomNav.
+    ...(process.env.VITE_VUE_DEVTOOLS === '1' ? [vueDevTools()] : []),
   ],
   resolve: {
     alias: {
