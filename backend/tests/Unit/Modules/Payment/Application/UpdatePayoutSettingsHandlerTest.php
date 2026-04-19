@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Modules\Catalog\Domain\ValueObject\Money;
+use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 use App\Modules\Payment\Application\Command\UpdatePayoutSettings\UpdatePayoutSettingsCommand;
 use App\Modules\Payment\Application\Command\UpdatePayoutSettings\UpdatePayoutSettingsHandler;
 use App\Modules\Payment\Domain\Entity\PayoutSettings;
 use App\Modules\Payment\Domain\Event\PayoutSettingsUpdated;
 use App\Modules\Payment\Domain\Repository\PayoutSettingsRepositoryInterface;
+use App\Modules\Payment\Domain\ValueObject\BankAccount;
 use App\Modules\Payment\Domain\ValueObject\PayoutSchedule;
+use App\Modules\Payment\Domain\ValueObject\PayoutSettingsId;
 use App\Shared\Application\Identity\MembershipLookupInterface;
 use App\Shared\Application\Outbox\OutboxPublisherInterface;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -84,16 +88,16 @@ it('updates existing PayoutSettings when one already exists', function (): void 
     $memberships->shouldReceive('isOwner')->with($userId, $orgId)->once()->andReturn(true);
 
     $existing = PayoutSettings::create(
-        \App\Modules\Payment\Domain\ValueObject\PayoutSettingsId::generate(),
-        new \App\Modules\Identity\Domain\ValueObject\OrganizationId($orgId),
-        new \App\Modules\Payment\Domain\ValueObject\BankAccount(
+        PayoutSettingsId::generate(),
+        new OrganizationId($orgId),
+        new BankAccount(
             bankName: 'Сбербанк',
             accountNumber: '40702810000000001111',
             accountHolder: 'ООО «Ромашка»',
             bic: '044525225',
         ),
         PayoutSchedule::MONTHLY,
-        \App\Modules\Catalog\Domain\ValueObject\Money::fromCents(500_000),
+        Money::fromCents(500_000),
     );
     $existing->pullDomainEvents();
 

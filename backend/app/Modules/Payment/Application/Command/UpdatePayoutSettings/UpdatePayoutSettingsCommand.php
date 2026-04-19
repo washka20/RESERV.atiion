@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Payment\Application\Command\UpdatePayoutSettings;
 
+use App\Shared\Application\Identity\MembershipLookupInterface;
+
 /**
  * Команда «обновить payout settings организации».
  *
  * Проверка принадлежности user'а organization выполняется handler'ом через
- * {@see \App\Shared\Application\Identity\MembershipLookupInterface::isOwner()}.
+ * {@see MembershipLookupInterface::isOwner()}.
  */
 final readonly class UpdatePayoutSettingsCommand
 {

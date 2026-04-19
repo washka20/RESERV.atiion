@@ -2,17 +2,24 @@
 
 declare(strict_types=1);
 
+use App\Modules\Booking\Domain\ValueObject\BookingId;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Identity\Domain\ValueObject\OrganizationId;
+use App\Modules\Identity\Domain\ValueObject\UserId;
+use App\Modules\Payment\Domain\Entity\Payment;
 use App\Modules\Payment\Domain\Entity\PayoutSettings;
 use App\Modules\Payment\Domain\Entity\PayoutTransaction;
+use App\Modules\Payment\Domain\Repository\PaymentRepositoryInterface;
 use App\Modules\Payment\Domain\Repository\PayoutSettingsRepositoryInterface;
 use App\Modules\Payment\Domain\Repository\PayoutTransactionRepositoryInterface;
 use App\Modules\Payment\Domain\ValueObject\BankAccount;
+use App\Modules\Payment\Domain\ValueObject\PaymentId;
+use App\Modules\Payment\Domain\ValueObject\PaymentMethod;
 use App\Modules\Payment\Domain\ValueObject\PayoutSchedule;
 use App\Modules\Payment\Domain\ValueObject\PayoutSettingsId;
 use App\Modules\Payment\Domain\ValueObject\PayoutStatus;
 use App\Modules\Payment\Domain\ValueObject\PayoutTransactionId;
+use App\Modules\Payment\Domain\ValueObject\Percentage;
 use App\Modules\Payment\Infrastructure\Worker\PayoutWorker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -60,21 +67,21 @@ function workerSetupPendingPayout(OrganizationId $orgId, int $netCents): PayoutT
     $service = saveTimeSlotService('Haircut', $categoryId, organizationId: $orgId);
     $slotId = bookingInsertTimeSlot($service->id());
     $bookingIdStr = bookingInsertTimeSlotBooking(
-        new \App\Modules\Identity\Domain\ValueObject\UserId((string) $user->getAuthIdentifier()),
+        new UserId((string) $user->getAuthIdentifier()),
         $service->id(),
         $slotId,
     );
-    $bookingId = new \App\Modules\Booking\Domain\ValueObject\BookingId($bookingIdStr);
+    $bookingId = new BookingId($bookingIdStr);
 
-    $paymentId = \App\Modules\Payment\Domain\ValueObject\PaymentId::generate();
-    $payment = \App\Modules\Payment\Domain\Entity\Payment::initiate(
+    $paymentId = PaymentId::generate();
+    $payment = Payment::initiate(
         $paymentId,
         $bookingId,
         Money::fromCents($netCents + 10_000, 'RUB'),
-        \App\Modules\Payment\Domain\ValueObject\PaymentMethod::CARD,
-        \App\Modules\Payment\Domain\ValueObject\Percentage::fromInt(10),
+        PaymentMethod::CARD,
+        Percentage::fromInt(10),
     );
-    app(\App\Modules\Payment\Domain\Repository\PaymentRepositoryInterface::class)->save($payment);
+    app(PaymentRepositoryInterface::class)->save($payment);
 
     $payoutId = PayoutTransactionId::generate();
     $fee = (int) round($netCents * 10 / 90);

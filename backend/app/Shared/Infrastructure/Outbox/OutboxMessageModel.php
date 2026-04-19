@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Shared\Infrastructure\Outbox;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Eloquent-модель для outbox_messages. Infrastructure-only (не domain entity).
@@ -18,9 +19,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property array<string, mixed> $payload
  * @property string $status
  * @property int $retry_count
- * @property \Illuminate\Support\Carbon|null $next_attempt_at
- * @property \Illuminate\Support\Carbon|null $published_at
- * @property \Illuminate\Support\Carbon|null $failed_at
+ * @property Carbon|null $next_attempt_at
+ * @property Carbon|null $published_at
+ * @property Carbon|null $failed_at
  * @property string|null $last_error
  */
 final class OutboxMessageModel extends Model

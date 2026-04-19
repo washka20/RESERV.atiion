@@ -331,10 +331,208 @@ parameters:
 			path: app/Modules/Identity/Provider.php
 
 		-
+			message: '#^Access to an undefined property object\:\:\$amount_cents\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$booking_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$currency\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$marketplace_fee_percent\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$method\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$net_amount_cents\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$paid_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$platform_fee_cents\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$provider_ref\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PaymentDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$booking_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$currency\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$gross_amount_cents\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$net_amount_cents\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$organization_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$paid_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$payment_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$platform_fee_cents\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$scheduled_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Modules/Payment/Application/DTO/PayoutTransactionDTO.php
+
+		-
+			message: '#^Method App\\Modules\\Payment\\Interface\\Filament\\Action\\MarkPaymentPaidAction\:\:getDefaultName\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Modules/Payment/Interface/Filament/Action/MarkPaymentPaidAction.php
+
+		-
+			message: '#^Method App\\Modules\\Payment\\Interface\\Filament\\Action\\MarkPayoutPaidAction\:\:getDefaultName\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Modules/Payment/Interface/Filament/Action/MarkPayoutPaidAction.php
+
+		-
+			message: '#^Method App\\Modules\\Payment\\Interface\\Filament\\Action\\ProcessPayoutBatchAction\:\:getDefaultName\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Modules/Payment/Interface/Filament/Action/ProcessPayoutBatchAction.php
+
+		-
+			message: '#^Method App\\Modules\\Payment\\Interface\\Filament\\Action\\RefundPaymentAction\:\:getDefaultName\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: app/Modules/Payment/Interface/Filament/Action/RefundPaymentAction.php
+
+		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
 			path: app/Shared/Domain/AggregateId.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: app/Shared/Infrastructure/Outbox/OutboxWorker.php
+
+		-
+			message: '#^Method App\\Shared\\Infrastructure\\Outbox\\OutboxWorker\:\:claimBatch\(\) should return list\<App\\Shared\\Infrastructure\\Outbox\\OutboxMessageModel\> but returns array\<int, App\\Shared\\Infrastructure\\Outbox\\OutboxMessageModel\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Shared/Infrastructure/Outbox/OutboxWorker.php
+
+		-
+			message: '#^Property App\\Shared\\Infrastructure\\Outbox\\OutboxMessageModel\:\:\$failed_at \(Illuminate\\Support\\Carbon\|null\) does not accept DateTimeImmutable\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Shared/Infrastructure/Outbox/OutboxWorker.php
+
+		-
+			message: '#^Property App\\Shared\\Infrastructure\\Outbox\\OutboxMessageModel\:\:\$next_attempt_at \(Illuminate\\Support\\Carbon\|null\) does not accept DateTimeImmutable\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Shared/Infrastructure/Outbox/OutboxWorker.php
+
+		-
+			message: '#^Property App\\Shared\\Infrastructure\\Outbox\\OutboxMessageModel\:\:\$published_at \(Illuminate\\Support\\Carbon\|null\) does not accept DateTimeImmutable\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Shared/Infrastructure/Outbox/OutboxWorker.php
 
 		-
 			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Connection\:\:transaction\(\) expects Closure\(Illuminate\\Database\\Connection\)\: mixed, callable\(\)\: T given\.$#'

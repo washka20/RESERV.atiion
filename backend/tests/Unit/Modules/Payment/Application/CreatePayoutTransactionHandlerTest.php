@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Modules\Booking\Domain\ValueObject\BookingId;
+use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 use App\Modules\Payment\Application\Command\CreatePayoutTransaction\CreatePayoutTransactionCommand;
 use App\Modules\Payment\Application\Command\CreatePayoutTransaction\CreatePayoutTransactionHandler;
@@ -12,6 +13,7 @@ use App\Modules\Payment\Domain\Event\PayoutTransactionCreated;
 use App\Modules\Payment\Domain\Repository\PayoutTransactionRepositoryInterface;
 use App\Modules\Payment\Domain\ValueObject\PaymentId;
 use App\Modules\Payment\Domain\ValueObject\PayoutStatus;
+use App\Modules\Payment\Domain\ValueObject\PayoutTransactionId;
 use App\Shared\Application\Outbox\OutboxPublisherInterface;
 use Tests\Unit\Modules\Payment\Application\PassthroughTransactionManager;
 
@@ -62,13 +64,13 @@ it('is idempotent — returns null when payout for booking already exists', func
     $paymentId = PaymentId::generate();
 
     $existing = PayoutTransaction::create(
-        \App\Modules\Payment\Domain\ValueObject\PayoutTransactionId::generate(),
+        PayoutTransactionId::generate(),
         $bookingId,
         $orgId,
         $paymentId,
-        \App\Modules\Catalog\Domain\ValueObject\Money::fromCents(100_000),
-        \App\Modules\Catalog\Domain\ValueObject\Money::fromCents(10_000),
-        \App\Modules\Catalog\Domain\ValueObject\Money::fromCents(90_000),
+        Money::fromCents(100_000),
+        Money::fromCents(10_000),
+        Money::fromCents(90_000),
     );
 
     $repo = mock(PayoutTransactionRepositoryInterface::class);

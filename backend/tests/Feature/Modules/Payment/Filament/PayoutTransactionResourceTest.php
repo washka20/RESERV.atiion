@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Modules\Identity\Domain\ValueObject\UserId;
 use App\Modules\Identity\Infrastructure\Persistence\Model\UserModel;
 use App\Modules\Payment\Infrastructure\Persistence\Model\PayoutTransactionModel;
 use App\Modules\Payment\Interface\Filament\Resource\PayoutTransactionResource;
@@ -45,7 +46,7 @@ function payoutCreateFixture(string $status = 'pending'): string
     $service = saveTimeSlotService('Fx svc '.Str::random(4), $categoryId, organizationId: $orgId);
     $slotId = bookingInsertTimeSlot($service->id());
     $bookingId = bookingInsertTimeSlotBooking(
-        new App\Modules\Identity\Domain\ValueObject\UserId((string) $user->getAuthIdentifier()),
+        new UserId((string) $user->getAuthIdentifier()),
         $service->id(),
         $slotId,
     );

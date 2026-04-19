@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Modules\Identity\Domain\ValueObject\UserId;
 use App\Modules\Identity\Infrastructure\Persistence\Model\UserModel;
 use App\Modules\Payment\Infrastructure\Persistence\Model\PaymentModel;
 use App\Modules\Payment\Interface\Filament\Resource\PaymentResource;
@@ -46,7 +47,7 @@ function paymentCreateFixture(string $status = 'pending'): array
     $service = saveTimeSlotService('Fx svc '.Str::random(4), $categoryId, organizationId: $orgId);
     $slotId = bookingInsertTimeSlot($service->id());
     $bookingId = bookingInsertTimeSlotBooking(
-        new App\Modules\Identity\Domain\ValueObject\UserId((string) $user->getAuthIdentifier()),
+        new UserId((string) $user->getAuthIdentifier()),
         $service->id(),
         $slotId,
     );

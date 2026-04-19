@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Modules\Booking\Domain\ValueObject\BookingId;
 use App\Modules\Catalog\Domain\ValueObject\Money;
 use App\Modules\Identity\Domain\ValueObject\OrganizationId;
 use App\Modules\Identity\Domain\ValueObject\UserId;
@@ -30,7 +31,7 @@ function seedPayoutForStats(OrganizationId $orgId, int $grossCents): void
         $service->id(),
         $slotId,
     );
-    $bookingId = new \App\Modules\Booking\Domain\ValueObject\BookingId($bookingIdStr);
+    $bookingId = new BookingId($bookingIdStr);
 
     $paymentId = PaymentId::generate();
     $payment = Payment::initiate(

@@ -39,7 +39,7 @@ final class PayoutWorker
             ->where('status', 'pending')
             ->select('organization_id')
             ->selectRaw('SUM(net_amount_cents) AS total_net')
-            ->selectRaw("array_agg(id::text) AS ids")
+            ->selectRaw('array_agg(id::text) AS ids')
             ->groupBy('organization_id')
             ->get();
 

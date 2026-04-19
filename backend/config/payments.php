@@ -1,12 +1,13 @@
 <?php
 
 declare(strict_types=1);
+use App\Modules\Payment\Infrastructure\Gateway\NullPaymentGateway;
 
 return [
     'default_gateway' => env('PAYMENT_GATEWAY', 'null'),
 
     'gateways' => [
-        'null' => \App\Modules\Payment\Infrastructure\Gateway\NullPaymentGateway::class,
+        'null' => NullPaymentGateway::class,
     ],
 
     'marketplace_fee_percent' => (int) env('MARKETPLACE_FEE_PERCENT', 10),

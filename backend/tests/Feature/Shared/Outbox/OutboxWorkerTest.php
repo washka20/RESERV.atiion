@@ -12,6 +12,7 @@ use App\Shared\Infrastructure\Outbox\OutboxMessageModel;
 use App\Shared\Infrastructure\Outbox\OutboxWorker;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Psr\Log\NullLogger;
 
 uses(RefreshDatabase::class);
@@ -19,8 +20,8 @@ uses(RefreshDatabase::class);
 beforeEach(function (): void {
     // Глушим реальные listener'ы Payment на PaymentReceived — тест проверяет сам worker,
     // а не side-effects цепочки ConfirmBooking/CreatePayoutTransaction (там bus → null bookings → throws).
-    \Illuminate\Support\Facades\Event::fake([
-        \App\Modules\Payment\Domain\Event\PaymentReceived::class,
+    Event::fake([
+        PaymentReceived::class,
     ]);
 });
 
