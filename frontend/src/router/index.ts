@@ -103,6 +103,12 @@ const router = createRouter({
           component: () => import('@/modules/provider/views/OrgDashboardView.vue'),
           meta: { orgPermission: 'analytics.view' },
         },
+        {
+          path: 'services',
+          name: 'org-services',
+          component: () => import('@/modules/provider/views/OrgServicesView.vue'),
+          meta: { orgPermission: 'services.edit' },
+        },
       ],
     },
     {
