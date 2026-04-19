@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import BaseBadge from '@/shared/components/base/BaseBadge.vue'
+import BaseButton from '@/shared/components/base/BaseButton.vue'
 import type { Booking, BookingStatus } from '@/types/booking.types'
 import type { Currency } from '@/types/catalog.types'
 
@@ -19,15 +21,17 @@ const STATUS_LABEL: Record<BookingStatus, string> = {
   completed: 'Выполнено',
 }
 
-const STATUS_CLASS: Record<BookingStatus, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  confirmed: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
-  completed: 'bg-blue-100 text-blue-800',
+type BadgeVariant = 'neutral' | 'success' | 'warning' | 'danger' | 'info'
+
+const STATUS_VARIANT: Record<BookingStatus, BadgeVariant> = {
+  pending: 'warning',
+  confirmed: 'success',
+  cancelled: 'danger',
+  completed: 'info',
 }
 
 const statusLabel = computed(() => STATUS_LABEL[props.booking.status])
-const statusClass = computed(() => STATUS_CLASS[props.booking.status])
+const statusVariant = computed<BadgeVariant>(() => STATUS_VARIANT[props.booking.status])
 
 const formattedTotal = computed(() => {
   const currency = props.booking.totalPriceCurrency as Currency
@@ -65,45 +69,41 @@ function onCancel(): void {
 
 <template>
   <article
-    class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+    class="rounded-md border border-border bg-surface p-4 shadow-sm"
     data-test-id="dashboard-booking-card"
     :data-booking-id="booking.id"
   >
     <header class="flex items-start justify-between gap-3">
       <div>
-        <h3 class="text-base font-semibold text-gray-900" data-test-id="dashboard-booking-service">
+        <h3 class="text-base font-semibold text-text" data-test-id="dashboard-booking-service">
           {{ shortServiceId }}…
         </h3>
-        <p class="mt-0.5 text-xs text-gray-500">
+        <p class="mt-0.5 text-xs text-text-subtle">
           Создано {{ new Date(booking.createdAt).toLocaleString() }}
         </p>
       </div>
-      <span
-        class="shrink-0 rounded-full px-3 py-1 text-xs font-medium"
-        :class="statusClass"
-        data-test-id="dashboard-booking-status"
-      >
-        {{ statusLabel }}
+      <span class="shrink-0" data-test-id="dashboard-booking-status">
+        <BaseBadge :variant="statusVariant">{{ statusLabel }}</BaseBadge>
       </span>
     </header>
 
-    <p class="mt-3 text-sm text-gray-700" data-test-id="dashboard-booking-dates">
+    <p class="mt-3 text-sm text-text" data-test-id="dashboard-booking-dates">
       {{ dateLine }}
     </p>
 
     <footer class="mt-4 flex items-center justify-between">
-      <span class="text-lg font-semibold text-gray-900" data-test-id="dashboard-booking-total">
+      <span class="text-lg font-semibold text-text" data-test-id="dashboard-booking-total">
         {{ formattedTotal }}
       </span>
-      <button
+      <BaseButton
         v-if="canCancel"
-        type="button"
-        class="rounded-md border border-red-300 bg-white px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-        data-test-id="dashboard-booking-cancel-btn"
+        variant="danger"
+        size="sm"
+        test-id="dashboard-booking-cancel-btn"
         @click="onCancel"
       >
         Отменить
-      </button>
+      </BaseButton>
     </footer>
   </article>
 </template>
