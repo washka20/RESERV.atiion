@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Modules\Catalog\Application\Command\CreateService\CreateServiceCommand;
 use App\Shared\Application\Bus\CommandBusInterface;
+use Database\Seeders\Identity\OrganizationsSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -13,24 +14,21 @@ use RuntimeException;
 /**
  * Сидер примеров услуг каталога: 5 TIME_SLOT + 5 QUANTITY.
  *
- * Цены хранятся в копейках (amount × 100). Зависит от CategoriesSeeder
- * и SubcategoriesSeeder — идентификаторы берутся lookup-ом по slug.
+ * Цены хранятся в копейках (amount × 100). Зависит от CategoriesSeeder,
+ * SubcategoriesSeeder (lookup по slug) и Identity\OrganizationsSeeder
+ * (organization_id lookup по фиксированным константам).
  *
- * Организация-владелец: создаётся inline platform-admin org (fixed UUID),
- * пока OrganizationsSeeder (Task 18) не введёт полноценный seed orgs.
- * Все dev sample services attach'атся к этой org.
+ * TIME_SLOT (стрижки, консультации) → Salon Savvin.
+ * QUANTITY (отели) → Loft 23.
  */
 final class ServicesSeeder extends Seeder
 {
-    private const PLATFORM_ADMIN_ORG_ID = '00000000-0000-0000-0000-000000000001';
-
-    private const PLATFORM_ADMIN_ORG_SLUG = 'platform-admin';
-
     public function __construct(private readonly CommandBusInterface $commandBus) {}
 
     public function run(): void
     {
-        $orgId = $this->ensurePlatformAdminOrganization();
+        $this->assertOrganizationExists(OrganizationsSeeder::SALON_SAVVIN_ID, 'salon-savvin');
+        $this->assertOrganizationExists(OrganizationsSeeder::LOFT_23_ID, 'loft-23');
 
         $haircutsCat = $this->categoryIdBySlug('haircuts');
         $hotelsCat = $this->categoryIdBySlug('hotels');
@@ -51,6 +49,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $menSubcat,
                 'durationMinutes' => 45,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Женская стрижка',
@@ -61,6 +60,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $womenSubcat,
                 'durationMinutes' => 60,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Детская стрижка',
@@ -71,6 +71,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => null,
                 'durationMinutes' => 30,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Консультация юриста',
@@ -81,6 +82,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => null,
                 'durationMinutes' => 60,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Психологическая консультация',
@@ -91,6 +93,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => null,
                 'durationMinutes' => 90,
                 'totalQuantity' => null,
+                'organizationId' => OrganizationsSeeder::SALON_SAVVIN_ID,
             ],
             [
                 'name' => 'Номер Стандарт',
@@ -101,6 +104,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $standardSubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 10,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Номер Люкс',
@@ -111,6 +115,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $luxurySubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 5,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Номер Семейный',
@@ -121,6 +126,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $standardSubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 7,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Номер Президентский',
@@ -131,6 +137,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $luxurySubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 2,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
             [
                 'name' => 'Эконом номер',
@@ -141,6 +148,7 @@ final class ServicesSeeder extends Seeder
                 'subcategoryId' => $standardSubcat,
                 'durationMinutes' => null,
                 'totalQuantity' => 15,
+                'organizationId' => OrganizationsSeeder::LOFT_23_ID,
             ],
         ];
 
@@ -156,7 +164,7 @@ final class ServicesSeeder extends Seeder
                 priceCurrency: 'RUB',
                 type: $s['type'],
                 categoryId: $s['categoryId'],
-                organizationId: $orgId,
+                organizationId: $s['organizationId'],
                 subcategoryId: $s['subcategoryId'],
                 durationMinutes: $s['durationMinutes'],
                 totalQuantity: $s['totalQuantity'],
@@ -164,38 +172,14 @@ final class ServicesSeeder extends Seeder
         }
     }
 
-    /**
-     * Обеспечивает существование platform-admin организации.
-     * Идемпотентно: reuse уже созданной.
-     */
-    private function ensurePlatformAdminOrganization(): string
+    private function assertOrganizationExists(string $id, string $slug): void
     {
-        $existing = DB::table('organizations')->where('id', self::PLATFORM_ADMIN_ORG_ID)->value('id');
-        if ($existing !== null) {
-            return (string) $existing;
+        $exists = DB::table('organizations')->where('id', $id)->exists();
+        if (! $exists) {
+            throw new RuntimeException(
+                "Organization '{$slug}' (id={$id}) not found. Run Identity\\OrganizationsSeeder first."
+            );
         }
-
-        DB::table('organizations')->insert([
-            'id' => self::PLATFORM_ADMIN_ORG_ID,
-            'slug' => self::PLATFORM_ADMIN_ORG_SLUG,
-            'name' => json_encode(['ru' => 'Platform Admin'], JSON_UNESCAPED_UNICODE),
-            'description' => json_encode(['ru' => 'Platform-wide organization для dev seed-услуг'], JSON_UNESCAPED_UNICODE),
-            'type' => 'other',
-            'logo_url' => null,
-            'city' => 'Moscow',
-            'district' => null,
-            'phone' => '+7 000 000 00 00',
-            'email' => 'admin@platform.local',
-            'verified' => true,
-            'cancellation_policy' => 'flexible',
-            'rating' => 0,
-            'reviews_count' => 0,
-            'archived_at' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        return self::PLATFORM_ADMIN_ORG_ID;
     }
 
     private function categoryIdBySlug(string $slug): string
