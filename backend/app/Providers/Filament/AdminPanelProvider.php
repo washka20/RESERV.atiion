@@ -49,6 +49,10 @@ final class AdminPanelProvider extends PanelProvider
                 in: app_path('Modules/Booking/Interface/Filament/Resource'),
                 for: 'App\\Modules\\Booking\\Interface\\Filament\\Resource',
             )
+            ->discoverResources(
+                in: app_path('Modules/Payment/Interface/Filament/Resource'),
+                for: 'App\\Modules\\Payment\\Interface\\Filament\\Resource',
+            )
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
