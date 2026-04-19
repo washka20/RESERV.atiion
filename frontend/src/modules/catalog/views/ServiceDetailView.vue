@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import BaseBadge from '@/shared/components/base/BaseBadge.vue'
+import BaseButton from '@/shared/components/base/BaseButton.vue'
+import BaseSkeleton from '@/shared/components/base/BaseSkeleton.vue'
 import { useCatalogStore } from '@/stores/catalog.store'
 
 const props = defineProps<{ id: string }>()
@@ -55,7 +58,7 @@ function buildImageUrl(path: string): string {
   >
     <div
       v-if="store.error"
-      class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+      class="rounded-md border border-danger/30 bg-danger/10 p-4 text-sm text-danger"
       data-test-id="service-detail-error"
     >
       {{ store.error }}
@@ -63,29 +66,24 @@ function buildImageUrl(path: string): string {
 
     <div
       v-else-if="store.isLoading || !service"
-      class="space-y-4"
+      class="flex flex-col gap-4"
       data-test-id="service-detail-loading"
     >
-      <div class="h-8 w-1/2 animate-pulse rounded bg-gray-200" />
-      <div class="aspect-video w-full animate-pulse rounded-lg bg-gray-200" />
-      <div class="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
-      <div class="h-4 w-2/3 animate-pulse rounded bg-gray-200" />
+      <BaseSkeleton variant="custom" width="50%" height="2rem" />
+      <BaseSkeleton variant="card" />
+      <BaseSkeleton variant="text" :lines="2" />
     </div>
 
     <article v-else class="space-y-6">
       <header class="space-y-2">
-        <p class="text-sm text-gray-500">
+        <p class="text-sm text-text-subtle">
           {{ service.categoryName }}
           <template v-if="service.subcategoryName">
             / {{ service.subcategoryName }}
           </template>
         </p>
-        <h1 class="text-3xl font-bold text-gray-900">{{ service.name }}</h1>
-        <span
-          class="inline-block rounded-full bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700"
-        >
-          {{ typeLabel }}
-        </span>
+        <h1 class="text-3xl font-bold text-text">{{ service.name }}</h1>
+        <BaseBadge variant="info">{{ typeLabel }}</BaseBadge>
       </header>
 
       <section
@@ -98,52 +96,52 @@ function buildImageUrl(path: string): string {
           :key="image"
           :src="buildImageUrl(image)"
           :alt="`${service.name} — изображение ${idx + 1}`"
-          class="aspect-video w-full rounded-lg object-cover"
+          class="aspect-video w-full rounded-md object-cover"
           loading="lazy"
         />
       </section>
       <div
         v-else
-        class="flex aspect-video w-full items-center justify-center rounded-lg bg-gray-100 text-sm text-gray-400"
+        class="flex aspect-video w-full items-center justify-center rounded-md bg-surface-muted text-sm text-text-subtle"
       >
         Нет изображений
       </div>
 
       <section class="space-y-2">
-        <h2 class="text-lg font-semibold text-gray-900">Описание</h2>
-        <p class="whitespace-pre-line text-gray-700">{{ service.description }}</p>
+        <h2 class="text-lg font-semibold text-text">Описание</h2>
+        <p class="whitespace-pre-line text-text">{{ service.description }}</p>
       </section>
 
       <section
-        class="grid grid-cols-1 gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 sm:grid-cols-3"
+        class="grid grid-cols-1 gap-3 rounded-md border border-border bg-surface-muted p-4 sm:grid-cols-3"
       >
         <div>
-          <dt class="text-xs uppercase tracking-wide text-gray-500">Цена</dt>
-          <dd class="text-lg font-semibold text-gray-900">{{ formattedPrice }}</dd>
+          <dt class="text-xs uppercase tracking-wide text-text-subtle">Цена</dt>
+          <dd class="text-lg font-semibold text-text">{{ formattedPrice }}</dd>
         </div>
         <div v-if="service.durationMinutes !== null">
-          <dt class="text-xs uppercase tracking-wide text-gray-500">Длительность</dt>
-          <dd class="text-lg font-semibold text-gray-900">
+          <dt class="text-xs uppercase tracking-wide text-text-subtle">Длительность</dt>
+          <dd class="text-lg font-semibold text-text">
             {{ service.durationMinutes }} мин
           </dd>
         </div>
         <div v-if="service.totalQuantity !== null">
-          <dt class="text-xs uppercase tracking-wide text-gray-500">Доступно</dt>
-          <dd class="text-lg font-semibold text-gray-900">
+          <dt class="text-xs uppercase tracking-wide text-text-subtle">Доступно</dt>
+          <dd class="text-lg font-semibold text-text">
             {{ service.totalQuantity }} шт
           </dd>
         </div>
       </section>
 
       <div class="flex justify-end">
-        <button
-          type="button"
-          class="rounded-md bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          data-test-id="service-detail-book-btn"
+        <BaseButton
+          variant="primary"
+          size="lg"
+          test-id="service-detail-book-btn"
           @click="bookService"
         >
           Забронировать
-        </button>
+        </BaseButton>
       </div>
     </article>
   </div>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import BaseBadge from '@/shared/components/base/BaseBadge.vue'
+import BaseButton from '@/shared/components/base/BaseButton.vue'
+import BaseSkeleton from '@/shared/components/base/BaseSkeleton.vue'
 import { useBookingStore } from '@/stores/booking.store'
 import { useCatalogStore } from '@/stores/catalog.store'
 import type { BookingStatus } from '@/types/booking.types'
@@ -25,11 +28,13 @@ const STATUS_LABEL: Record<BookingStatus, string> = {
   completed: 'выполнено',
 }
 
-const STATUS_CLASS: Record<BookingStatus, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  confirmed: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
-  completed: 'bg-blue-100 text-blue-800',
+type BadgeVariant = 'neutral' | 'success' | 'warning' | 'danger' | 'info'
+
+const STATUS_VARIANT: Record<BookingStatus, BadgeVariant> = {
+  pending: 'warning',
+  confirmed: 'success',
+  cancelled: 'danger',
+  completed: 'info',
 }
 
 onMounted(async () => {
@@ -57,8 +62,8 @@ const statusLabel = computed(() =>
   current.value ? STATUS_LABEL[current.value.status] : '',
 )
 
-const statusClass = computed(() =>
-  current.value ? STATUS_CLASS[current.value.status] : '',
+const statusVariant = computed<BadgeVariant>(() =>
+  current.value ? STATUS_VARIANT[current.value.status] : 'neutral',
 )
 
 const formattedTotal = computed(() => {
@@ -85,7 +90,7 @@ function formatDateTime(iso: string): string {
   <div class="mx-auto max-w-2xl px-4 py-6 sm:px-6 lg:px-8" data-test-id="booking-confirm-page">
     <div
       v-if="booking.error"
-      class="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+      class="rounded-md border border-danger/30 bg-danger/10 p-4 text-sm text-danger"
       data-test-id="booking-confirm-error"
     >
       {{ booking.error }}
@@ -93,39 +98,35 @@ function formatDateTime(iso: string): string {
 
     <div
       v-else-if="booking.isLoading || !current"
-      class="space-y-4"
+      class="flex flex-col gap-4"
       data-test-id="booking-confirm-loading"
     >
-      <div class="h-8 w-1/2 animate-pulse rounded bg-gray-200" />
-      <div class="h-32 w-full animate-pulse rounded bg-gray-200" />
+      <BaseSkeleton variant="custom" width="50%" height="2rem" />
+      <BaseSkeleton variant="custom" width="100%" height="8rem" />
     </div>
 
     <article
       v-else
-      class="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+      class="space-y-6 rounded-md border border-border bg-surface p-6 shadow-sm"
       data-test-id="booking-confirm-card"
     >
       <header class="space-y-2 text-center">
-        <h1 class="text-2xl font-bold text-gray-900">
+        <h1 class="text-2xl font-bold text-text">
           Бронирование
-          <span
-            class="ml-2 inline-block rounded-full px-3 py-1 text-sm font-medium"
-            :class="statusClass"
-            data-test-id="booking-confirm-status"
-          >
-            {{ statusLabel }}
+          <span class="ml-2 inline-block align-middle" data-test-id="booking-confirm-status">
+            <BaseBadge :variant="statusVariant">{{ statusLabel }}</BaseBadge>
           </span>
         </h1>
-        <p class="text-sm text-gray-500" data-test-id="booking-confirm-id">
-          ID: <code class="rounded bg-gray-100 px-1.5 py-0.5">{{ current.id }}</code>
+        <p class="text-sm text-text-subtle" data-test-id="booking-confirm-id">
+          ID: <code class="rounded bg-surface-muted px-1.5 py-0.5">{{ current.id }}</code>
         </p>
       </header>
 
       <dl class="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
         <div>
-          <dt class="text-xs uppercase tracking-wide text-gray-500">Услуга</dt>
+          <dt class="text-xs uppercase tracking-wide text-text-subtle">Услуга</dt>
           <dd
-            class="mt-1 text-base font-medium text-gray-900"
+            class="mt-1 text-base font-medium text-text"
             data-test-id="booking-confirm-service"
           >
             {{ service?.name ?? current.serviceId }}
@@ -133,9 +134,9 @@ function formatDateTime(iso: string): string {
         </div>
 
         <div>
-          <dt class="text-xs uppercase tracking-wide text-gray-500">Стоимость</dt>
+          <dt class="text-xs uppercase tracking-wide text-text-subtle">Стоимость</dt>
           <dd
-            class="mt-1 text-base font-semibold text-gray-900"
+            class="mt-1 text-base font-semibold text-text"
             data-test-id="booking-confirm-total"
           >
             {{ formattedTotal }}
@@ -144,14 +145,14 @@ function formatDateTime(iso: string): string {
 
         <template v-if="current.type === 'time_slot'">
           <div>
-            <dt class="text-xs uppercase tracking-wide text-gray-500">Начало</dt>
-            <dd class="mt-1 text-gray-900" data-test-id="booking-confirm-start">
+            <dt class="text-xs uppercase tracking-wide text-text-subtle">Начало</dt>
+            <dd class="mt-1 text-text" data-test-id="booking-confirm-start">
               {{ current.startAt ? formatDateTime(current.startAt) : '—' }}
             </dd>
           </div>
           <div>
-            <dt class="text-xs uppercase tracking-wide text-gray-500">Окончание</dt>
-            <dd class="mt-1 text-gray-900" data-test-id="booking-confirm-end">
+            <dt class="text-xs uppercase tracking-wide text-text-subtle">Окончание</dt>
+            <dd class="mt-1 text-text" data-test-id="booking-confirm-end">
               {{ current.endAt ? formatDateTime(current.endAt) : '—' }}
             </dd>
           </div>
@@ -159,42 +160,42 @@ function formatDateTime(iso: string): string {
 
         <template v-else>
           <div>
-            <dt class="text-xs uppercase tracking-wide text-gray-500">Заезд</dt>
-            <dd class="mt-1 text-gray-900" data-test-id="booking-confirm-check-in">
+            <dt class="text-xs uppercase tracking-wide text-text-subtle">Заезд</dt>
+            <dd class="mt-1 text-text" data-test-id="booking-confirm-check-in">
               {{ current.checkIn ?? '—' }}
             </dd>
           </div>
           <div>
-            <dt class="text-xs uppercase tracking-wide text-gray-500">Выезд</dt>
-            <dd class="mt-1 text-gray-900" data-test-id="booking-confirm-check-out">
+            <dt class="text-xs uppercase tracking-wide text-text-subtle">Выезд</dt>
+            <dd class="mt-1 text-text" data-test-id="booking-confirm-check-out">
               {{ current.checkOut ?? '—' }}
             </dd>
           </div>
           <div>
-            <dt class="text-xs uppercase tracking-wide text-gray-500">Количество</dt>
-            <dd class="mt-1 text-gray-900" data-test-id="booking-confirm-quantity">
+            <dt class="text-xs uppercase tracking-wide text-text-subtle">Количество</dt>
+            <dd class="mt-1 text-text" data-test-id="booking-confirm-quantity">
               {{ current.quantity ?? '—' }}
             </dd>
           </div>
         </template>
 
         <div v-if="current.notes" class="sm:col-span-2">
-          <dt class="text-xs uppercase tracking-wide text-gray-500">Комментарий</dt>
-          <dd class="mt-1 whitespace-pre-line text-gray-700" data-test-id="booking-confirm-notes">
+          <dt class="text-xs uppercase tracking-wide text-text-subtle">Комментарий</dt>
+          <dd class="mt-1 whitespace-pre-line text-text" data-test-id="booking-confirm-notes">
             {{ current.notes }}
           </dd>
         </div>
       </dl>
 
       <div class="flex justify-end">
-        <button
-          type="button"
-          class="rounded-md bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          data-test-id="booking-confirm-dashboard-btn"
+        <BaseButton
+          variant="primary"
+          size="lg"
+          test-id="booking-confirm-dashboard-btn"
           @click="goToDashboard"
         >
           В кабинет
-        </button>
+        </BaseButton>
       </div>
     </article>
   </div>

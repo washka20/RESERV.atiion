@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import BaseCard from '@/shared/components/base/BaseCard.vue'
 import type { Currency, Service } from '@/types/catalog.types'
 
 const props = defineProps<{
@@ -53,33 +54,32 @@ const selectedParams = computed(() => {
 </script>
 
 <template>
-  <section
-    class="rounded-lg border border-gray-200 bg-gray-50 p-4"
-    data-test-id="booking-summary"
-  >
-    <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Итого</h3>
-    <dl class="mt-3 space-y-2 text-sm">
-      <div class="flex items-center justify-between">
-        <dt class="text-gray-500">Услуга</dt>
-        <dd class="font-medium text-gray-900" data-test-id="booking-summary-service">
-          {{ service.name }}
-        </dd>
-      </div>
-      <div class="flex items-center justify-between">
-        <dt class="text-gray-500">Параметры</dt>
-        <dd class="text-gray-700" data-test-id="booking-summary-params">
-          {{ selectedParams }}
-        </dd>
-      </div>
-      <div class="flex items-center justify-between border-t border-gray-200 pt-2">
-        <dt class="text-gray-500">Стоимость</dt>
-        <dd
-          class="text-lg font-semibold text-gray-900"
-          data-test-id="booking-summary-total"
-        >
-          {{ formattedTotal }}
-        </dd>
-      </div>
-    </dl>
+  <section data-test-id="booking-summary">
+    <BaseCard as="section" padding="md" elevation="none">
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-text-subtle">Итого</h3>
+      <dl class="mt-3 flex flex-col gap-2 text-sm">
+        <div class="flex items-center justify-between">
+          <dt class="text-text-subtle">Услуга</dt>
+          <dd class="font-medium text-text" data-test-id="booking-summary-service">
+            {{ service.name }}
+          </dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-text-subtle">Параметры</dt>
+          <dd class="text-text" data-test-id="booking-summary-params">
+            {{ selectedParams }}
+          </dd>
+        </div>
+        <div class="flex items-center justify-between border-t border-border pt-2">
+          <dt class="text-text-subtle">Стоимость</dt>
+          <dd
+            class="text-lg font-semibold text-text"
+            data-test-id="booking-summary-total"
+          >
+            {{ formattedTotal }}
+          </dd>
+        </div>
+      </dl>
+    </BaseCard>
   </section>
 </template>
