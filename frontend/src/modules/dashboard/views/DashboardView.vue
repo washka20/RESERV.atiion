@@ -6,8 +6,12 @@ import BaseTabs from '@/shared/components/base/BaseTabs.vue'
 import { useBookingStore } from '@/stores/booking.store'
 import BookingFilters from '../components/BookingFilters.vue'
 import BookingsList from '../components/BookingsList.vue'
+import PersonalProfileView from './tabs/PersonalProfileView.vue'
+import NotificationsView from './tabs/NotificationsView.vue'
+import FavoritesView from './tabs/FavoritesView.vue'
+import PaymentMethodsView from './tabs/PaymentMethodsView.vue'
 
-type TabId = 'bookings' | 'profile' | 'notifications' | 'favorites'
+type TabId = 'bookings' | 'profile' | 'notifications' | 'favorites' | 'payment-methods'
 
 const booking = useBookingStore()
 const route = useRoute()
@@ -18,6 +22,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'profile', label: 'Профиль' },
   { id: 'notifications', label: 'Уведомления' },
   { id: 'favorites', label: 'Избранное' },
+  { id: 'payment-methods', label: 'Способы оплаты' },
 ]
 
 /** Активная вкладка — синхронизирована с `?tab=` в URL. */
@@ -118,30 +123,19 @@ const hasBookings = computed(() => booking.userBookings.length > 0)
       </template>
 
       <template #tab-profile>
-        <section :data-test-id="`dashboard-tab-profile`">
-          <BaseEmptyState
-            title="Профиль"
-            description="Управление профилем будет доступно в Plan 14"
-          />
-        </section>
+        <PersonalProfileView />
       </template>
 
       <template #tab-notifications>
-        <section :data-test-id="`dashboard-tab-notifications`">
-          <BaseEmptyState
-            title="Уведомления"
-            description="Уведомления появятся в Plan 14"
-          />
-        </section>
+        <NotificationsView />
       </template>
 
       <template #tab-favorites>
-        <section :data-test-id="`dashboard-tab-favorites`">
-          <BaseEmptyState
-            title="Избранное"
-            description="Сохранённые услуги появятся в Plan 14"
-          />
-        </section>
+        <FavoritesView />
+      </template>
+
+      <template #tab-payment-methods>
+        <PaymentMethodsView />
       </template>
     </BaseTabs>
   </div>

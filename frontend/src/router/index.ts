@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store'
+import type { MembershipPermission } from '@/types/auth.types'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,9 +41,123 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/modules/auth/views/LoginView.vue'),
+    },
+    {
+      path: '/register',
+      name: 'auth-register',
+      component: () => import('@/modules/auth/views/RegisterRoleView.vue'),
+    },
+    {
+      path: '/register/customer',
+      name: 'auth-register-customer',
+      component: () => import('@/modules/auth/views/RegisterCustomerView.vue'),
+    },
+    {
+      path: '/register/provider',
+      name: 'auth-register-provider',
+      component: () => import('@/modules/auth/views/RegisterProviderView.vue'),
+    },
+    {
+      path: '/verify-email/:token',
+      name: 'auth-verify-email',
+      component: () => import('@/modules/auth/views/VerifyEmailView.vue'),
+      props: true,
+    },
+    {
+      path: '/verify-phone',
+      name: 'auth-verify-phone',
+      component: () => import('@/modules/auth/views/VerifyPhoneView.vue'),
+    },
+    {
+      path: '/forgot-password',
+      name: 'auth-forgot-password',
+      component: () => import('@/modules/auth/views/ForgotPasswordView.vue'),
+    },
+    {
+      path: '/reset-password/:token',
+      name: 'auth-reset-password',
+      component: () => import('@/modules/auth/views/ResetPasswordView.vue'),
+      props: true,
+    },
+    {
+      path: '/forbidden',
+      name: 'forbidden',
+      component: () => import('@/modules/auth/views/ForbiddenView.vue'),
+    },
+    {
+      path: '/provider/onboarding',
+      name: 'provider-onboarding',
+      component: () => import('@/modules/provider/views/OrgOnboardingWizardView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/design-system',
       name: 'design-system',
       component: () => import('@/modules/design-system/DesignSystemView.vue'),
+    },
+    {
+      path: '/o/:slug',
+      component: () => import('@/modules/provider/components/OrgLayout.vue'),
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '',
+          name: 'org-dashboard',
+          component: () => import('@/modules/provider/views/OrgDashboardView.vue'),
+          meta: { orgPermission: 'analytics.view' },
+        },
+        {
+          path: 'services',
+          name: 'org-services',
+          component: () => import('@/modules/provider/views/OrgServicesView.vue'),
+          meta: { orgPermission: 'services.edit' },
+        },
+        {
+          path: 'services/new',
+          name: 'org-service-create',
+          component: () => import('@/modules/provider/views/OrgServiceFormView.vue'),
+          meta: { orgPermission: 'services.create' },
+        },
+        {
+          path: 'services/:id/edit',
+          name: 'org-service-edit',
+          component: () => import('@/modules/provider/views/OrgServiceFormView.vue'),
+          meta: { orgPermission: 'services.edit' },
+        },
+        {
+          path: 'calendar',
+          name: 'org-calendar',
+          component: () => import('@/modules/provider/views/OrgCalendarView.vue'),
+          meta: { orgPermission: 'bookings.view' },
+        },
+        {
+          path: 'inbox',
+          name: 'org-inbox',
+          component: () => import('@/modules/provider/views/OrgInboxView.vue'),
+          meta: { orgPermission: 'bookings.view' },
+        },
+        {
+          path: 'payouts',
+          name: 'org-payouts',
+          component: () => import('@/modules/provider/views/OrgPayoutsView.vue'),
+          meta: { orgPermission: 'payouts.view' },
+        },
+        {
+          path: 'team',
+          name: 'org-team',
+          component: () => import('@/modules/provider/views/OrgTeamView.vue'),
+          meta: { orgPermission: 'team.view' },
+        },
+        {
+          path: 'settings',
+          name: 'org-settings',
+          component: () => import('@/modules/provider/views/OrgSettingsView.vue'),
+          meta: { orgPermission: 'settings.view' },
+        },
+      ],
     },
     {
       path: '/:pathMatch(.*)*',
@@ -52,16 +168,28 @@ const router = createRouter({
 })
 
 /**
- * Guard для роутов с meta.requiresAuth: пока /login нет (до Plan 14) —
- * редиректим на каталог. После Plan 14 заменить на redirect /login с saved route.
+ * Router guards.
+ *
+ * 1. `meta.requiresAuth` — redirect на /login с `?redirect=` saved route.
+ * 2. Org routes (`params.slug` + `meta.orgPermission`) — проверка membership
+ *    permission клиентски. Backend всё равно проверяет через middleware,
+ *    client guard нужен только для UX (избегаем flash незагруженной страницы).
  */
 router.beforeEach((to) => {
-  if (to.meta.requiresAuth) {
-    const token = localStorage.getItem('auth:token')
-    if (!token) {
-      return { name: 'catalog', query: { 'auth-required': '1' } }
+  const auth = useAuthStore()
+
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+
+  const orgSlug = to.params.slug
+  const requiredPermission = to.meta.orgPermission as MembershipPermission | undefined
+  if (typeof orgSlug === 'string' && requiredPermission) {
+    if (!auth.canAccessOrg(orgSlug, requiredPermission)) {
+      return { name: 'forbidden' }
     }
   }
+
   return true
 })
 
