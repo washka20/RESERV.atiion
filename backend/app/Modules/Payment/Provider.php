@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace App\Modules\Payment;
 
+use App\Modules\Booking\Domain\Event\BookingCancelled;
+use App\Modules\Booking\Domain\Event\BookingCreated;
 use App\Modules\Payment\Application\Command\CreatePayoutTransaction\CreatePayoutTransactionHandler;
 use App\Modules\Payment\Application\Command\InitiatePayment\InitiatePaymentHandler;
 use App\Modules\Payment\Application\Command\UpdatePayoutSettings\UpdatePayoutSettingsHandler;
+use App\Modules\Payment\Application\Listener\ConfirmBookingOnPaymentReceived;
+use App\Modules\Payment\Application\Listener\CreatePayoutTransactionOnPaymentReceived;
+use App\Modules\Payment\Application\Listener\InitiatePaymentOnBookingCreated;
+use App\Modules\Payment\Application\Listener\RefundPaymentOnBookingCancelled;
+use App\Modules\Payment\Domain\Event\PaymentReceived;
 use App\Modules\Payment\Domain\Gateway\PaymentGatewayInterface;
 use App\Modules\Payment\Domain\Repository\PaymentRepositoryInterface;
 use App\Modules\Payment\Domain\Repository\PayoutSettingsRepositoryInterface;
@@ -20,8 +27,9 @@ use App\Shared\Application\Bus\CommandBusInterface;
 use App\Shared\Application\Identity\MembershipLookupInterface;
 use App\Shared\Application\Outbox\OutboxPublisherInterface;
 use App\Shared\Application\Transaction\TransactionManagerInterface;
-use Illuminate\Database\ConnectionInterface;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\ServiceProvider;
 use RuntimeException;
 
@@ -99,5 +107,11 @@ final class Provider extends ServiceProvider
         });
     }
 
-    public function boot(): void {}
+    public function boot(Dispatcher $events): void
+    {
+        $events->listen(BookingCreated::class, [InitiatePaymentOnBookingCreated::class, 'handle']);
+        $events->listen(PaymentReceived::class, [ConfirmBookingOnPaymentReceived::class, 'handle']);
+        $events->listen(PaymentReceived::class, [CreatePayoutTransactionOnPaymentReceived::class, 'handle']);
+        $events->listen(BookingCancelled::class, [RefundPaymentOnBookingCancelled::class, 'handle']);
+    }
 }
