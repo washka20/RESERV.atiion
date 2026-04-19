@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Payment\Interface\Console\PayoutsProcessCommand;
 use App\Shared\Infrastructure\Outbox\Console\OutboxWorkCommand;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withCommands([
         OutboxWorkCommand::class,
+        PayoutsProcessCommand::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         //
