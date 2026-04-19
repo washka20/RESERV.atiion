@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { useTheme } from './shared/composables/useTheme'
+
+useTheme()
 </script>
 
 <template>
