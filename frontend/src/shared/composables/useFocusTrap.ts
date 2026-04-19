@@ -38,8 +38,8 @@ export function useFocusTrap(
       event.preventDefault()
       return
     }
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
+    const first = focusable[0] as HTMLElement
+    const last = focusable[focusable.length - 1] as HTMLElement
     const activeEl = document.activeElement as HTMLElement | null
 
     if (event.shiftKey && activeEl === first) {
@@ -54,7 +54,8 @@ export function useFocusTrap(
   const activate = () => {
     previouslyFocused = document.activeElement as HTMLElement | null
     const focusable = getFocusable()
-    if (focusable.length) focusable[0].focus()
+    const first = focusable[0]
+    if (first) first.focus()
     document.addEventListener('keydown', onKeyDown)
   }
 

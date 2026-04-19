@@ -3,6 +3,7 @@
  * ARIA-tabs с клавиатурной навигацией (Arrow Left/Right).
  * Контент каждой табы рендерится через slot `tab-{id}`.
  */
+import type { ComponentPublicInstance } from 'vue'
 import { computed, nextTick, ref } from 'vue'
 
 interface Tab {
@@ -28,9 +29,10 @@ const currentIndex = computed<number>(() =>
   props.tabs.findIndex((t) => t.id === props.modelValue),
 )
 
-const setTabRef = (id: string) => (el: Element | null) => {
-  tabRefs.value[id] = el as HTMLButtonElement | null
-}
+const setTabRef =
+  (id: string) => (el: Element | ComponentPublicInstance | null) => {
+    tabRefs.value[id] = (el as HTMLButtonElement | null) ?? null
+  }
 
 const activate = (id: string) => {
   const tab = props.tabs.find((t) => t.id === id)
@@ -54,11 +56,12 @@ const onKeyDown = (event: KeyboardEvent) => {
   let next = idx
   for (let i = 0; i < tabs.length; i += 1) {
     next = (next + step + tabs.length) % tabs.length
-    if (!tabs[next].disabled) break
+    if (!tabs[next]?.disabled) break
   }
-  const nextId = tabs[next].id
-  activate(nextId)
-  focusTab(nextId)
+  const nextTab = tabs[next]
+  if (!nextTab) return
+  activate(nextTab.id)
+  focusTab(nextTab.id)
 }
 </script>
 
