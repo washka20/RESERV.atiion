@@ -298,7 +298,7 @@ jobs:
       - name: Fresh migrate + full seed
         run: php artisan migrate:fresh --seed --no-interaction --force
       - name: Run seeders smoke assertions
-        run: ./vendor/bin/pest tests/Feature/Infrastructure/SeedersSmokeTest.php
+        run: ./vendor/bin/pest tests/Smoke/
 
   backend-build:
     name: Backend build (prod composer smoke)
