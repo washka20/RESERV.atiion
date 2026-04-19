@@ -36,6 +36,8 @@ enum MembershipRole: string
         'bookings.cancel' => [self::OWNER, self::ADMIN, self::STAFF],
         'bookings.view' => [self::OWNER, self::ADMIN, self::STAFF, self::VIEWER],
         'payouts.view' => [self::OWNER, self::ADMIN],
+        'payouts.manage' => [self::OWNER],
+        'analytics.view' => [self::OWNER, self::ADMIN],
         'team.view' => [self::OWNER, self::ADMIN, self::STAFF],
         'team.manage' => [self::OWNER],
         'settings.view' => [self::OWNER, self::ADMIN, self::STAFF],
