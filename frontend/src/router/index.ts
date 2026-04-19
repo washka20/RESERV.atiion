@@ -121,6 +121,12 @@ const router = createRouter({
           component: () => import('@/modules/provider/views/OrgServiceFormView.vue'),
           meta: { orgPermission: 'services.edit' },
         },
+        {
+          path: 'calendar',
+          name: 'org-calendar',
+          component: () => import('@/modules/provider/views/OrgCalendarView.vue'),
+          meta: { orgPermission: 'bookings.view' },
+        },
       ],
     },
     {
