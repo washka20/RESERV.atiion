@@ -51,3 +51,7 @@ old/public/build/
 old/public/hot/
 old/public/storage/
 old/storage/*.key
+
+# QA session screenshots (Playwright MCP)
+*.png
+.playwright-mcp/
