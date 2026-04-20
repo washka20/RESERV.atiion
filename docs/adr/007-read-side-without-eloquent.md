@@ -1,6 +1,6 @@
 # ADR 007: Read-side customer API без Eloquent
 
-**Status:** Accepted
+**Status:** Superseded in parts by ADR-016 (2026-04-20) — Eloquent допустим для простых queries, `DB::table` оставлен для сложных агрегаций и существующих 21 handler
 **Date:** 2026-04-14
 
 ## Context

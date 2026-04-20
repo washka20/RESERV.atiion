@@ -1,6 +1,6 @@
 # ADR 004: Specification Pattern для бизнес-правил
 
-**Status:** Accepted
+**Status:** Superseded in parts by ADR-016 (2026-04-20) — композиция `->and/->or/->not` удалена за ненадобностью, базовый `Specification` класс оставлен
 **Date:** 2026-04-14
 
 ## Context
