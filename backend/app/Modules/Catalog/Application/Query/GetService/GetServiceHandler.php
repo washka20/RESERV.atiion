@@ -7,16 +7,23 @@ namespace App\Modules\Catalog\Application\Query\GetService;
 use App\Modules\Catalog\Application\DTO\ServiceDTO;
 use App\Modules\Catalog\Domain\Exception\ServiceNotFoundException;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
+use App\Shared\Application\Media\MediaStorageInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Возвращает полное представление услуги по идентификатору.
  *
+ * Images конвертируются в signed URLs (TTL из media.signed_url.ttl_minutes).
+ *
  * @throws ServiceNotFoundException если услуга не найдена
  */
 final readonly class GetServiceHandler
 {
+    public function __construct(
+        private MediaStorageInterface $storage,
+    ) {}
+
     public function handle(GetServiceQuery $query): ServiceDTO
     {
         $row = DB::table('services as s')
@@ -46,12 +53,17 @@ final readonly class GetServiceHandler
             throw ServiceNotFoundException::byId(new ServiceId($query->serviceId));
         }
 
-        $images = DB::table('service_images')
+        $imagePaths = DB::table('service_images')
             ->where('service_id', $query->serviceId)
             ->orderBy('sort_order')
             ->pluck('path')
             ->map(static fn ($p) => (string) $p)
             ->all();
+
+        $images = array_map(
+            fn (string $path): string => $this->storage->signedUrl($path),
+            $imagePaths,
+        );
 
         return new ServiceDTO(
             id: (string) $row->id,

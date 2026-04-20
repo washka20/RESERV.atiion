@@ -9,16 +9,20 @@ use App\Modules\Catalog\Domain\Repository\ServiceRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObject\ImagePath;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
+use App\Shared\Application\Media\MediaStorageInterface;
 
 final readonly class RemoveServiceImageHandler
 {
     public function __construct(
         private ServiceRepositoryInterface $services,
+        private MediaStorageInterface $storage,
         private DomainEventDispatcherInterface $dispatcher,
     ) {}
 
     /**
-     * Удаляет изображение из услуги. Идемпотентно.
+     * Удаляет изображение из услуги + файл из S3/MinIO.
+     *
+     * Идемпотентно: если файла нет в хранилище, delete() молчит.
      *
      * @throws ServiceNotFoundException если услуги нет
      */
@@ -28,5 +32,7 @@ final readonly class RemoveServiceImageHandler
         $service->removeImage(ImagePath::fromString($command->imagePath));
         $this->services->save($service);
         $this->dispatcher->dispatchAll($service->pullDomainEvents());
+
+        $this->storage->delete($command->imagePath);
     }
 }

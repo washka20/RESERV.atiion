@@ -113,7 +113,8 @@ it('uses primary image with lowest sort_order', function (): void {
 
     $result = listServicesHandler()->handle(new ListServicesQuery);
 
-    expect($result->data[0]->primaryImage)->toBe('services/a.jpg');
+    // primary_image теперь signed URL (ADR-017), не raw path.
+    expect($result->data[0]->primaryImage)->toStartWith('http')->toContain('services/a.jpg');
 });
 
 it('filters by min/max price', function (): void {
