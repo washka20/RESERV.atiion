@@ -47,7 +47,10 @@ it('returns ServiceDTO with full data and images', function (): void {
     expect($dto->subcategoryId)->toBe($subcategoryId->toString());
     expect($dto->subcategoryName)->toBe('Hair');
     expect($dto->isActive)->toBeTrue();
-    expect($dto->images)->toBe(['services/first.jpg', 'services/second.jpg']);
+    // Images теперь signed URLs (ADR-017), не raw paths. Проверяем что URL содержит path.
+    expect($dto->images)->toHaveCount(2);
+    expect($dto->images[0])->toStartWith('http')->toContain('services/first.jpg');
+    expect($dto->images[1])->toStartWith('http')->toContain('services/second.jpg');
     expect($dto->createdAt)->toBeString();
     expect($dto->updatedAt)->toBeString();
 });

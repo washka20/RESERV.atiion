@@ -9,23 +9,33 @@ use App\Modules\Catalog\Domain\Repository\ServiceRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObject\ImagePath;
 use App\Modules\Catalog\Domain\ValueObject\ServiceId;
 use App\Shared\Application\Event\DomainEventDispatcherInterface;
+use App\Shared\Application\Media\MediaStorageInterface;
+use App\Shared\Application\Media\MediaValidationException;
 
 final readonly class AddServiceImageHandler
 {
     public function __construct(
         private ServiceRepositoryInterface $services,
+        private MediaStorageInterface $storage,
         private DomainEventDispatcherInterface $dispatcher,
     ) {}
 
     /**
-     * Добавляет изображение к услуге. Идемпотентно по значению.
+     * Загружает файл в S3/MinIO, сохраняет path в service_images.
+     *
+     * Путь: "services/{service_id}/{uuid}.{ext}". Валидация mime/size/ext
+     * делается в MediaStorage::store (fail-fast до записи в БД).
      *
      * @throws ServiceNotFoundException если услуги нет
+     * @throws MediaValidationException
      */
     public function handle(AddServiceImageCommand $command): void
     {
         $service = $this->services->findByIdOrFail(new ServiceId($command->serviceId));
-        $service->addImage(ImagePath::fromString($command->imagePath));
+
+        $path = $this->storage->store($command->file, "services/{$command->serviceId}");
+
+        $service->addImage(ImagePath::fromString($path));
         $this->services->save($service);
         $this->dispatcher->dispatchAll($service->pullDomainEvents());
     }

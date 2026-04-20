@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application\Query\ListServices;
 
 use App\Modules\Catalog\Application\DTO\PaginatedResultDTO;
 use App\Modules\Catalog\Application\DTO\ServiceListItemDTO;
+use App\Shared\Application\Media\MediaStorageInterface;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -13,10 +14,15 @@ use Illuminate\Support\Facades\DB;
  * Возвращает paginated-список услуг для каталога с опциональными фильтрами.
  *
  * Использует QueryBuilder (без Eloquent) согласно CQRS read-модели.
- * Images догружаются batch-запросом без N+1.
+ * Primary image догружается batch-запросом без N+1, затем конвертируется
+ * в signed URL через MediaStorage (TTL из config).
  */
 final readonly class ListServicesHandler
 {
+    public function __construct(
+        private MediaStorageInterface $storage,
+    ) {}
+
     public function handle(ListServicesQuery $query): PaginatedResultDTO
     {
         $builder = DB::table('services as s')
@@ -51,6 +57,7 @@ final readonly class ListServicesHandler
         $items = [];
         foreach ($rows as $row) {
             $serviceId = (string) $row->id;
+            $primaryPath = $primaryImages[$serviceId] ?? null;
             $items[] = new ServiceListItemDTO(
                 id: $serviceId,
                 name: (string) $row->name,
@@ -58,7 +65,7 @@ final readonly class ListServicesHandler
                 priceCurrency: (string) $row->price_currency,
                 type: (string) $row->type,
                 categoryName: (string) $row->category_name,
-                primaryImage: $primaryImages[$serviceId] ?? null,
+                primaryImage: $primaryPath !== null ? $this->storage->signedUrl($primaryPath) : null,
                 isActive: (bool) $row->is_active,
             );
         }

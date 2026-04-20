@@ -77,3 +77,11 @@ arch('Application\Service не использует DB facade (Booking)')
 arch('Application\Service не использует DB facade (Payment)')
     ->expect('App\Modules\Payment\Application\Service')
     ->not->toUse('Illuminate\Support\Facades\DB');
+
+// ADR-017: модули используют MediaStorageInterface, не конкретную S3MediaStorage.
+// Защита от coupling к Laravel Storage и транспорта (S3 vs GCS vs локальный).
+arch('Catalog не импортирует S3MediaStorage напрямую')
+    ->expect('App\Modules\Catalog')
+    ->not->toUse([
+        'App\Shared\Infrastructure\Media\S3MediaStorage',
+    ]);
