@@ -174,3 +174,25 @@ export async function logout(refreshToken: string | null): Promise<void> {
   const body = refreshToken ? { refresh_token: refreshToken } : {}
   await apiClient.post('/auth/logout', body)
 }
+
+export interface UpdateMePayload {
+  email?: string
+  first_name?: string
+  last_name?: string
+  middle_name?: string | null
+}
+
+/**
+ * PUT /auth/me — partial update профиля текущего пользователя.
+ *
+ * Backend игнорирует отсутствующие поля. При DUPLICATE_EMAIL — 409.
+ * Возвращает обновлённого user'а.
+ */
+export async function updateMe(payload: UpdateMePayload): Promise<Envelope<User>> {
+  const resp = await apiClient.put<Envelope<RawUser>>('/auth/me', payload)
+  const raw = resp.data
+  if (!raw.success || !raw.data) {
+    return { success: raw.success, data: null, error: raw.error, meta: raw.meta }
+  }
+  return { success: true, data: mapUser(raw.data), error: null, meta: raw.meta }
+}

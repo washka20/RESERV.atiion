@@ -47,6 +47,8 @@ interface WizardDraft {
   orgType: string
   city: string
   description: string
+  orgPhone: string
+  orgEmail: string
   serviceType: 'time_slot' | 'quantity'
   serviceName: string
   servicePrice: number | string
@@ -63,6 +65,8 @@ const orgName = ref<string>('')
 const orgType = ref<string>('salon')
 const city = ref<string>('')
 const description = ref<string>('')
+const orgPhone = ref<string>('')
+const orgEmail = ref<string>('')
 const logo = ref<File[]>([])
 
 const serviceType = ref<'time_slot' | 'quantity'>('time_slot')
@@ -99,10 +103,13 @@ const currentIndex = computed<number>(() => STEP_ORDER.indexOf(currentStep.value
 const canGoBack = computed<boolean>(() => currentIndex.value > 0)
 const canGoNext = computed<boolean>(() => currentIndex.value < STEP_ORDER.length - 1)
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const profileValid = computed<boolean>(() =>
   orgName.value.trim().length > 0 &&
   orgType.value.trim().length > 0 &&
-  city.value.trim().length > 0,
+  city.value.trim().length > 0 &&
+  orgPhone.value.trim().length >= 7 &&
+  EMAIL_RE.test(orgEmail.value.trim()),
 )
 
 const serviceValid = computed<boolean>(() =>
@@ -121,6 +128,8 @@ function saveDraft(): void {
       orgType: orgType.value,
       city: city.value,
       description: description.value,
+      orgPhone: orgPhone.value,
+      orgEmail: orgEmail.value,
       serviceType: serviceType.value,
       serviceName: serviceName.value,
       servicePrice: servicePrice.value,
@@ -182,33 +191,28 @@ function goNext(): void {
 }
 
 /**
- * Публикация — POST /organizations. Backend endpoint пока stub,
- * поэтому при ошибке остаёмся на шаге publish и показываем toast.
- * При success redirect на org dashboard по slug из envelope.data.slug.
+ * Публикация — POST /organizations с правильным shape payload'а.
+ *
+ * Backend (CreateOrganizationRequest) ожидает:
+ * - name, description: локализованные объекты {ru, en?}
+ * - type, city, phone, email: required strings
+ * При ошибке остаёмся на шаге publish с toast. При success redirect на org dashboard.
+ *
+ * TODO: после success создавать первую услугу через POST /organizations/{slug}/services
+ * (backend endpoint ещё не реализован).
  */
 async function handlePublish(): Promise<void> {
   if (isSubmitting.value) return
   isSubmitting.value = true
   try {
+    const trimmedDescription = description.value.trim()
     const payload = {
-      name: orgName.value.trim(),
+      name: { ru: orgName.value.trim() },
       type: orgType.value,
       city: city.value.trim(),
-      description: description.value.trim() || null,
-      first_service: {
-        type: serviceType.value,
-        name: serviceName.value.trim(),
-        price_amount: Number(servicePrice.value) * 100,
-        price_currency: 'RUB',
-        duration_minutes:
-          serviceType.value === 'time_slot'
-            ? Number(serviceDuration.value) || null
-            : null,
-        total_quantity:
-          serviceType.value === 'quantity'
-            ? Number(serviceQuantity.value) || null
-            : null,
-      },
+      description: trimmedDescription ? { ru: trimmedDescription } : undefined,
+      phone: orgPhone.value.trim(),
+      email: orgEmail.value.trim(),
     }
     const resp = await apiClient.post<Envelope<{ slug: string }>>(
       '/organizations',
@@ -221,8 +225,9 @@ async function handlePublish(): Promise<void> {
     clearDraft()
     toast.success(t('onboarding.successTitle'))
     await router.push(`/o/${encodeURIComponent(slug)}`)
-  } catch {
-    toast.error(t('onboarding.errorPublish'))
+  } catch (err) {
+    const message = err instanceof Error ? err.message : t('onboarding.errorPublish')
+    toast.error(message)
   } finally {
     isSubmitting.value = false
   }
@@ -235,6 +240,8 @@ onMounted(() => {
     orgType.value = draft.orgType
     city.value = draft.city
     description.value = draft.description
+    orgPhone.value = draft.orgPhone ?? ''
+    orgEmail.value = draft.orgEmail ?? ''
     serviceType.value = draft.serviceType
     serviceName.value = draft.serviceName
     servicePrice.value = draft.servicePrice
@@ -252,6 +259,8 @@ watch(
     orgType,
     city,
     description,
+    orgPhone,
+    orgEmail,
     serviceType,
     serviceName,
     servicePrice,
@@ -356,6 +365,29 @@ const typeLabel = computed<string>(() => {
           required
           test-id="onboarding-city-input"
         />
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <BaseInput
+            v-model="orgPhone"
+            :label="t('onboarding.orgPhone')"
+            :placeholder="t('onboarding.orgPhonePh')"
+            :error="submitted && orgPhone.trim().length < 7 ? t('common.error') : ''"
+            required
+            type="tel"
+            autocomplete="tel"
+            test-id="onboarding-phone-input"
+          />
+          <BaseInput
+            v-model="orgEmail"
+            :label="t('onboarding.orgEmail')"
+            :placeholder="t('onboarding.orgEmailPh')"
+            :error="submitted && !EMAIL_RE.test(orgEmail.trim()) ? t('common.error') : ''"
+            required
+            type="email"
+            autocomplete="email"
+            test-id="onboarding-email-input"
+          />
+        </div>
 
         <BaseTextarea
           v-model="description"

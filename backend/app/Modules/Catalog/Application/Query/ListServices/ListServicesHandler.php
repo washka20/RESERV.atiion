@@ -97,6 +97,10 @@ final readonly class ListServicesHandler
             $builder->where('s.price_amount', '<=', $query->maxPrice);
         }
 
+        if ($query->organizationId !== null) {
+            $builder->where('s.organization_id', $query->organizationId);
+        }
+
         if ($query->search !== null && $query->search !== '') {
             $operator = DB::getDriverName() === 'pgsql' ? 'ilike' : 'like';
             $builder->where(static function (Builder $sub) use ($query, $operator): void {

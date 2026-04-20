@@ -25,20 +25,20 @@ const router = createRouter({
       name: 'booking-new',
       component: () => import('@/modules/booking/views/BookingView.vue'),
       props: true,
+      meta: { requiresAuth: true },
     },
     {
       path: '/bookings/:id',
       name: 'booking-confirm',
       component: () => import('@/modules/booking/views/BookingConfirmView.vue'),
       props: true,
+      meta: { requiresAuth: true },
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('@/modules/dashboard/views/DashboardView.vue'),
-      // requiresAuth отключён до полной реализации auth flow (Plan 14 ongoing):
-      // backend отвечает 401 без JWT, frontend показывает error message.
-      // Вернуть meta.requiresAuth когда login flow полностью hydrated/tested.
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',

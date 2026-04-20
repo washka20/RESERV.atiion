@@ -19,7 +19,7 @@ export interface ServicePayload {
 /**
  * GET /organizations/{slug}/services — список услуг organization.
  *
- * NOTE: на момент написания backend endpoint для org-scoped services пока stub.
+ * Требует membership в organization (backend проверяет через middleware org.member:services.edit).
  * Customer-side catalog endpoint живёт в catalog.api.ts.
  */
 export async function list(slug: string): Promise<Envelope<ServiceListItem[]>> {

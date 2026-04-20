@@ -53,8 +53,15 @@ async function handleSaveProfile(): Promise<void> {
   if (isSaving.value) return
   isSaving.value = true
   try {
-    // stub: PUT /auth/me появится позже
-    toast.error(t('profile.saveStub'))
+    await authStore.updateProfile({
+      first_name: firstName.value.trim(),
+      last_name: lastName.value.trim(),
+      middle_name: middleName.value.trim() || null,
+    })
+    toast.success(t('profile.saveSuccess'))
+  } catch (err) {
+    const message = err instanceof Error ? err.message : t('profile.saveError')
+    toast.error(message)
   } finally {
     isSaving.value = false
   }

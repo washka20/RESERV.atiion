@@ -17,6 +17,7 @@ Route::prefix('auth')->group(function (): void {
     Route::middleware(JwtAuthMiddleware::class)->group(function (): void {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
+        Route::put('me', [AuthController::class, 'updateMe']);
     });
 });
 
