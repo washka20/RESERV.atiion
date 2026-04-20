@@ -42,3 +42,38 @@ arch('Application не использует Eloquent (Booking)')
 arch('Application не использует Eloquent (Payment)')
     ->expect('App\Modules\Payment\Application')
     ->not->toUse('Illuminate\Database\Eloquent');
+
+// ADR-016: DB::table допустим только в Query handlers (read-side).
+// Command/Listener/Service — write-side, должны ходить через Repository интерфейсы.
+// Защита от god-сервисов, которые обходят Domain слой через raw SQL.
+arch('Command handlers не используют DB facade (Identity)')
+    ->expect('App\Modules\Identity\Application\Command')
+    ->not->toUse('Illuminate\Support\Facades\DB');
+
+arch('Command handlers не используют DB facade (Catalog)')
+    ->expect('App\Modules\Catalog\Application\Command')
+    ->not->toUse('Illuminate\Support\Facades\DB');
+
+arch('Command handlers не используют DB facade (Booking)')
+    ->expect('App\Modules\Booking\Application\Command')
+    ->not->toUse('Illuminate\Support\Facades\DB');
+
+arch('Command handlers не используют DB facade (Payment)')
+    ->expect('App\Modules\Payment\Application\Command')
+    ->not->toUse('Illuminate\Support\Facades\DB');
+
+arch('Application\Service не использует DB facade (Identity)')
+    ->expect('App\Modules\Identity\Application\Service')
+    ->not->toUse('Illuminate\Support\Facades\DB');
+
+arch('Application\Service не использует DB facade (Catalog)')
+    ->expect('App\Modules\Catalog\Application\Service')
+    ->not->toUse('Illuminate\Support\Facades\DB');
+
+arch('Application\Service не использует DB facade (Booking)')
+    ->expect('App\Modules\Booking\Application\Service')
+    ->not->toUse('Illuminate\Support\Facades\DB');
+
+arch('Application\Service не использует DB facade (Payment)')
+    ->expect('App\Modules\Payment\Application\Service')
+    ->not->toUse('Illuminate\Support\Facades\DB');
