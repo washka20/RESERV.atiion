@@ -62,7 +62,14 @@ it('returns 401 for unknown email', function (): void {
         ->assertJson(['success' => false, 'error' => ['code' => 'INVALID_CREDENTIALS']]);
 });
 
-it('throttles login after 5 attempts per minute', function (): void {
+it('throttles login after 5 attempts per minute (non-testing env)', function (): void {
+    // В testing env named limiter 'auth-login' возвращает Limit::none().
+    // Переопределяем через RateLimiter::for, чтобы проверить prod-поведение.
+    // См. AppServiceProvider::boot + ADR-018.
+    Illuminate\Support\Facades\RateLimiter::for('auth-login', function ($request) {
+        return Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
+    });
+
     for ($i = 0; $i < 5; $i++) {
         $this->postJson('/api/v1/auth/login', ['email' => 'login@test.com', 'password' => 'wrong']);
     }
