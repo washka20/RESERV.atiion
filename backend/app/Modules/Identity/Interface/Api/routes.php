@@ -10,14 +10,15 @@ use App\Modules\Identity\Interface\Api\Middleware\JwtAuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function (): void {
-    Route::post('register', [AuthController::class, 'register']);
+    // Rate limits — anti-bruteforce + anti-enumeration (ADR-018).
+    Route::post('register', [AuthController::class, 'register'])->middleware('throttle:3,1');
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:5,1');
-    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('refresh', [AuthController::class, 'refresh'])->middleware('throttle:20,1');
 
     Route::middleware(JwtAuthMiddleware::class)->group(function (): void {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
-        Route::put('me', [AuthController::class, 'updateMe']);
+        Route::put('me', [AuthController::class, 'updateMe'])->middleware('throttle:10,1');
     });
 });
 
