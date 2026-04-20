@@ -1,5 +1,7 @@
 # Module Guide — как создать новый модуль
 
+> **Новый в проекте?** Сначала прочитай [DDD Onboarding](ddd-onboarding.md) — 1 страница, что можно/нельзя.
+
 Модули живут в `backend/app/Modules/<Name>/`. Структура фиксирована **по реальному содержимому** (см. ADR-016): создаём только те папки, для которых есть классы.
 
 ## Шаги
@@ -59,16 +61,11 @@ final class Provider extends ServiceProvider
 }
 ```
 
-### 3. Зарегистрировать в `ModuleServiceProvider`
+### 3. Provider подхватится автоматически
 
-Добавить FQCN в `MODULE_PROVIDERS` (`backend/app/Providers/ModuleServiceProvider.php`):
+`ModuleServiceProvider` сканирует `app/Modules/*/Provider.php` через `glob()`. Положил файл по конвенции — он зарегистрируется. Правки `MODULE_PROVIDERS` **не нужны** (массив удалён).
 
-```php
-private const MODULE_PROVIDERS = [
-    // ...
-    \App\Modules\MyNewModule\Provider::class,
-];
-```
+Так же работает `routes/api_v1.php` — он авто-подхватит `app/Modules/<Module>/Interface/Api/routes.php` если файл существует.
 
 ### 4. Создать `README.md` модуля
 
