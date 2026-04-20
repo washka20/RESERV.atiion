@@ -1,0 +1,179 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - button "Личный" [expanded] [active] [ref=e6] [cursor=pointer]:
+          - generic [ref=e7]:
+            - img [ref=e8]
+            - generic [ref=e11]: Личный
+          - img [ref=e12]
+        - listbox [ref=e41]:
+          - option "Личный" [selected] [ref=e42]:
+            - button "Личный" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+              - generic [ref=e47]: Личный
+              - img [ref=e48]
+      - link "RESERV" [ref=e14] [cursor=pointer]:
+        - /url: /catalog
+      - navigation "Main navigation" [ref=e15]:
+        - link "Каталог" [ref=e16] [cursor=pointer]:
+          - /url: /catalog
+        - link "Мои брони" [ref=e17] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Design" [ref=e18] [cursor=pointer]:
+          - /url: /design-system
+      - generic [ref=e19]:
+        - button "Включить светлую тему" [ref=e20] [cursor=pointer]:
+          - img [ref=e21]
+        - generic "User" [ref=e27]:
+          - generic [ref=e28]: U
+    - main [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - heading "Каталог услуг" [level=1] [ref=e53]
+          - paragraph [ref=e54]: Выберите услугу для бронирования
+        - generic [ref=e55]:
+          - complementary [ref=e56]:
+            - heading "Фильтры" [level=2] [ref=e57]
+            - generic [ref=e58]:
+              - generic [ref=e59]: Поиск
+              - searchbox "Поиск" [ref=e61]
+            - generic [ref=e62]:
+              - generic [ref=e63]: Категория
+              - combobox "Категория" [ref=e64]:
+                - option "Все категории" [selected]
+                - option "Стрижки"
+                - option "Отели"
+                - option "Консультации"
+            - generic [ref=e65]:
+              - generic [ref=e66]: Тип
+              - combobox "Тип" [ref=e67]:
+                - option "Все" [selected]
+                - option "Временной слот"
+                - option "Количество"
+            - group "Цена, ₽" [ref=e68]:
+              - generic [ref=e69]: Цена, ₽
+              - generic [ref=e70]:
+                - spinbutton [ref=e73]
+                - generic [ref=e74]: —
+                - spinbutton [ref=e77]
+            - button "Сбросить" [ref=e78] [cursor=pointer]:
+              - generic [ref=e79]: Сбросить
+          - main [ref=e80]:
+            - generic [ref=e82]:
+              - article [ref=e83]:
+                - generic [ref=e85]: Нет изображения
+                - generic [ref=e86]:
+                  - generic [ref=e87]:
+                    - heading "Мужская стрижка" [level=3] [ref=e88]
+                    - generic [ref=e89]: Слот
+                  - paragraph [ref=e90]: Стрижки
+                  - generic [ref=e91]:
+                    - generic [ref=e92]: 1 500,00 ₽
+                    - link "Подробнее" [ref=e93] [cursor=pointer]:
+                      - /url: /catalog/25089764-d616-4124-bf48-8d3652f11d12
+              - article [ref=e94]:
+                - generic [ref=e96]: Нет изображения
+                - generic [ref=e97]:
+                  - generic [ref=e98]:
+                    - heading "Женская стрижка" [level=3] [ref=e99]
+                    - generic [ref=e100]: Слот
+                  - paragraph [ref=e101]: Стрижки
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: 2 500,00 ₽
+                    - link "Подробнее" [ref=e104] [cursor=pointer]:
+                      - /url: /catalog/e6f20c53-8e5f-460e-9be4-d4a98fa3f755
+              - article [ref=e105]:
+                - generic [ref=e107]: Нет изображения
+                - generic [ref=e108]:
+                  - generic [ref=e109]:
+                    - heading "Детская стрижка" [level=3] [ref=e110]
+                    - generic [ref=e111]: Слот
+                  - paragraph [ref=e112]: Стрижки
+                  - generic [ref=e113]:
+                    - generic [ref=e114]: 1 000,00 ₽
+                    - link "Подробнее" [ref=e115] [cursor=pointer]:
+                      - /url: /catalog/949918e9-34e9-46e2-87e1-58ca15dc020c
+              - article [ref=e116]:
+                - generic [ref=e118]: Нет изображения
+                - generic [ref=e119]:
+                  - generic [ref=e120]:
+                    - heading "Консультация юриста" [level=3] [ref=e121]
+                    - generic [ref=e122]: Слот
+                  - paragraph [ref=e123]: Консультации
+                  - generic [ref=e124]:
+                    - generic [ref=e125]: 3 000,00 ₽
+                    - link "Подробнее" [ref=e126] [cursor=pointer]:
+                      - /url: /catalog/5667ca8b-02a0-4776-8688-48a425f0fdf5
+              - article [ref=e127]:
+                - generic [ref=e129]: Нет изображения
+                - generic [ref=e130]:
+                  - generic [ref=e131]:
+                    - heading "Психологическая консультация" [level=3] [ref=e132]
+                    - generic [ref=e133]: Слот
+                  - paragraph [ref=e134]: Консультации
+                  - generic [ref=e135]:
+                    - generic [ref=e136]: 4 000,00 ₽
+                    - link "Подробнее" [ref=e137] [cursor=pointer]:
+                      - /url: /catalog/4fb45e60-9ad0-4d33-8fd9-297dc6d667dc
+              - article [ref=e138]:
+                - generic [ref=e140]: Нет изображения
+                - generic [ref=e141]:
+                  - generic [ref=e142]:
+                    - heading "Номер Стандарт" [level=3] [ref=e143]
+                    - generic [ref=e144]: Количество
+                  - paragraph [ref=e145]: Отели
+                  - generic [ref=e146]:
+                    - generic [ref=e147]: 5 000,00 ₽
+                    - link "Подробнее" [ref=e148] [cursor=pointer]:
+                      - /url: /catalog/785353c4-e095-47a0-90fa-01fada0e93d6
+              - article [ref=e149]:
+                - generic [ref=e151]: Нет изображения
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - heading "Номер Люкс" [level=3] [ref=e154]
+                    - generic [ref=e155]: Количество
+                  - paragraph [ref=e156]: Отели
+                  - generic [ref=e157]:
+                    - generic [ref=e158]: 10 000,00 ₽
+                    - link "Подробнее" [ref=e159] [cursor=pointer]:
+                      - /url: /catalog/2084e8ee-a0a7-428a-a360-5679f12402e7
+              - article [ref=e160]:
+                - generic [ref=e162]: Нет изображения
+                - generic [ref=e163]:
+                  - generic [ref=e164]:
+                    - heading "Номер Семейный" [level=3] [ref=e165]
+                    - generic [ref=e166]: Количество
+                  - paragraph [ref=e167]: Отели
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: 8 000,00 ₽
+                    - link "Подробнее" [ref=e170] [cursor=pointer]:
+                      - /url: /catalog/ff1c8e98-748d-48ae-8d6e-492cb841a5e6
+              - article [ref=e171]:
+                - generic [ref=e173]: Нет изображения
+                - generic [ref=e174]:
+                  - generic [ref=e175]:
+                    - heading "Номер Президентский" [level=3] [ref=e176]
+                    - generic [ref=e177]: Количество
+                  - paragraph [ref=e178]: Отели
+                  - generic [ref=e179]:
+                    - generic [ref=e180]: 25 000,00 ₽
+                    - link "Подробнее" [ref=e181] [cursor=pointer]:
+                      - /url: /catalog/ea7490a9-40bb-4d9e-9695-e36c81756432
+              - article [ref=e182]:
+                - generic [ref=e184]: Нет изображения
+                - generic [ref=e185]:
+                  - generic [ref=e186]:
+                    - heading "Эконом номер" [level=3] [ref=e187]
+                    - generic [ref=e188]: Количество
+                  - paragraph [ref=e189]: Отели
+                  - generic [ref=e190]:
+                    - generic [ref=e191]: 3 000,00 ₽
+                    - link "Подробнее" [ref=e192] [cursor=pointer]:
+                      - /url: /catalog/c062d82a-372c-4af6-9b57-eab22f33b87d
+  - region "Notifications"
+  - generic [ref=e29]:
+    - generic "Toggle devtools panel" [ref=e30] [cursor=pointer]:
+      - img [ref=e31]
+    - generic "Toggle Component Inspector" [ref=e36] [cursor=pointer]:
+      - img [ref=e37]

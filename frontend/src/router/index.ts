@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store'
+import { getAccessToken } from '@/api/client'
 import type { MembershipPermission } from '@/types/auth.types'
 
 const router = createRouter({
@@ -178,7 +179,12 @@ const router = createRouter({
 router.beforeEach((to) => {
   const auth = useAuthStore()
 
-  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+  // Hydrate-safe: проверяем только accessToken (sync из localStorage), не user.
+  // User подгружается async через hydrate() → loadMe(); guard не должен ждать его.
+  // Если token в localStorage есть — пропускаем, interceptor обработает 401 при
+  // невалидном токене. Это fix для E2E preview build race (596bbba).
+  const hasToken = auth.accessToken !== null || getAccessToken() !== null
+  if (to.meta.requiresAuth && !hasToken) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 

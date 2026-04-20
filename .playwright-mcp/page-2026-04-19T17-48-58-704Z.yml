@@ -1,0 +1,34 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "Личный" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e11]: Личный
+        - img [ref=e12]
+      - generic [ref=e14]:
+        - button "Включить светлую тему" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+        - generic "User" [ref=e22]:
+          - generic [ref=e23]: U
+    - main
+    - navigation "Bottom navigation" [ref=e24]:
+      - list [ref=e25]:
+        - listitem [ref=e26]:
+          - button "Каталог" [ref=e27] [cursor=pointer]:
+            - img [ref=e29]
+            - generic [ref=e32]: Каталог
+        - listitem [ref=e33]:
+          - button "Мои брони" [ref=e34] [cursor=pointer]:
+            - img [ref=e36]
+            - generic [ref=e39]: Мои брони
+        - listitem [ref=e40]:
+          - button "Профиль" [ref=e41] [cursor=pointer]:
+            - img [ref=e43]
+            - generic [ref=e46]: Профиль
+  - region "Notifications"
+  - generic [ref=e47]:
+    - generic "Toggle devtools panel" [ref=e48] [cursor=pointer]:
+      - img [ref=e49]
+    - generic "Toggle Component Inspector" [ref=e54] [cursor=pointer]:
+      - img [ref=e55]

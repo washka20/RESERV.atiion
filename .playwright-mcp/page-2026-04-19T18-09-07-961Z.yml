@@ -1,0 +1,24 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "Личный" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e11]: Личный
+        - img [ref=e12]
+      - link "RESERV" [ref=e14] [cursor=pointer]:
+        - /url: /catalog
+      - navigation "Main navigation" [ref=e15]:
+        - link "Каталог" [ref=e16] [cursor=pointer]:
+          - /url: /catalog
+        - link "Мои брони" [ref=e17] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Design" [ref=e18] [cursor=pointer]:
+          - /url: /design-system
+      - generic [ref=e19]:
+        - button "Включить светлую тему" [ref=e20] [cursor=pointer]:
+          - img [ref=e21]
+        - generic "User" [ref=e27]:
+          - generic [ref=e28]: U
+    - main
+  - region "Notifications"

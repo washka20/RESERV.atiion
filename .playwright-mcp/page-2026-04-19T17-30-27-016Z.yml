@@ -1,0 +1,708 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "Личный" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e11]: Личный
+        - img [ref=e12]
+      - link "RESERV" [ref=e14] [cursor=pointer]:
+        - /url: /catalog
+      - navigation "Main navigation" [ref=e15]:
+        - link "Каталог" [ref=e16] [cursor=pointer]:
+          - /url: /catalog
+        - link "Мои брони" [ref=e17] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Design" [ref=e18] [cursor=pointer]:
+          - /url: /design-system
+      - generic [ref=e19]:
+        - button "Включить светлую тему" [active] [ref=e887] [cursor=pointer]:
+          - img [ref=e888]
+        - generic "User" [ref=e23]:
+          - generic [ref=e24]: U
+    - main [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]: RESERV.atiion
+            - heading "Design System" [level=1] [ref=e43]
+          - generic [ref=e44]:
+            - generic [ref=e45]: Dark
+            - button "Light" [ref=e46] [cursor=pointer]:
+              - img [ref=e48]
+              - generic [ref=e54]: Light
+            - button "Dark" [pressed] [ref=e55] [cursor=pointer]:
+              - img [ref=e57]
+              - generic [ref=e59]: Dark
+            - button "Auto" [ref=e60] [cursor=pointer]:
+              - img [ref=e62]
+              - generic [ref=e65]: Auto
+        - generic [ref=e66]:
+          - complementary "Design system sections" [ref=e67]:
+            - navigation [ref=e68]:
+              - list [ref=e69]:
+                - listitem [ref=e70]:
+                  - link "Цвета" [ref=e71] [cursor=pointer]:
+                    - /url: "#colors"
+                - listitem [ref=e72]:
+                  - link "Типографика" [ref=e73] [cursor=pointer]:
+                    - /url: "#typography"
+                - listitem [ref=e74]:
+                  - link "Spacing" [ref=e75] [cursor=pointer]:
+                    - /url: "#spacing"
+                - listitem [ref=e76]:
+                  - link "Buttons" [ref=e77] [cursor=pointer]:
+                    - /url: "#buttons"
+                - listitem [ref=e78]:
+                  - link "Inputs" [ref=e79] [cursor=pointer]:
+                    - /url: "#inputs"
+                - listitem [ref=e80]:
+                  - link "Cards · Badges · Chips" [ref=e81] [cursor=pointer]:
+                    - /url: "#cards"
+                - listitem [ref=e82]:
+                  - link "Tabs · Pagination" [ref=e83] [cursor=pointer]:
+                    - /url: "#tabs-pagination"
+                - listitem [ref=e84]:
+                  - link "Modals · Dialog" [ref=e85] [cursor=pointer]:
+                    - /url: "#modals"
+                - listitem [ref=e86]:
+                  - link "Feedback · Toast" [ref=e87] [cursor=pointer]:
+                    - /url: "#feedback"
+                - listitem [ref=e88]:
+                  - link "Data display" [ref=e89] [cursor=pointer]:
+                    - /url: "#data-display"
+                - listitem [ref=e90]:
+                  - link "Forms" [ref=e91] [cursor=pointer]:
+                    - /url: "#forms"
+                - listitem [ref=e92]:
+                  - link "Navigation" [ref=e93] [cursor=pointer]:
+                    - /url: "#navigation"
+          - main [ref=e94]:
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - heading "Цвета" [level=2] [ref=e98]
+                - paragraph [ref=e99]: Design tokens через CSS custom properties. Toggle темы — в шапке страницы.
+              - generic [ref=e100]:
+                - generic [ref=e101]:
+                  - generic [ref=e103]: bg
+                  - code [ref=e105]: "--color-bg"
+                - generic [ref=e106]:
+                  - generic [ref=e108]: surface
+                  - code [ref=e110]: "--color-surface"
+                - generic [ref=e111]:
+                  - generic [ref=e113]: surface-muted
+                  - code [ref=e115]: "--color-surface-muted"
+                - generic [ref=e116]:
+                  - generic [ref=e118]: accent
+                  - code [ref=e120]: "--color-accent"
+                - generic [ref=e121]:
+                  - generic [ref=e123]: accent-soft
+                  - code [ref=e125]: "--color-accent-soft"
+                - generic [ref=e126]:
+                  - generic [ref=e128]: danger
+                  - code [ref=e130]: "--color-danger"
+                - generic [ref=e131]:
+                  - generic [ref=e133]: success
+                  - code [ref=e135]: "--color-success"
+                - generic [ref=e136]:
+                  - generic [ref=e138]: warning
+                  - code [ref=e140]: "--color-warning"
+                - generic [ref=e141]:
+                  - generic [ref=e143]: text
+                  - code [ref=e145]: "--color-text"
+                - generic [ref=e146]:
+                  - generic [ref=e148]: text-subtle
+                  - code [ref=e150]: "--color-text-subtle"
+                - generic [ref=e151]:
+                  - generic [ref=e153]: border
+                  - code [ref=e155]: "--color-border"
+              - code [ref=e157]: <div class="bg-accent text-white">Accent</div> <div class="bg-surface border border-border">Surface</div>
+            - generic [ref=e159]:
+              - generic [ref=e160]:
+                - heading "Типографика" [level=2] [ref=e161]
+                - paragraph [ref=e162]: Manrope sans + JetBrains Mono для кода.
+              - generic [ref=e163]:
+                - generic [ref=e164]:
+                  - text: h1 · 48px / 700
+                  - heading "Бронируй, что важно" [level=1] [ref=e165]
+                - generic [ref=e166]:
+                  - text: h2 · 36px / 700
+                  - heading "Готовые решения" [level=2] [ref=e167]
+                - generic [ref=e168]:
+                  - text: h3 · 22px / 600
+                  - heading "Категории услуг" [level=3] [ref=e169]
+                - generic [ref=e170]:
+                  - text: p · 15px / 400 / leading 1.55
+                  - paragraph [ref=e171]: Основной текст интерфейса. Читается комфортно, не утомляет при длинных блоках. Используй для описаний, параграфов, каталожных карточек.
+                - generic [ref=e172]:
+                  - text: small · 13px / 500
+                  - paragraph [ref=e173]: Мелкий текст — подписи, метки, вспомогательная информация
+                - generic [ref=e174]:
+                  - text: caption · 12px / 500 uppercase
+                  - paragraph [ref=e175]: Label · tag · caption
+              - code [ref=e177]: <h1 class="text-4xl font-bold tracking-tight">Title</h1> <p class="text-base text-text leading-relaxed">Body</p>
+            - generic [ref=e179]:
+              - generic [ref=e180]:
+                - heading "Spacing" [level=2] [ref=e181]
+                - paragraph [ref=e182]: Шаг 4px. Используй tailwind утилиты p-1..p-12.
+              - generic [ref=e183]:
+                - generic [ref=e185]:
+                  - generic [ref=e186]: p-1
+                  - generic [ref=e187]: 4px · space-1
+                - generic [ref=e191]:
+                  - generic [ref=e192]: p-2
+                  - generic [ref=e193]: 8px · space-2
+                - generic [ref=e197]:
+                  - generic [ref=e198]: p-3
+                  - generic [ref=e199]: 12px · space-3
+                - generic [ref=e203]:
+                  - generic [ref=e204]: p-4
+                  - generic [ref=e205]: 16px · space-4
+                - generic [ref=e209]:
+                  - generic [ref=e210]: p-6
+                  - generic [ref=e211]: 24px · space-6
+                - generic [ref=e215]:
+                  - generic [ref=e216]: p-8
+                  - generic [ref=e217]: 32px · space-8
+                - generic [ref=e221]:
+                  - generic [ref=e222]: p-12
+                  - generic [ref=e223]: 48px · space-12
+              - code [ref=e227]: <div class="p-4 gap-3">...</div> <div class="px-6 py-3">...</div>
+            - generic [ref=e229]:
+              - generic [ref=e230]:
+                - heading "Buttons" [level=2] [ref=e231]
+                - paragraph [ref=e232]: 4 variant × 3 size + loading/disabled + icon slots.
+              - generic [ref=e233]:
+                - generic [ref=e234]:
+                  - generic [ref=e235]: Variants
+                  - generic [ref=e236]:
+                    - button "Primary" [ref=e237] [cursor=pointer]:
+                      - generic [ref=e238]: Primary
+                    - button "Secondary" [ref=e239] [cursor=pointer]:
+                      - generic [ref=e240]: Secondary
+                    - button "Ghost" [ref=e241] [cursor=pointer]:
+                      - generic [ref=e242]: Ghost
+                    - button "Danger" [ref=e243] [cursor=pointer]:
+                      - generic [ref=e244]: Danger
+                - generic [ref=e245]:
+                  - generic [ref=e246]: Sizes
+                  - generic [ref=e247]:
+                    - button "Small" [ref=e248] [cursor=pointer]:
+                      - generic [ref=e249]: Small
+                    - button "Medium" [ref=e250] [cursor=pointer]:
+                      - generic [ref=e251]: Medium
+                    - button "Large" [ref=e252] [cursor=pointer]:
+                      - generic [ref=e253]: Large
+                - generic [ref=e254]:
+                  - generic [ref=e255]: States
+                  - generic [ref=e256]:
+                    - button "Загрузка Loading" [disabled] [ref=e257]:
+                      - status "Загрузка" [ref=e258]
+                      - generic [ref=e259]: Loading
+                    - button "Disabled" [disabled] [ref=e260]:
+                      - generic [ref=e261]: Disabled
+                    - button "Danger disabled" [disabled] [ref=e262]:
+                      - generic [ref=e263]: Danger disabled
+                - generic [ref=e264]:
+                  - generic [ref=e265]: With icons
+                  - generic [ref=e266]:
+                    - button "Добавить" [ref=e267] [cursor=pointer]:
+                      - img [ref=e269]
+                      - generic [ref=e270]: Добавить
+                    - button "Далее" [ref=e271] [cursor=pointer]:
+                      - generic [ref=e272]: Далее
+                      - img [ref=e274]
+                    - button "Full width" [ref=e276] [cursor=pointer]:
+                      - generic [ref=e277]: Full width
+              - code [ref=e279]: <BaseButton variant="primary" size="md">Click</BaseButton> <BaseButton loading>Loading</BaseButton>
+            - generic [ref=e281]:
+              - generic [ref=e282]:
+                - heading "Form controls" [level=2] [ref=e283]
+                - paragraph [ref=e284]: Поля с label / helper / error. Все контролы поддерживают v-model.
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - generic [ref=e287]: Email
+                  - textbox "Email" [ref=e289]:
+                    - /placeholder: you@example.com
+                    - text: user@example.com
+                  - paragraph [ref=e290]: Мы не передаём адрес третьим сторонам
+                - generic [ref=e291]:
+                  - generic [ref=e292]: Пароль
+                  - textbox "Пароль" [ref=e294]: abc
+                  - paragraph [ref=e295]: Минимум 8 символов
+                - generic [ref=e296]:
+                  - generic [ref=e297]: Комментарий
+                  - textbox "Комментарий" [ref=e298]:
+                    - /placeholder: Пожелания к администратору…
+                  - paragraph [ref=e299]: До 500 символов
+                - generic [ref=e300]:
+                  - generic [ref=e301]: Город
+                  - combobox "Город" [ref=e302]:
+                    - option "— выберите —" [disabled] [selected]
+                    - option "Москва"
+                    - option "Санкт-Петербург"
+                    - option "Казань"
+                - generic [ref=e303]:
+                  - generic [ref=e304]: Согласия
+                  - generic [ref=e305] [cursor=pointer]:
+                    - generic [ref=e306]:
+                      - checkbox "Согласен на рассылку" [checked] [ref=e307]
+                      - img [ref=e309]
+                    - generic [ref=e311]: Согласен на рассылку
+                  - generic [ref=e312] [cursor=pointer]:
+                    - checkbox "Disabled" [disabled] [ref=e314]
+                    - generic [ref=e316]: Disabled
+                - generic [ref=e317]:
+                  - generic [ref=e318]: Тариф
+                  - generic [ref=e319] [cursor=pointer]:
+                    - radio "Free" [ref=e321]
+                    - generic [ref=e323]: Free
+                  - generic [ref=e324] [cursor=pointer]:
+                    - radio "Pro" [checked] [ref=e326]
+                    - generic [ref=e329]: Pro
+                  - generic [ref=e330] [cursor=pointer]:
+                    - radio "Business" [ref=e332]
+                    - generic [ref=e334]: Business
+                - generic [ref=e335]:
+                  - generic [ref=e336]: Переключатели
+                  - generic [ref=e337] [cursor=pointer]:
+                    - switch "Push-уведомления" [checked] [ref=e338]
+                    - generic [ref=e340]: Push-уведомления
+                  - generic [ref=e341] [cursor=pointer]:
+                    - switch "Beta features (disabled)" [disabled] [ref=e342]
+                    - generic [ref=e344]: Beta features (disabled)
+              - code [ref=e346]: <BaseInput v-model="email" label="Email" helper="..." /> <BaseSelect v-model="city" :options="cityOptions" /> <BaseToggle v-model="enabled" label="On" />
+            - generic [ref=e348]:
+              - generic [ref=e349]:
+                - heading "Cards · Badges · Chips" [level=2] [ref=e350]
+                - paragraph [ref=e351]: Контейнеры и inline-статусы.
+              - generic [ref=e352]:
+                - generic [ref=e353]:
+                  - heading "Padding sm · elevation none" [level=3] [ref=e354]
+                  - paragraph [ref=e355]: Минимальная карточка.
+                - generic [ref=e356]:
+                  - heading "Padding md · shadow sm" [level=3] [ref=e357]
+                  - paragraph [ref=e358]: Дефолт для списков.
+                - generic [ref=e359]:
+                  - heading "Padding lg · shadow md" [level=3] [ref=e360]
+                  - paragraph [ref=e361]: Акцентный блок на лендинге.
+              - generic [ref=e362]:
+                - generic [ref=e363]: Badges
+                - generic [ref=e364]:
+                  - generic [ref=e365]: Neutral
+                  - generic [ref=e366]: Confirmed
+                  - generic [ref=e367]: Pending
+                  - generic [ref=e368]: Cancelled
+                  - generic [ref=e369]: New
+              - generic [ref=e370]:
+                - generic [ref=e371]: Chips
+                - generic [ref=e372]:
+                  - button "Спа" [pressed] [ref=e373] [cursor=pointer]
+                  - button "Массаж" [ref=e374] [cursor=pointer]
+                  - button "Йога" [ref=e375] [cursor=pointer]
+                  - button "Disabled" [disabled] [ref=e376]
+                - generic [ref=e377]:
+                  - button "Москва Удалить" [ref=e378] [cursor=pointer]:
+                    - text: Москва
+                    - button "Удалить" [ref=e379]:
+                      - img [ref=e380]
+                  - button "До 3 000 ₽ Удалить" [ref=e382] [cursor=pointer]:
+                    - text: До 3 000 ₽
+                    - button "Удалить" [ref=e383]:
+                      - img [ref=e384]
+                  - button "4.5+ Удалить" [ref=e386] [cursor=pointer]:
+                    - text: 4.5+
+                    - button "Удалить" [ref=e387]:
+                      - img [ref=e388]
+              - code [ref=e391]: <BaseCard padding="md" elevation="sm">...</BaseCard> <BaseBadge variant="success">Confirmed</BaseBadge> <BaseChip label="Moscow" clickable :selected="true" />
+            - generic [ref=e393]:
+              - generic [ref=e394]:
+                - heading "Tabs · Pagination" [level=2] [ref=e395]
+                - paragraph [ref=e396]: ARIA-tabs с keyboard-навигацией (Arrow Left/Right) + пагинация с ellipsis.
+              - generic [ref=e398]:
+                - tablist [ref=e399]:
+                  - tab "Обзор" [selected] [ref=e400] [cursor=pointer]
+                  - tab "Расписание" [ref=e401] [cursor=pointer]
+                  - tab "Отзывы" [ref=e402] [cursor=pointer]
+                  - tab "Архив" [disabled] [ref=e403]
+                - tabpanel "Обзор" [ref=e404]:
+                  - paragraph [ref=e405]: "Обзор услуги: базовые параметры, цена, доступные слоты на ближайшие 7 дней."
+              - generic [ref=e406]:
+                - generic [ref=e407]: Pagination (text-page=5)
+                - navigation "Pagination" [ref=e408]:
+                  - button "Предыдущая страница" [ref=e409] [cursor=pointer]: ‹
+                  - button "1" [ref=e410] [cursor=pointer]
+                  - generic [ref=e411]: …
+                  - button "4" [ref=e412] [cursor=pointer]
+                  - button "5" [ref=e413] [cursor=pointer]
+                  - button "6" [ref=e414] [cursor=pointer]
+                  - generic [ref=e415]: …
+                  - button "42" [ref=e416] [cursor=pointer]
+                  - button "Следующая страница" [ref=e417] [cursor=pointer]: ›
+              - code [ref=e419]: "<BaseTabs v-model=\"activeTab\" :tabs=\"tabs\"> <template #tab-overview>...</template> </BaseTabs> <BasePagination v-model:current-page=\"page\" :total-pages=\"42\" />"
+            - generic [ref=e421]:
+              - generic [ref=e422]:
+                - heading "Modals · Dialog" [level=2] [ref=e423]
+                - paragraph [ref=e424]: Teleport в body, focus-trap, Escape-close, backdrop click.
+              - generic [ref=e425]:
+                - button "Open modal" [ref=e426] [cursor=pointer]:
+                  - generic [ref=e427]: Open modal
+                - button "Confirm dialog" [ref=e428] [cursor=pointer]:
+                  - generic [ref=e429]: Confirm dialog
+                - button "Danger dialog" [ref=e430] [cursor=pointer]:
+                  - generic [ref=e431]: Danger dialog
+              - code [ref=e433]: "<BaseModal v-model=\"open\" title=\"...\"> Контент <template #footer><BaseButton>OK</BaseButton></template> </BaseModal> <BaseDialog v-model=\"open\" title=\"...\" variant=\"danger\" @confirm=\"...\" />"
+            - generic [ref=e435]:
+              - generic [ref=e436]:
+                - heading "Feedback" [level=2] [ref=e437]
+                - paragraph [ref=e438]: Avatar / EmptyState / Skeleton / Toast — пользовательская обратная связь.
+              - generic [ref=e439]:
+                - generic [ref=e440]: Avatars
+                - generic [ref=e441]:
+                  - generic "Анна Савина" [ref=e442]:
+                    - generic [ref=e443]: АС
+                  - generic "Игорь Петров" [ref=e444]:
+                    - generic [ref=e445]: ИП
+                  - generic "Мария Ключникова" [ref=e446]:
+                    - generic [ref=e447]: МК
+                  - generic "Admin User" [ref=e448]:
+                    - generic [ref=e449]: AU
+                  - generic "Broken" [ref=e450]:
+                    - generic [ref=e451]: BR
+              - generic [ref=e452]:
+                - generic [ref=e453]: Toast triggers
+                - generic [ref=e454]:
+                  - button "Success" [ref=e455] [cursor=pointer]:
+                    - generic [ref=e456]: Success
+                  - button "Error" [ref=e457] [cursor=pointer]:
+                    - generic [ref=e458]: Error
+                  - button "Info" [ref=e459] [cursor=pointer]:
+                    - generic [ref=e460]: Info
+                  - button "Warning" [ref=e461] [cursor=pointer]:
+                    - generic [ref=e462]: Warning
+              - generic [ref=e464]: Skeleton
+              - generic [ref=e475]:
+                - img [ref=e477]
+                - heading "Пока нет бронирований" [level=3] [ref=e480]
+                - paragraph [ref=e481]: Как только клиент забронирует слот — появится здесь. Создай первую услугу, чтобы начать.
+                - button "Создать услугу" [ref=e483] [cursor=pointer]:
+                  - generic [ref=e484]: Создать услугу
+              - code [ref=e486]: "const { toast } = useToast() toast.success('Готово!') <BaseAvatar alt=\"John Doe\" size=\"lg\" /> <BaseEmptyState title=\"Пусто\" />"
+            - generic [ref=e488]:
+              - generic [ref=e489]:
+                - heading "Data display" [level=2] [ref=e490]
+                - paragraph [ref=e491]: StatCard · DataTable · Calendar · Chart · Timeline.
+              - generic [ref=e492]:
+                - generic [ref=e493]:
+                  - generic [ref=e494]:
+                    - generic [ref=e495]: Брони за неделю
+                    - img [ref=e497]
+                  - generic [ref=e499]:
+                    - generic [ref=e500]: "142"
+                    - generic [ref=e501]:
+                      - img [ref=e502]
+                      - text: +12%
+                  - generic [ref=e505]: vs прошлой неделе
+                - generic [ref=e506]:
+                  - generic [ref=e507]:
+                    - generic [ref=e508]: Выручка
+                    - img [ref=e510]
+                  - generic [ref=e512]:
+                    - generic [ref=e513]: 1.2 млн ₽
+                    - generic [ref=e514]:
+                      - img [ref=e515]
+                      - text: "-4%"
+                  - generic [ref=e518]: vs прошлой неделе
+                - generic [ref=e519]:
+                  - generic [ref=e520]:
+                    - generic [ref=e521]: Новые клиенты
+                    - img [ref=e523]
+                  - generic [ref=e528]:
+                    - generic [ref=e529]: "38"
+                    - generic [ref=e530]:
+                      - img [ref=e531]
+                      - text: 0%
+              - generic [ref=e532]:
+                - generic [ref=e533]: DataTable
+                - table [ref=e535]:
+                  - rowgroup [ref=e536]:
+                    - row "Название Город Выручка Рейтинг" [ref=e537]:
+                      - columnheader "Название" [ref=e538]:
+                        - button "Название" [ref=e539] [cursor=pointer]:
+                          - text: Название
+                          - img [ref=e540]
+                      - columnheader "Город" [ref=e543]:
+                        - button "Город" [ref=e544] [cursor=pointer]:
+                          - text: Город
+                          - img [ref=e545]
+                      - columnheader "Выручка" [ref=e548]:
+                        - button "Выручка" [ref=e549] [cursor=pointer]:
+                          - text: Выручка
+                          - img [ref=e550]
+                      - columnheader "Рейтинг" [ref=e552]:
+                        - button "Рейтинг" [ref=e553] [cursor=pointer]:
+                          - text: Рейтинг
+                          - img [ref=e554]
+                  - rowgroup [ref=e557]:
+                    - row "Салон Саввина Москва 1 200 тыс ₽ 4.8" [ref=e558] [cursor=pointer]:
+                      - cell "Салон Саввина" [ref=e559]
+                      - cell "Москва" [ref=e560]
+                      - cell "1 200 тыс ₽" [ref=e561]
+                      - cell "4.8" [ref=e562]
+                    - row "Sauna Relax Сочи 980 тыс ₽ 4.3" [ref=e563] [cursor=pointer]:
+                      - cell "Sauna Relax" [ref=e564]
+                      - cell "Сочи" [ref=e565]
+                      - cell "980 тыс ₽" [ref=e566]
+                      - cell "4.3" [ref=e567]
+                    - row "Loft 23 СПб 850 тыс ₽ 4.6" [ref=e568] [cursor=pointer]:
+                      - cell "Loft 23" [ref=e569]
+                      - cell "СПб" [ref=e570]
+                      - cell "850 тыс ₽" [ref=e571]
+                      - cell "4.6" [ref=e572]
+                    - row "Beauty Club Казань 620 тыс ₽ 4.5" [ref=e573] [cursor=pointer]:
+                      - cell "Beauty Club" [ref=e574]
+                      - cell "Казань" [ref=e575]
+                      - cell "620 тыс ₽" [ref=e576]
+                      - cell "4.5" [ref=e577]
+                    - row "Yoga Space Москва 410 тыс ₽ 4.9" [ref=e578] [cursor=pointer]:
+                      - cell "Yoga Space" [ref=e579]
+                      - cell "Москва" [ref=e580]
+                      - cell "410 тыс ₽" [ref=e581]
+                      - cell "4.9" [ref=e582]
+              - generic [ref=e583]:
+                - generic [ref=e584]:
+                  - generic [ref=e585]: Calendar
+                  - generic [ref=e586]:
+                    - generic [ref=e587]:
+                      - button "Предыдущий месяц" [ref=e588] [cursor=pointer]:
+                        - img [ref=e589]
+                      - generic [ref=e591]: Апрель 2026
+                      - button "Следующий месяц" [ref=e592] [cursor=pointer]:
+                        - img [ref=e593]
+                    - grid "Апрель 2026" [ref=e595]:
+                      - columnheader "Пн" [ref=e596]
+                      - columnheader "Вт" [ref=e597]
+                      - columnheader "Ср" [ref=e598]
+                      - columnheader "Чт" [ref=e599]
+                      - columnheader "Пт" [ref=e600]
+                      - columnheader "Сб" [ref=e601]
+                      - columnheader "Вс" [ref=e602]
+                      - gridcell "Mon Mar 30 2026" [ref=e603]:
+                        - button "Mon Mar 30 2026" [ref=e604] [cursor=pointer]: "30"
+                      - gridcell "Tue Mar 31 2026" [ref=e605]:
+                        - button "Tue Mar 31 2026" [ref=e606] [cursor=pointer]: "31"
+                      - gridcell "Wed Apr 01 2026" [ref=e607]:
+                        - button "Wed Apr 01 2026" [ref=e608] [cursor=pointer]: "1"
+                      - gridcell "Thu Apr 02 2026" [ref=e609]:
+                        - button "Thu Apr 02 2026" [ref=e610] [cursor=pointer]: "2"
+                      - gridcell "Fri Apr 03 2026" [ref=e611]:
+                        - button "Fri Apr 03 2026" [ref=e612] [cursor=pointer]: "3"
+                      - gridcell "Sat Apr 04 2026" [ref=e613]:
+                        - button "Sat Apr 04 2026" [ref=e614] [cursor=pointer]: "4"
+                      - gridcell "Sun Apr 05 2026" [ref=e615]:
+                        - button "Sun Apr 05 2026" [ref=e616] [cursor=pointer]: "5"
+                      - gridcell "Mon Apr 06 2026" [ref=e617]:
+                        - button "Mon Apr 06 2026" [ref=e618] [cursor=pointer]: "6"
+                      - gridcell "Tue Apr 07 2026" [ref=e619]:
+                        - button "Tue Apr 07 2026" [ref=e620] [cursor=pointer]: "7"
+                      - gridcell "Wed Apr 08 2026" [ref=e621]:
+                        - button "Wed Apr 08 2026" [ref=e622] [cursor=pointer]: "8"
+                      - gridcell "Thu Apr 09 2026" [ref=e623]:
+                        - button "Thu Apr 09 2026" [ref=e624] [cursor=pointer]: "9"
+                      - gridcell "Fri Apr 10 2026" [ref=e625]:
+                        - button "Fri Apr 10 2026" [ref=e626] [cursor=pointer]: "10"
+                      - gridcell "Sat Apr 11 2026" [ref=e627]:
+                        - button "Sat Apr 11 2026" [ref=e628] [cursor=pointer]: "11"
+                      - gridcell "Sun Apr 12 2026" [ref=e629]:
+                        - button "Sun Apr 12 2026" [ref=e630] [cursor=pointer]: "12"
+                      - gridcell "Mon Apr 13 2026" [ref=e631]:
+                        - button "Mon Apr 13 2026" [ref=e632] [cursor=pointer]: "13"
+                      - gridcell "Tue Apr 14 2026" [ref=e633]:
+                        - button "Tue Apr 14 2026" [ref=e634] [cursor=pointer]: "14"
+                      - gridcell "Wed Apr 15 2026" [ref=e635]:
+                        - button "Wed Apr 15 2026" [ref=e636] [cursor=pointer]: "15"
+                      - gridcell "Thu Apr 16 2026" [ref=e637]:
+                        - button "Thu Apr 16 2026" [ref=e638] [cursor=pointer]: "16"
+                      - gridcell "Fri Apr 17 2026" [ref=e639]:
+                        - button "Fri Apr 17 2026" [ref=e640] [cursor=pointer]: "17"
+                      - gridcell "Sat Apr 18 2026" [ref=e641]:
+                        - button "Sat Apr 18 2026" [ref=e642] [cursor=pointer]: "18"
+                      - gridcell "Sun Apr 19 2026" [selected] [ref=e643]:
+                        - button "Sun Apr 19 2026" [ref=e644] [cursor=pointer]: "19"
+                      - gridcell "Mon Apr 20 2026" [ref=e645]:
+                        - button "Mon Apr 20 2026" [ref=e646] [cursor=pointer]: "20"
+                      - gridcell "Tue Apr 21 2026" [ref=e647]:
+                        - button "Tue Apr 21 2026" [ref=e648] [cursor=pointer]: "21"
+                      - gridcell "Wed Apr 22 2026" [ref=e649]:
+                        - button "Wed Apr 22 2026" [ref=e650] [cursor=pointer]: "22"
+                      - gridcell "Thu Apr 23 2026" [ref=e651]:
+                        - button "Thu Apr 23 2026" [ref=e652] [cursor=pointer]: "23"
+                      - gridcell "Fri Apr 24 2026" [ref=e653]:
+                        - button "Fri Apr 24 2026" [ref=e654] [cursor=pointer]: "24"
+                      - gridcell "Sat Apr 25 2026" [ref=e655]:
+                        - button "Sat Apr 25 2026" [ref=e656] [cursor=pointer]: "25"
+                      - gridcell "Sun Apr 26 2026" [ref=e657]:
+                        - button "Sun Apr 26 2026" [ref=e658] [cursor=pointer]: "26"
+                      - gridcell "Mon Apr 27 2026" [ref=e659]:
+                        - button "Mon Apr 27 2026" [ref=e660] [cursor=pointer]: "27"
+                      - gridcell "Tue Apr 28 2026" [ref=e661]:
+                        - button "Tue Apr 28 2026" [ref=e662] [cursor=pointer]: "28"
+                      - gridcell "Wed Apr 29 2026" [ref=e663]:
+                        - button "Wed Apr 29 2026" [ref=e664] [cursor=pointer]: "29"
+                      - gridcell "Thu Apr 30 2026" [ref=e665]:
+                        - button "Thu Apr 30 2026" [ref=e666] [cursor=pointer]: "30"
+                      - gridcell "Fri May 01 2026" [ref=e667]:
+                        - button "Fri May 01 2026" [ref=e668] [cursor=pointer]: "1"
+                      - gridcell "Sat May 02 2026" [ref=e669]:
+                        - button "Sat May 02 2026" [ref=e670] [cursor=pointer]: "2"
+                      - gridcell "Sun May 03 2026" [ref=e671]:
+                        - button "Sun May 03 2026" [ref=e672] [cursor=pointer]: "3"
+                      - gridcell "Mon May 04 2026" [ref=e673]:
+                        - button "Mon May 04 2026" [ref=e674] [cursor=pointer]: "4"
+                      - gridcell "Tue May 05 2026" [ref=e675]:
+                        - button "Tue May 05 2026" [ref=e676] [cursor=pointer]: "5"
+                      - gridcell "Wed May 06 2026" [ref=e677]:
+                        - button "Wed May 06 2026" [ref=e678] [cursor=pointer]: "6"
+                      - gridcell "Thu May 07 2026" [ref=e679]:
+                        - button "Thu May 07 2026" [ref=e680] [cursor=pointer]: "7"
+                      - gridcell "Fri May 08 2026" [ref=e681]:
+                        - button "Fri May 08 2026" [ref=e682] [cursor=pointer]: "8"
+                      - gridcell "Sat May 09 2026" [ref=e683]:
+                        - button "Sat May 09 2026" [ref=e684] [cursor=pointer]: "9"
+                      - gridcell "Sun May 10 2026" [ref=e685]:
+                        - button "Sun May 10 2026" [ref=e686] [cursor=pointer]: "10"
+                - generic [ref=e687]:
+                  - generic [ref=e688]:
+                    - generic [ref=e689]: Chart · bar
+                    - figure "Брони по дням" [ref=e690]:
+                      - generic [ref=e691]: Брони по дням
+                      - img "Брони по дням" [ref=e692]:
+                        - generic [ref=e701]:
+                          - generic [ref=e702]: Пн
+                          - generic [ref=e703]: Вт
+                          - generic [ref=e704]: Ср
+                          - generic [ref=e705]: Чт
+                          - generic [ref=e706]: Пт
+                          - generic [ref=e707]: Сб
+                          - generic [ref=e708]: Вс
+                  - generic [ref=e709]:
+                    - generic [ref=e710]: Chart · line
+                    - figure "Динамика" [ref=e711]:
+                      - generic [ref=e712]: Динамика
+                      - img "Динамика" [ref=e713]:
+                        - generic [ref=e723]:
+                          - generic [ref=e724]: Пн
+                          - generic [ref=e725]: Вт
+                          - generic [ref=e726]: Ср
+                          - generic [ref=e727]: Чт
+                          - generic [ref=e728]: Пт
+                          - generic [ref=e729]: Сб
+                          - generic [ref=e730]: Вс
+              - generic [ref=e731]:
+                - generic [ref=e732]: Timeline
+                - list [ref=e733]:
+                  - listitem [ref=e734]:
+                    - generic [ref=e736]: 12 апр
+                    - generic [ref=e740]:
+                      - generic [ref=e741]: Бронирование создано
+                      - generic [ref=e742]: Клиент — Анна С.
+                  - listitem [ref=e743]:
+                    - generic [ref=e745]: 12 апр
+                    - generic [ref=e749]:
+                      - generic [ref=e750]: Оплата прошла
+                      - generic [ref=e751]: 3 500 ₽ · Yandex Pay
+                  - listitem [ref=e752]:
+                    - generic [ref=e754]: 13 апр
+                    - generic [ref=e759]: Напоминание отправлено
+                  - listitem [ref=e760]:
+                    - generic [ref=e762]: 14 апр
+                    - generic [ref=e766]: Визит завершён
+              - code [ref=e768]: <BaseStatCard label="Брони" :value="142" trend="up" delta="+12%" /> <BaseDataTable :columns="columns" :rows="rows" @sort="onSort" /> <BaseCalendar v-model="date" /> <BaseChart type="bar" :data="data" /> <BaseTimeline :events="events" />
+            - generic [ref=e770]:
+              - generic [ref=e771]:
+                - heading "Forms" [level=2] [ref=e772]
+                - paragraph [ref=e773]: Stepper + FileUploader с drag-n-drop.
+              - generic [ref=e774]:
+                - generic [ref=e775]: Stepper (navigable)
+                - list "Progress" [ref=e776]:
+                  - listitem [ref=e777]:
+                    - generic [ref=e778]:
+                      - button [ref=e780] [cursor=pointer]:
+                        - img [ref=e781]
+                      - generic [ref=e784]:
+                        - generic [ref=e785]: Услуга
+                        - generic [ref=e786]: Выбор типа и мастера
+                  - listitem [ref=e787]:
+                    - generic [ref=e788]:
+                      - button "2" [ref=e791] [cursor=pointer]:
+                        - generic [ref=e792]: "2"
+                      - generic [ref=e794]:
+                        - generic [ref=e795]: Слот
+                        - generic [ref=e796]: Дата и время
+                  - listitem [ref=e797]:
+                    - generic [ref=e798]:
+                      - button "3" [ref=e801] [cursor=pointer]:
+                        - generic [ref=e802]: "3"
+                      - generic [ref=e804]:
+                        - generic [ref=e805]: Контакты
+                        - generic [ref=e806]: Имя и телефон
+                  - listitem [ref=e807]:
+                    - generic [ref=e808]:
+                      - button "4" [ref=e811] [cursor=pointer]:
+                        - generic [ref=e812]: "4"
+                      - generic [ref=e813]:
+                        - generic [ref=e814]: Готово
+                        - generic [ref=e815]: Подтверждение
+                - generic [ref=e816]:
+                  - button "Назад" [ref=e817] [cursor=pointer]:
+                    - generic [ref=e818]: Назад
+                  - button "Далее" [ref=e819] [cursor=pointer]:
+                    - generic [ref=e820]: Далее
+              - generic [ref=e821]:
+                - generic [ref=e822]: FileUploader
+                - button "Перетащите фото или выберите" [ref=e824] [cursor=pointer]:
+                  - img [ref=e825]
+                  - generic [ref=e828]: Перетащите фото или выберите
+                  - generic [ref=e829]: PNG / JPG, до 5 MB
+              - code [ref=e831]: <BaseStepper v-model="step" :steps="steps" navigable /> <BaseFileUploader v-model="files" multiple :max-size-mb="5" @error="..." />
+            - generic [ref=e833]:
+              - generic [ref=e834]:
+                - heading "Navigation" [level=2] [ref=e835]
+                - paragraph [ref=e836]: WorkspaceSwitcher — для multi-tenant. BottomNav — мобильная (md+ скрыта глобально, здесь — preview через вынесенный контейнер).
+              - generic [ref=e837]:
+                - generic [ref=e838]: WorkspaceSwitcher
+                - button "Salon Savvin" [ref=e841] [cursor=pointer]:
+                  - generic [ref=e842]:
+                    - img [ref=e843]
+                    - generic [ref=e847]: Salon Savvin
+                  - img [ref=e848]
+                - paragraph [ref=e850]: "Активный workspace: salon"
+              - generic [ref=e851]:
+                - generic [ref=e852]: BottomNav (mobile preview)
+                - list [ref=e855]:
+                  - listitem [ref=e856]:
+                    - button "Главная" [ref=e857] [cursor=pointer]:
+                      - img [ref=e859]
+                      - generic [ref=e862]: Главная
+                  - listitem [ref=e863]:
+                    - button "Поиск" [ref=e864] [cursor=pointer]:
+                      - img [ref=e866]
+                      - generic [ref=e869]: Поиск
+                  - listitem [ref=e870]:
+                    - button "3 Брони" [ref=e871] [cursor=pointer]:
+                      - generic [ref=e872]:
+                        - img [ref=e873]
+                        - generic [ref=e875]: "3"
+                      - generic [ref=e876]: Брони
+                  - listitem [ref=e877]:
+                    - button "Профиль" [ref=e878] [cursor=pointer]:
+                      - img [ref=e880]
+                      - generic [ref=e883]: Профиль
+                - paragraph [ref=e884]: "Активный: bookings. На md+ реальный <BaseBottomNav> автоматически скрывается — компонент ниже использует обычный viewport-rendering."
+              - code [ref=e886]: <BaseWorkspaceSwitcher v-model="ws" :workspaces="workspaces" /> <BaseBottomNav v-model="nav" :items="items" />
+  - region "Notifications"
+  - generic [ref=e25]:
+    - generic "Toggle devtools panel" [ref=e26] [cursor=pointer]:
+      - img [ref=e27]
+    - generic "Toggle Component Inspector" [ref=e32] [cursor=pointer]:
+      - img [ref=e33]
