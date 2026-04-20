@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Database\Seeders\RoleSeeder;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -66,8 +67,8 @@ it('throttles login after 5 attempts per minute (non-testing env)', function ():
     // В testing env named limiter 'auth-login' возвращает Limit::none().
     // Переопределяем через RateLimiter::for, чтобы проверить prod-поведение.
     // См. AppServiceProvider::boot + ADR-018.
-    Illuminate\Support\Facades\RateLimiter::for('auth-login', function ($request) {
-        return Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
+    RateLimiter::for('auth-login', function ($request) {
+        return Limit::perMinute(5)->by($request->ip());
     });
 
     for ($i = 0; $i < 5; $i++) {
