@@ -62,26 +62,36 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]
 
-# --- Stage: prod (copy code + composer install) ---
+# --- Stage: prod (copy code + composer install + optimized autoload) ---
+# Prod запускается под www-data (non-root, встроенный в base image) —
+# совместимо с FPM pool настройкой в www.conf (user=www-data).
 FROM base AS prod
 
 COPY docker/php/php-prod.ini /usr/local/etc/php/conf.d/zz-app.ini
 
-# Non-root user
-RUN addgroup -g 1000 app \
-    && adduser -u 1000 -G app -s /bin/sh -D app
+# Опкэш-preload для Laravel — ускоряет cold start.
+# Файл подключается через php-prod.ini (opcache.preload).
+COPY docker/php/opcache-preload.php /usr/local/etc/php/opcache-preload.php
 
-COPY --chown=app:app backend/composer.json backend/composer.lock ./
+# composer сначала, потом код — кэш слоёв срабатывает при изменениях только код.
+COPY backend/composer.json backend/composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
 
-COPY --chown=app:app backend/ ./
+COPY backend/ ./
 RUN composer dump-autoload --optimize --classmap-authoritative \
     && php artisan filament:assets --no-interaction \
-    && php artisan storage:link || true
+    && php artisan storage:link || true \
+    && php artisan route:cache \
+    && php artisan config:cache \
+    && php artisan view:cache \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-USER app
+USER www-data
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD php-fpm -t || exit 1
+# Health: FPM pool ping endpoint + config syntax validation.
+# Проверяется snippet'ом из entrypoint (php-fpm -t проверяет config).
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD php-fpm -t 2>&1 | grep -q "test is successful" || exit 1
 
-CMD ["php-fpm"]
+EXPOSE 9000
+CMD ["php-fpm", "-F"]

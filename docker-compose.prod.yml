@@ -1,3 +1,17 @@
+# Production overlay. Применять поверх базы:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Что добавляется относительно base:
+# - resource limits на каждый сервис
+# - `restart: always` (override unless-stopped)
+# - postgres/redis/minio без exposed ports (internal-only)
+# - logging driver json-file с ротацией (10MB × 3 файла — hard cap 30MB/service)
+# - env APP_ENV=production + APP_DEBUG=false для php
+# - volumes для prod public/storage/frontend-dist (build artefacts)
+#
+# SSL/Let's Encrypt: раскомментировать 443 + подключить /etc/letsencrypt.
+# Detailed deploy runbook: docs/deployment/production.md.
+
 services:
   nginx:
     image: nginx:1.27-alpine
@@ -9,6 +23,13 @@ services:
       - ./docker/nginx/prod.conf:/etc/nginx/conf.d/default.conf:ro
       - backend_public:/var/www/html/public:ro
       - frontend_dist:/var/www/frontend/dist:ro
+      # Раскомментировать после получения certs.
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
@@ -28,6 +49,11 @@ services:
     volumes:
       - backend_public:/var/www/html/public
       - backend_storage:/var/www/html/storage
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
@@ -36,8 +62,13 @@ services:
 
   postgres:
     restart: always
-    # Никаких exposed ports в prod
+    # НЕ экспонируем порт 5432 — только внутри docker network.
     ports: []
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
@@ -47,7 +78,13 @@ services:
   redis:
     restart: always
     ports: []
+    # Prod redis: persistence on + memory cap с LRU eviction.
     command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
@@ -57,6 +94,11 @@ services:
   minio:
     restart: always
     ports: []
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     deploy:
       resources:
         limits:
