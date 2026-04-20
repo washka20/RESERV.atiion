@@ -81,7 +81,7 @@ parameters:
 		-
 			message: '#^PHPDoc tag @var for variable \$result contains generic class App\\Modules\\Catalog\\Application\\DTO\\PaginatedResultDTO but does not specify its types\: T$#'
 			identifier: missingType.generics
-			count: 1
+			count: 2
 			path: app/Modules/Catalog/Interface/Api/Controller/ServiceController.php
 
 		-

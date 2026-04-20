@@ -17,6 +17,7 @@ final readonly class ListServicesQuery
         public ?string $search = null,
         public ?int $minPrice = null,
         public ?int $maxPrice = null,
+        public ?string $organizationId = null,
         public int $page = 1,
         public int $perPage = 20,
     ) {}

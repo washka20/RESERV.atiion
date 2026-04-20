@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import * as authApi from '@/api/auth.api'
+import type { UpdateMePayload } from '@/api/auth.api'
 import {
   clearTokens,
   getAccessToken,
@@ -243,6 +244,28 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   /**
+   * Обновляет профиль текущего user'а через PUT /auth/me.
+   * При успехе обновляет user в store. Ошибки передаются наверх для UI.
+   */
+  async function updateProfile(payload: UpdateMePayload): Promise<void> {
+    isLoading.value = true
+    error.value = null
+    try {
+      const envelope = await authApi.updateMe(payload)
+      if (!envelope.success || !envelope.data) {
+        throw new Error(envelope.error?.message ?? 'Не удалось обновить профиль')
+      }
+      user.value = envelope.data
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Не удалось обновить профиль'
+      error.value = message
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
    * Hydration при старте app: если в localStorage есть access token,
    * подгружает user и memberships. Вызывается из main.ts после pinia.use().
    *
@@ -287,6 +310,7 @@ export const useAuthStore = defineStore('auth', () => {
     loadMe,
     loadMemberships,
     logout,
+    updateProfile,
     hydrate,
   }
 })

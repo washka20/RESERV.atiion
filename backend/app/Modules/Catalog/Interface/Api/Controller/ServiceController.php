@@ -14,6 +14,7 @@ use App\Modules\Catalog\Interface\Api\Resource\ServiceListItemResource;
 use App\Modules\Catalog\Interface\Api\Resource\ServiceResource;
 use App\Shared\Application\Bus\QueryBusInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Публичные эндпоинты списка и деталей услуг каталога.
@@ -37,6 +38,54 @@ final class ServiceController
             search: $this->nullableString($request->input('search')),
             minPrice: $request->input('minPrice') !== null ? (int) $request->input('minPrice') : null,
             maxPrice: $request->input('maxPrice') !== null ? (int) $request->input('maxPrice') : null,
+            page: $page,
+            perPage: $perPage,
+        );
+
+        /** @var PaginatedResultDTO $result */
+        $result = $this->queryBus->ask($query);
+
+        $items = [];
+        foreach ($result->data as $dto) {
+            $items[] = ServiceListItemResource::fromDTO($dto);
+        }
+
+        return $this->envelope(
+            data: $items,
+            meta: [
+                'page' => $result->page,
+                'per_page' => $result->perPage,
+                'total' => $result->total,
+                'last_page' => $result->perPage > 0
+                    ? (int) max(1, (int) ceil($result->total / $result->perPage))
+                    : 1,
+            ],
+        );
+    }
+
+    /**
+     * GET /organizations/{slug}/services — services owned by organization.
+     *
+     * Требует membership (middleware org.member:services.edit).
+     * Возвращает все services организации (включая inactive), отсортированные
+     * по created_at desc. Пагинация: ?page=1&perPage=20.
+     */
+    public function indexForOrganization(string $slug, ListServicesRequest $request): JsonResponse
+    {
+        /** @var object{id: string}|null $org */
+        $org = DB::table('organizations')->select('id')->where('slug', $slug)->first();
+        if ($org === null) {
+            return $this->error('ORGANIZATION_NOT_FOUND', 'Organization not found', 404);
+        }
+
+        $page = (int) ($request->input('page') ?? 1);
+        $perPage = (int) ($request->input('perPage') ?? 20);
+
+        $query = new ListServicesQuery(
+            type: $this->nullableString($request->input('type')),
+            isActive: null,  // org-scoped list показывает all statuses
+            search: $this->nullableString($request->input('search')),
+            organizationId: (string) $org->id,
             page: $page,
             perPage: $perPage,
         );
